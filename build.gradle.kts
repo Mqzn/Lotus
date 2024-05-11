@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    id("maven-publish")
     //id("io.github.patrick.remapper") version "1.4.0"
 }
 
@@ -32,6 +33,11 @@ tasks {
         targetCompatibility = "17"
         options.encoding = "UTF-8"
     }
+    wrapper {
+        gradleVersion = "8.1.1"
+        distributionType = Wrapper.DistributionType.ALL
+    }
+
 }
 
 /**tasks.getByName<Test>("test") {
