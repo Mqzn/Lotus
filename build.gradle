@@ -5,16 +5,15 @@ plugins {
 }
 
 group = "io.github.mqzen"
-version = "1.0"
+version = "1.0.2"
 
 repositories {
     gradlePluginPortal()
     mavenCentral()
-    mavenLocal()
-    maven("https://repo.papermc.io/repository/maven-public/")
-    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    maven("https://oss.sonatype.org/content/repositories/snapshots")
-    maven("https://oss.sonatype.org/content/repositories/central")
+    maven {
+        url 'https://repo.papermc.io/repository/maven-public/'
+    }
+
 }
 
 dependencies {
@@ -27,19 +26,15 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
 }
-tasks {
-    withType<JavaCompile> {
-        sourceCompatibility = "17"
-        targetCompatibility = "17"
-        options.encoding = "UTF-8"
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
     }
-    wrapper {
-        gradleVersion = "8.1.1"
-        distributionType = Wrapper.DistributionType.ALL
+    repositories {
+        maven {
+            url 'https://jitpack.io'
+        }
     }
-
 }
-
-/**tasks.getByName<Test>("test") {
-    useJUnitPlatform()
-}*/
