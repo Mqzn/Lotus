@@ -5,15 +5,11 @@ import io.github.mqzen.menus.base.MenuCreator;
 import io.github.mqzen.menus.misc.Button;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.Slot;
-import lombok.Setter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class PageCreator implements MenuCreator {
-	
-	@Setter
-	protected int pageIndex;
 	
 	protected PageCreator() {
 	

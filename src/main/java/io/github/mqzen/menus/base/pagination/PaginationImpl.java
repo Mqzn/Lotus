@@ -41,7 +41,7 @@ class PaginationImpl implements Pagination {
 		assert currentOpener != null;
 		
 		currentIndex++;
-		System.out.println("Current index = " + currentIndex);
+
 		try {
 			openPage(currentIndex, currentOpener);
 		} catch (Exception e) {
@@ -56,8 +56,6 @@ class PaginationImpl implements Pagination {
 	public void previous() {
 		assert currentOpener != null;
 		currentIndex--;
-		
-		System.out.println("Current index = " + currentIndex);
 		
 		try {
 			openPage(currentIndex, currentOpener);
