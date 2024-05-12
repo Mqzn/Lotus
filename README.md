@@ -33,7 +33,7 @@ Lotus dependency on your project.
 ### Gradle
 If you're using Gradle as your build tool for your project, this is quick example how to add it as a dependency in your `build.gradle` file
 
-```
+```groovy
 repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
@@ -47,7 +47,7 @@ dependencies {
 ### Maven 
 if you're using maven, it's basically the same information regarding the API dependency but there will be small changes to the syntax as following:
 
-```
+```xml
 <repositories>
     <repository>
         <id>jitpack.io</id>
