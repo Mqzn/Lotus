@@ -29,10 +29,11 @@ public interface Content {
 	int nextEmptySlot();
 	
 	default void addButton(Button... buttons) {
-		int slot = nextEmptySlot();
-		if(slot == -1) return;
-		for(var button : buttons)
-			setButton(slot, button);
+		for(var button : buttons) {
+			int nextSlot = nextEmptySlot();
+			if(nextSlot == -1) break;
+			setButton(nextSlot, button);
+		}
 	}
 	
 	void setButton(Slot slot, Button button);
