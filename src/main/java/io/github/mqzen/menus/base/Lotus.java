@@ -3,6 +3,7 @@ package io.github.mqzen.menus.base;
 
 import io.github.mqzen.menus.listeners.MenuClickListener;
 import io.github.mqzen.menus.listeners.MenuCloseListener;
+import io.github.mqzen.menus.listeners.MenuOpenListener;
 import io.github.mqzen.menus.openers.DefaultOpener;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +31,7 @@ public final class Lotus {
 		this.plugin = plugin;
 		registerOpeners();
 		Bukkit.getPluginManager().registerEvents(new MenuClickListener(this), plugin);
+		Bukkit.getPluginManager().registerEvents(new MenuOpenListener(), plugin);
 		Bukkit.getPluginManager().registerEvents(new MenuCloseListener(this), plugin);
 	}
 	

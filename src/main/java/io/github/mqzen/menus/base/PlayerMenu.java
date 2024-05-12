@@ -139,13 +139,6 @@ public class PlayerMenu<C extends MenuCreator> implements InventoryHolder {
 			.ifPresent((button)-> button.executeOnClick(this, e));
 		
 	}
-	
-	private MenuCache createData(Player opener) {
-		Capacity capacity = creator.createCapacity(menuData, opener);
-		return new MenuCache(creator.createTitle(menuData, opener),
-			capacity, creator.createContent(menuData, opener, capacity));
-	}
-	
 	@NotNull
 	@Override
 	public Inventory getInventory() {
