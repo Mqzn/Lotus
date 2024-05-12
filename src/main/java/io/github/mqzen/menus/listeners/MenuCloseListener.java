@@ -20,7 +20,7 @@ public class MenuCloseListener implements Listener {
 		
 		Player closer = (Player) e.getPlayer();
 		manager.getOpenMenus(closer.getUniqueId())
-			.ifPresent((menu)->
+			.ifPresent((menu) ->
 				manager.preClosePlayerMenu(menu, e));
 	}
 }

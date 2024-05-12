@@ -32,6 +32,14 @@ public final class Page extends PlayerMenu<PageCreator> {
 		this.menuData.setData("pagination", pagination);
 	}
 	
+	static Page create(Pagination pagination, int index) {
+		return new Page(pagination, index);
+	}
+	
+	static Page create(Pagination pagination, PageCreator creator, int index) {
+		return new Page(pagination, creator, index);
+	}
+	
 	public PageCreator getCreator() {
 		return creator;
 	}
@@ -46,10 +54,10 @@ public final class Page extends PlayerMenu<PageCreator> {
 		Content originalPageContent = creator.createContent(this.menuData, opener, capacity);
 		
 		int maxButtonsCount = creator.getPageButtonsCount(this, opener);
-		if(originalPageContent.size() > maxButtonsCount) originalPageContent.trim(maxButtonsCount);
+		if (originalPageContent.size() > maxButtonsCount) originalPageContent.trim(maxButtonsCount);
 		
 		currentOpenedData = new MenuCache(creator.createTitle(this.menuData, opener),
-			capacity, originalPageContent.mergeWith(creator.defaultContent(this, capacity,opener)));
+			capacity, originalPageContent.mergeWith(creator.defaultContent(this, capacity, opener)));
 	}
 	
 	public void setData(Player opener) {
@@ -58,15 +66,8 @@ public final class Page extends PlayerMenu<PageCreator> {
 	
 	@Override
 	public synchronized void preClose(InventoryCloseEvent event) {
-		creator.onClose(this,event);
+		creator.onClose(this, event);
 		currentOpener = null;
 		currentOpenInventory = null;
-	}
-	
-	static Page create(Pagination pagination, int index) {
-		return new Page(pagination, index);
-	}
-	static Page create(Pagination pagination, PageCreator creator, int index) {
-		return new Page(pagination, creator, index);
 	}
 }

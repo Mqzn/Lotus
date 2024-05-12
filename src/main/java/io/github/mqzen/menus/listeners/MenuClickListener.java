@@ -28,27 +28,27 @@ public final class MenuClickListener implements Listener {
 		
 		//TODO create a powerful checker for bugs
 		
-		PlayerMenu<?> menu = manager.getOpenMenus(clicker.getUniqueId()).orElseGet(()-> {
-			if(topInventory.getHolder() instanceof PlayerMenu<?> playerMenu){
+		PlayerMenu<?> menu = manager.getOpenMenus(clicker.getUniqueId()).orElseGet(() -> {
+			if (topInventory.getHolder() instanceof PlayerMenu<?> playerMenu) {
 				manager.setOpenMenus(clicker, playerMenu);
 				return playerMenu;
 			}
 			return null;
 		});
 		
-		if(menu == null){
+		if (menu == null) {
 			e.setCancelled(!manager.isAllowOutsideClick());
 			return;
 		}
 		
 		int clickedSlot = e.getSlot();
-		if(clickedInventory == null)
+		if (clickedInventory == null)
 			return;
 		
-		if(clickedInventory.equals(bottomInventory))
+		if (clickedInventory.equals(bottomInventory))
 			return;
 		
-		if(clickedInventory.equals(topInventory)) {
+		if (clickedInventory.equals(topInventory)) {
 			menu.executeItemAction(clickedSlot, e);
 		}
 	}

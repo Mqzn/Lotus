@@ -24,17 +24,13 @@ public class PlayerMenu<C extends MenuCreator> implements InventoryHolder {
 	
 	
 	protected final C creator;
-	
+	protected final MenuData menuData = MenuData.empty();
 	@Getter
 	protected MenuCache currentOpenedData = null;
-	
 	@Getter
 	protected Inventory currentOpenInventory = null;
-	
 	@Getter
 	protected Player currentOpener = null;
-	
-	protected final MenuData menuData = MenuData.empty();
 	
 	protected PlayerMenu(C creator) {
 		this.creator = creator;
@@ -52,12 +48,11 @@ public class PlayerMenu<C extends MenuCreator> implements InventoryHolder {
 	
 	
 	public void setClickedItem(@NotNull InventoryClickEvent event,
-	                              @Nullable ItemStack itemStack) {
+	                           @Nullable ItemStack itemStack) {
 		setItem(event.getSlot(), itemStack);
 	}
 	
 	
-
 	public void setItem(int slot,
 	                    @Nullable ItemStack newItem) {
 		updateItem(Slot.of(slot), newItem);
@@ -65,40 +60,40 @@ public class PlayerMenu<C extends MenuCreator> implements InventoryHolder {
 	
 	public void updateItem(@NotNull Slot slot,
 	                       @Nullable ItemStack newItem) {
-		if(!isOpen())
+		if (!isOpen())
 			throw new IllegalStateException("Cannot update the item of a closed menus, the menus must be open");
 		
 		if (!currentOpener.getOpenInventory().getTopInventory().equals(currentOpenInventory))
 			throw new IllegalStateException("Unexpected inventories mismatch, synchronization between cached open inventory and the opener's internal inventory has been lost !");
 		
-		currentOpenedData.content().updateButton(slot, (button)-> button.setItem(newItem));
-		currentOpenInventory.setItem(slot.getSlot(),newItem);
+		currentOpenedData.content().updateButton(slot, (button) -> button.setItem(newItem));
+		currentOpenInventory.setItem(slot.getSlot(), newItem);
 	}
 	
 	public void updateItem(Slot slot, Consumer<ItemStack> updater) {
 		ItemStack item = currentOpenInventory.getItem(slot.getSlot());
-		if(item == null) return;
+		if (item == null) return;
 		updater.accept(item);
 		updateItem(slot, item);
 	}
 	
 	public void updateItemMeta(Slot slot, Consumer<ItemMeta> metaUpdater) {
-		updateItem(slot,(item)-> {
+		updateItem(slot, (item) -> {
 			ItemMeta meta = item.getItemMeta();
-			if(meta == null)return;
+			if (meta == null) return;
 			metaUpdater.accept(meta);
 			item.setItemMeta(meta);
 		});
 	}
 	
 	public void setClickedButton(@NotNull InventoryClickEvent event,
-	                              @NotNull Button button) {
+	                             @NotNull Button button) {
 		updateButton(event.getSlot(), button);
 	}
 	
 	public void updateButton(@NotNull Slot slot,
 	                         @NotNull Button button) {
-		if(!isOpen())
+		if (!isOpen())
 			throw new IllegalStateException("Cannot update the item of a closed menus, the menus must be open");
 		
 		if (!currentOpener.getOpenInventory().getTopInventory().equals(currentOpenInventory))
@@ -119,26 +114,29 @@ public class PlayerMenu<C extends MenuCreator> implements InventoryHolder {
 		if (!(this instanceof Page page)) {
 			setData(creator, player);
 		} else {
-			if(!page.getPagination().isAutomatic()) { setData(creator, player); }
+			if (!page.getPagination().isAutomatic()) {
+				setData(creator, player);
+			}
 		}
 		currentOpenInventory = opener.openMenu(manager, player, this, currentOpenedData);
 	}
 	
 	public synchronized void preClose(InventoryCloseEvent event) {
-		creator.onClose(this,event);
+		creator.onClose(this, event);
 		currentOpener = null;
 		currentOpenInventory = null;
 		currentOpenedData = null;
 	}
 	
 	public void executeItemAction(int clickedSlot, InventoryClickEvent e) {
-		if(currentOpenedData == null)
+		if (currentOpenedData == null)
 			throw new IllegalStateException("Cannot find the data for this menus");
 		
 		currentOpenedData.content().getButton(clickedSlot)
-			.ifPresent((button)-> button.executeOnClick(this, e));
+			.ifPresent((button) -> button.executeOnClick(this, e));
 		
 	}
+	
 	@NotNull
 	@Override
 	public Inventory getInventory() {
@@ -161,7 +159,7 @@ public class PlayerMenu<C extends MenuCreator> implements InventoryHolder {
 	
 	public void setData(C creator, Player opener) {
 		Capacity capacity = creator.createCapacity(menuData, opener);
-		currentOpenedData = new MenuCache(creator.createTitle( menuData, opener),
+		currentOpenedData = new MenuCache(creator.createTitle(menuData, opener),
 			capacity, creator.createContent(menuData, opener, capacity));
 	}
 }

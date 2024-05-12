@@ -14,6 +14,14 @@ import java.util.function.Consumer;
 
 public interface Content {
 	
+	static Builder builder(Capacity capacity) {
+		return new Builder(capacity);
+	}
+	
+	static Content empty(Capacity capacity) {
+		return Content.builder(capacity).build();
+	}
+	
 	Capacity capacity();
 	
 	Optional<Button> getButton(Slot slot);
@@ -29,9 +37,9 @@ public interface Content {
 	int nextEmptySlot();
 	
 	default void addButton(Button... buttons) {
-		for(var button : buttons) {
+		for (var button : buttons) {
 			int nextSlot = nextEmptySlot();
-			if(nextSlot == -1) break;
+			if (nextSlot == -1) break;
 			setButton(nextSlot, button);
 		}
 	}
@@ -39,7 +47,7 @@ public interface Content {
 	void setButton(Slot slot, Button button);
 	
 	default void setButton(Slots slots, Button button) {
-		for(Slot slot : slots.getSlots())
+		for (Slot slot : slots.getSlots())
 			setButton(slot, button);
 	}
 	
@@ -56,6 +64,7 @@ public interface Content {
 	default void removeButton(int slot) {
 		removeButton(Slot.of(slot));
 	}
+	
 	default void removeButton(int row, int column) {
 		removeButton(Slot.of(row, column));
 	}
@@ -65,6 +74,7 @@ public interface Content {
 	void fill(Button button);
 	
 	void fillRow(int row, Button button);
+	
 	void fillRow(int row, int endColumn, Button button);
 	
 	void fillRow(int row, Button button, List<Integer> exceptColumns);
@@ -90,7 +100,6 @@ public interface Content {
 	@NotNull Collection<? extends Button> getAllButtons();
 	
 	Content mergeWith(Content other);
-
 	
 	void updateButton(Slot slot, Consumer<Button> buttonUpdate);
 	
@@ -100,17 +109,11 @@ public interface Content {
 	
 	void trim(int maxButtonsCount);
 	
-	
-	static Builder builder(Capacity capacity) {
-		return new Builder(capacity);
-	}
-	static Content empty(Capacity capacity) {
-		return Content.builder(capacity).build();
-	}
 	class Builder {
 		
 		private final MenuContentImpl impl;
 		private final Capacity capacity;
+		
 		Builder(Capacity capacity) {
 			this.capacity = capacity;
 			impl = new MenuContentImpl(capacity);
@@ -132,7 +135,7 @@ public interface Content {
 		}
 		
 		public Builder setButton(int slot, ItemStack buttonItem, ButtonAction buttonAction) {
-			impl.setButton(slot, Button.clickable(buttonItem,buttonAction));
+			impl.setButton(slot, Button.clickable(buttonItem, buttonAction));
 			return this;
 		}
 		
@@ -147,9 +150,10 @@ public interface Content {
 		}
 		
 		public Builder repeatButton(int startSlot, int endSlot, Button button) {
-			if(startSlot < 0 || endSlot < 0) throw new IllegalStateException("start and end slot must be positive");
-			if(startSlot > endSlot) throw new IllegalStateException("Start is larger than end");
-			if(endSlot >= capacity.getTotalSize()) throw new IllegalStateException("End slot is larger than the total size of menu");
+			if (startSlot < 0 || endSlot < 0) throw new IllegalStateException("start and end slot must be positive");
+			if (startSlot > endSlot) throw new IllegalStateException("Start is larger than end");
+			if (endSlot >= capacity.getTotalSize())
+				throw new IllegalStateException("End slot is larger than the total size of menu");
 			
 			for (int start = startSlot; start <= endSlot; start++) {
 				impl.setButton(start, button);
@@ -162,7 +166,7 @@ public interface Content {
 		}
 		
 		public Builder iterate(SlotIterator iterator, BiConsumer<Content, Slot> consumer) {
-			while (iterator.hasNext()){
+			while (iterator.hasNext()) {
 				Slot slot = iterator.next();
 				consumer.accept(impl, slot);
 			}
@@ -170,22 +174,22 @@ public interface Content {
 		}
 		
 		public Builder iterate(Slot startSlot, Slot endSlot, Direction direction, BiConsumer<Content, Slot> consumer) {
-			SlotIterator iterator = SlotIterator.create(startSlot, endSlot, capacity,direction);
-			return iterate(iterator,consumer);
+			SlotIterator iterator = SlotIterator.create(startSlot, endSlot, capacity, direction);
+			return iterate(iterator, consumer);
 		}
 		
 		public Builder iterate(Slot startSlot, Direction direction, BiConsumer<Content, Slot> consumer) {
-			SlotIterator iterator = SlotIterator.create(startSlot, capacity,direction);
-			return iterate(iterator,consumer);
+			SlotIterator iterator = SlotIterator.create(startSlot, capacity, direction);
+			return iterate(iterator, consumer);
 		}
-
+		
 		
 		public Builder iterate(Direction direction, BiConsumer<Content, Slot> consumer) {
-			return iterate(Slot.of(0),direction, consumer);
+			return iterate(Slot.of(0), direction, consumer);
 		}
 		
 		public Builder draw(Slot startSlot, Slot endSlot, Direction direction, Button button) {
-			return iterate(startSlot, endSlot, direction, (content, slot)-> content.setButton(slot, button));
+			return iterate(startSlot, endSlot, direction, (content, slot) -> content.setButton(slot, button));
 		}
 		
 		public Builder draw(Slot startSlot, Slot endSlot, Direction direction, ItemStack itemStack) {
@@ -193,13 +197,12 @@ public interface Content {
 		}
 		
 		public Builder draw(Slot startSlot, Direction direction, Button button) {
-			return iterate(startSlot, direction, (content, slot)-> content.setButton(slot, button));
+			return iterate(startSlot, direction, (content, slot) -> content.setButton(slot, button));
 		}
 		
 		public Builder draw(Slot startSlot, Direction direction, ItemStack itemStack) {
-			return iterate(startSlot, direction, (content, slot)-> content.setButton(slot, Button.empty(itemStack)));
+			return iterate(startSlot, direction, (content, slot) -> content.setButton(slot, Button.empty(itemStack)));
 		}
-		
 		
 		
 		//---------
@@ -220,11 +223,11 @@ public interface Content {
 		}
 		
 		public Builder draw(Direction direction, Button button) {
-			return iterate(direction, (content, slot)-> content.setButton(slot,button));
+			return iterate(direction, (content, slot) -> content.setButton(slot, button));
 		}
 		
 		public Builder draw(Direction direction, ItemStack itemStack) {
-			return iterate(direction, (content, slot)-> content.setButton(slot, Button.empty(itemStack)));
+			return iterate(direction, (content, slot) -> content.setButton(slot, Button.empty(itemStack)));
 		}
 		
 		
@@ -234,7 +237,6 @@ public interface Content {
 		
 		
 	}
-	
 	
 	
 }

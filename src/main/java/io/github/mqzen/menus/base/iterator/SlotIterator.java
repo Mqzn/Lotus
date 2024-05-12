@@ -15,8 +15,8 @@ public final class SlotIterator implements Iterator<Slot> {
 	
 	private final Capacity capacity;
 	private final Direction direction;
-	private @NotNull Slot current;
 	private final Slot endSlot;
+	private @NotNull Slot current;
 	
 	SlotIterator(@NotNull Slot startingSlot, Slot endSlot, Capacity capacity, Direction direction) {
 		this.current = startingSlot;
@@ -24,10 +24,10 @@ public final class SlotIterator implements Iterator<Slot> {
 		this.capacity = capacity;
 		this.direction = direction;
 	}
-
+	
 	SlotIterator(Capacity capacity, Direction direction) {
 		this.current = Slot.of(0);
-		this.endSlot = Slot.of(capacity.getTotalSize()-1);
+		this.endSlot = Slot.of(capacity.getTotalSize() - 1);
 		this.capacity = capacity;
 		this.direction = direction;
 	}
@@ -37,7 +37,7 @@ public final class SlotIterator implements Iterator<Slot> {
 	}
 	
 	public static SlotIterator create(Slot start, Capacity capacity, Direction direction) {
-		return new SlotIterator(start, Slot.of(capacity.getTotalSize()-1), capacity, direction);
+		return new SlotIterator(start, Slot.of(capacity.getTotalSize() - 1), capacity, direction);
 	}
 	
 	public static SlotIterator create(Slot start, Slot end, Capacity capacity, Direction direction) {
@@ -73,7 +73,7 @@ public final class SlotIterator implements Iterator<Slot> {
 		
 		boolean found = false;
 		while (hasNext()) {
-			if(slotPredicate.test(current)) {
+			if (slotPredicate.test(current)) {
 				found = true;
 				break;
 			}

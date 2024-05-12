@@ -15,16 +15,15 @@ class PaginationImpl implements Pagination {
 	
 	private final Lotus manager;
 	private final PageCreator creator;
-	private @Nullable Player currentOpener = null;
 	private final List<PageComponent> components = Lists.newArrayList();
 	private final Map<Integer, Page> pages = new HashMap<>();
 	private final boolean automatic;
-	
+	private @Nullable Player currentOpener = null;
 	private int currentIndex = 0;
 	
 	PaginationImpl(Lotus manager,
 	               boolean automatic, PageCreator creator) {
-		if(automatic && creator == null)
+		if (automatic && creator == null)
 			throw new IllegalStateException("Automatic pagination has no creator");
 		
 		this.manager = manager;
@@ -41,7 +40,7 @@ class PaginationImpl implements Pagination {
 		assert currentOpener != null;
 		
 		currentIndex++;
-
+		
 		try {
 			openPage(currentIndex, currentOpener);
 		} catch (Exception e) {
@@ -95,12 +94,6 @@ class PaginationImpl implements Pagination {
 		return creator;
 	}
 	
-	@Override
-	public void setCurrentOpener(@Nullable Player player) {
-		this.currentOpener = player;
-	}
-	
-	
 	/**
 	 * Opener for this pagination menu
 	 *
@@ -109,6 +102,11 @@ class PaginationImpl implements Pagination {
 	@Override
 	public @Nullable Player getCurrentOpener() {
 		return currentOpener;
+	}
+	
+	@Override
+	public void setCurrentOpener(@Nullable Player player) {
+		this.currentOpener = player;
 	}
 	
 	/**
@@ -130,7 +128,7 @@ class PaginationImpl implements Pagination {
 	/**
 	 * The page menu with index
 	 *
-	 * @param index index of the page-menu to fetch
+	 * @param index        index of the page-menu to fetch
 	 * @param defaultIndex default index if page with that index doesn't exist !
 	 * @return the page menu with specific index
 	 * @see Page
@@ -172,7 +170,7 @@ class PaginationImpl implements Pagination {
 	
 	@Override
 	public synchronized void paginate(Player opener) {
-		if(!automatic)
+		if (!automatic)
 			throw new IllegalStateException("Automatic pagination is only allowed to paginate and create pages automatically");
 		
 		int maxPages = calculateMaxPages(opener);
@@ -183,11 +181,11 @@ class PaginationImpl implements Pagination {
 			final int buttonsPerPage = page.getCreator().getPageButtonsCount(page, opener);
 			
 			int startIndex = pageIndex * buttonsPerPage;
-			int endIndex = (pageIndex+1) * buttonsPerPage;
+			int endIndex = (pageIndex + 1) * buttonsPerPage;
 			
 			for (int index = startIndex; index < endIndex; index++) {
 				PageComponent component = components.get(index);
-				if(component == null) break;
+				if (component == null) break;
 				page.addButton(component.toButton());
 			}
 			pages.put(pageIndex, page);
@@ -197,13 +195,13 @@ class PaginationImpl implements Pagination {
 	
 	private int calculateMaxPages(Player opener) {
 		int buttonsCountPerPage = creator.getPageButtonsCount(null, opener);
-		return (int) Math.ceil((double)  components.size() / buttonsCountPerPage);
+		return (int) Math.ceil((double) components.size() / buttonsCountPerPage);
 	}
 	
 	
 	@Override
 	public boolean isLast(int index) {
-		int highestIndex = pages.keySet().stream().max(Comparator.comparingInt((i)->i))
+		int highestIndex = pages.keySet().stream().max(Comparator.comparingInt((i) -> i))
 			.orElse(0);
 		return index == highestIndex;
 	}
@@ -217,35 +215,35 @@ class PaginationImpl implements Pagination {
 	public void openPage(int pageIndex, Player opener) throws Exception {
 		Page page = pages.get(pageIndex);
 		
-		if(page == null) {
-			if(pageIndex == 0) throw new PaginationIsEmptyException();
+		if (page == null) {
+			if (pageIndex == 0) throw new PaginationIsEmptyException();
 			else throw new PageDoesntExistException(pageIndex);
 		}
-		Bukkit.getScheduler().runTaskLater(manager.getPlugin(), ()-> page.open(opener),1L);
+		Bukkit.getScheduler().runTaskLater(manager.getPlugin(), () -> page.open(opener), 1L);
 	}
 	
 	@Override
 	public void open(Player opener) throws Exception {
-		if(this.isAutomatic())
+		if (this.isAutomatic())
 			paginate(opener);
 		
 		setCurrentOpener(opener);
-		openPage(0,opener);
+		openPage(0, opener);
 	}
 	
 	/**
 	 * Sets the page (caching it manually)
 	 *
-	 * @param index    the index of the page
+	 * @param index   the index of the page
 	 * @param creator the creator for this page
 	 */
 	@Override
 	public void setPage(int index, PageCreator creator) {
-		if(automatic) throw new IllegalStateException("Manual addition of a page cannot be done while the pagination is declared automatic !");
+		if (automatic)
+			throw new IllegalStateException("Manual addition of a page cannot be done while the pagination is declared automatic !");
 		Page page = Page.create(this, creator, index);
 		pages.put(index, page);
 	}
 	
-
 	
 }

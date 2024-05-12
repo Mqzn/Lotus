@@ -12,6 +12,6 @@ public interface PageComponent {
 	
 	default Button toButton() {
 		return Button.clickable(toItem(),
-			(menu, clickEvent)-> onClick((Page) menu, clickEvent));
+			(menu, clickEvent) -> onClick((Page) menu, clickEvent));
 	}
 }

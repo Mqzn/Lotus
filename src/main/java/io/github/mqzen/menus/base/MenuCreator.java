@@ -14,6 +14,7 @@ public interface MenuCreator {
 	
 	/**
 	 * Type of inventory you're creating
+	 *
 	 * @return the type of inventory
 	 */
 	default InventoryType getMenuType() {
@@ -34,7 +35,8 @@ public interface MenuCreator {
 	
 	/**
 	 * Creates the content for the menu
-	 * @param opener the player opening this menu
+	 *
+	 * @param opener   the player opening this menu
 	 * @param capacity the capacity set by the user above
 	 * @return the content of the menu to add (this includes items)
 	 */
@@ -42,15 +44,19 @@ public interface MenuCreator {
 	
 	/**
 	 * What's going to happen on close
-	 * @param menu the menu closing
+	 *
+	 * @param menu  the menu closing
 	 * @param event the event of closing the inventory of this menu
 	 */
-	default void onClose(PlayerMenu<?> menu, InventoryCloseEvent event) {}
+	default void onClose(PlayerMenu<?> menu, InventoryCloseEvent event) {
+	}
 	
 	/**
 	 * What's going to happen on opening of the menu's inventory
-	 * @param menu the holder of the inventory opening
+	 *
+	 * @param menu  the holder of the inventory opening
 	 * @param event the inventory open event
 	 */
-	default void onOpen(PlayerMenu<?> menu, InventoryOpenEvent event) {}
+	default void onOpen(PlayerMenu<?> menu, InventoryOpenEvent event) {
+	}
 }

@@ -11,9 +11,9 @@ public interface Opener {
 	 * Creates an inventory , opens it for the player using the dynamic data
 	 * of the menu that is cached within 'MenuCache'
 	 *
-	 * @param manager the manager
-	 * @param player the player opening this menu
-	 * @param menu the menu to open
+	 * @param manager   the manager
+	 * @param player    the player opening this menu
+	 * @param menu      the menu to open
 	 * @param menuCache the data of the menu to open
 	 * @return the menu inventory opened for this player
 	 */

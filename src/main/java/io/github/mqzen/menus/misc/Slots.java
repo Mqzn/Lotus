@@ -27,11 +27,11 @@ public final class Slots {
 	}
 	
 	public static Slots ofRows(int[] rows) {
-		Slot[] slots = new Slot[rows.length*9];
+		Slot[] slots = new Slot[rows.length * 9];
 		for (int i = 0; i < rows.length; i++) {
 			int row = rows[i];
 			for (int column = 0; column < 9; column++) {
-				slots[i+column] = Slot.of(row, column);
+				slots[i + column] = Slot.of(row, column);
 			}
 		}
 		return new Slots(slots);

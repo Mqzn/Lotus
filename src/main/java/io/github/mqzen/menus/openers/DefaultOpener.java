@@ -18,9 +18,9 @@ public final class DefaultOpener implements Opener {
 	 * Creates an inventory , opens it for the player using the dynamic data
 	 * of the menu that is cached within 'MenuCache'
 	 *
-	 * @param manager  the manager
-	 * @param player   the player opening this menu
-	 * @param menu     the menu to open
+	 * @param manager   the manager
+	 * @param player    the player opening this menu
+	 * @param menu      the menu to open
 	 * @param menuCache the data of the menu to open
 	 * @return the menu inventory opened for this player
 	 */
@@ -32,8 +32,8 @@ public final class DefaultOpener implements Opener {
 		
 		Inventory inv = Bukkit.createInventory(menu, size, title);
 		
-		menuCache.content().forEachItem((slot, button)->
-			inv.setItem(slot.getSlot(),button.getItem()));
+		menuCache.content().forEachItem((slot, button) ->
+			inv.setItem(slot.getSlot(), button.getItem()));
 		
 		return Objects.requireNonNull(player.openInventory(inv)).getTopInventory();
 	}

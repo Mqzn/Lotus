@@ -14,7 +14,7 @@ public final class Slot implements Comparable<Slot> {
 	
 	private Slot(int slot) {
 		this.slot = slot;
-		this.row = (int) Math.floor((float) (slot/WIDTH));
+		this.row = (int) Math.floor((float) (slot / WIDTH));
 		this.column = slot % WIDTH;
 	}
 	
@@ -33,8 +33,9 @@ public final class Slot implements Comparable<Slot> {
 	}
 	
 	public static Slot last(Capacity capacity) {
-		return new Slot(capacity.getTotalSize()-1);
+		return new Slot(capacity.getTotalSize() - 1);
 	}
+	
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -48,11 +49,11 @@ public final class Slot implements Comparable<Slot> {
 	}
 	
 	public Slot subtractBy(int num) {
-		return Slot.of(slot-num);
+		return Slot.of(slot - num);
 	}
 	
 	@Override
 	public int compareTo(@NotNull Slot o) {
-		return this.slot-o.slot;
+		return this.slot - o.slot;
 	}
 }

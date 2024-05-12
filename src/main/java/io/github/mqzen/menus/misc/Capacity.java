@@ -11,11 +11,11 @@ public final class Capacity {
 	private Capacity(int totalSize) {
 		this.totalSize = totalSize;
 		this.columns = 9;
-		this.rows = totalSize/columns;
+		this.rows = totalSize / columns;
 	}
 	
 	private Capacity(int rows, int columns) {
-		this.totalSize = rows*columns;
+		this.totalSize = rows * columns;
 		this.rows = rows;
 		this.columns = columns;
 	}

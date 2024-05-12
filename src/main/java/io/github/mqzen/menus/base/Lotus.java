@@ -17,16 +17,16 @@ import java.util.*;
 
 public final class Lotus {
 	
-
+	
 	private final DefaultOpener defaultOpener = new DefaultOpener();
 	//TODO add more openers
 	private final EnumMap<InventoryType, Opener> openers = new EnumMap<>(InventoryType.class);
-	
-	@Getter @Setter
-	private boolean allowOutsideClick = true;
 	private final Map<UUID, PlayerMenu<?>> openMenus = new HashMap<>();
-	
 	private final Plugin plugin;
+	@Getter
+	@Setter
+	private boolean allowOutsideClick = true;
+	
 	public Lotus(Plugin plugin) {
 		this.plugin = plugin;
 		registerOpeners();

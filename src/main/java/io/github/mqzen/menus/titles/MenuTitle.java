@@ -7,5 +7,5 @@ public sealed interface MenuTitle permits LegacyTitle, ModernTitle {
 	Component asComponent();
 	
 	String asString();
-
+	
 }

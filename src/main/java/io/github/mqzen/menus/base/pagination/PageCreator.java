@@ -14,9 +14,11 @@ public abstract class PageCreator implements MenuCreator {
 	protected PageCreator() {
 	
 	}
+	
 	/**
 	 * The number of buttons this page should have
-	 * @param page null if the pagination is automatic
+	 *
+	 * @param page   null if the pagination is automatic
 	 * @param opener opener of this pagination
 	 * @return The number of buttons this page should have
 	 */
@@ -31,6 +33,7 @@ public abstract class PageCreator implements MenuCreator {
 	}
 	
 	public abstract ItemStack nextPageItem(Player player);
+	
 	public abstract ItemStack previousPageItem(Player player);
 	
 	public final Content defaultContent(Page page, Capacity capacity, Player player) {
@@ -45,7 +48,7 @@ public abstract class PageCreator implements MenuCreator {
 		
 		boolean isLast;
 		
-		if(!pagination.isAutomatic())
+		if (!pagination.isAutomatic())
 			isLast = pagination.isLast(page);
 		else {
 			int endIndex = (page.getIndex() + 1) * itemsPerPage;
@@ -53,16 +56,16 @@ public abstract class PageCreator implements MenuCreator {
 			isLast = (endIndex == compSize);
 		}
 		
-		if(!isLast)
+		if (!isLast)
 			content.setButton(nextButtonSlot, Button.clickable(nextPageItem(player),
-				(menu, event)-> {
+				(menu, event) -> {
 					event.setCancelled(true);
 					pagination.next();
 				}));
 		
-		if(!pagination.isFirst(page))
+		if (!pagination.isFirst(page))
 			content.setButton(previousButtonSlot, Button.clickable(previousPageItem(player),
-				(menu, event)-> {
+				(menu, event) -> {
 					event.setCancelled(true);
 					pagination.previous();
 				}));

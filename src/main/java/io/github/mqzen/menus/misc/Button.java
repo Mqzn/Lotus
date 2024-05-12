@@ -11,7 +11,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
-@Getter @Setter
+@Getter
+@Setter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Button {
 	
@@ -33,12 +34,12 @@ public class Button {
 	}
 	
 	public static Button transformerButton(ItemStack item, BiFunction<PlayerMenu<?>, InventoryClickEvent, Button> transformer) {
-		return new Button(item, (menu, click)-> menu.setClickedButton(click, transformer.apply(menu, click)));
+		return new Button(item, (menu, click) -> menu.setClickedButton(click, transformer.apply(menu, click)));
 	}
 	
 	public static Button transformerItem(ItemStack item,
 	                                     BiFunction<PlayerMenu<?>, InventoryClickEvent, ItemStack> transformer) {
-		return new Button(item, (menu, click)->
+		return new Button(item, (menu, click) ->
 			menu.setClickedItem(click, transformer.apply(menu, click)));
 	}
 	
@@ -47,7 +48,7 @@ public class Button {
 	}
 	
 	public void executeOnClick(PlayerMenu<?> menu, InventoryClickEvent event) {
-		if(action != null) action.execute(menu, event);
+		if (action != null) action.execute(menu, event);
 	}
 	
 	

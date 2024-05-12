@@ -11,6 +11,14 @@ import java.util.*;
 
 public interface Pagination {
 	
+	static Pagination.Builder.Automatic auto(Lotus manager) {
+		return new Builder.Automatic(manager);
+	}
+	
+	static Pagination.Builder.Plain plain(Lotus manager) {
+		return new Builder.Plain(manager);
+	}
+	
 	/**
 	 * Moves to next page
 	 */
@@ -23,6 +31,7 @@ public interface Pagination {
 	
 	/**
 	 * The manager of all menus
+	 *
 	 * @return the menu manager
 	 */
 	@NotNull Lotus getManager();
@@ -30,24 +39,27 @@ public interface Pagination {
 	/**
 	 * An automatic paginated menu is a pagination that automatically create pages depending on
 	 * the number of items inserted into the pagination
+	 *
 	 * @return whether the paginated menu is automatic
 	 */
 	boolean isAutomatic();
 	
 	/**
 	 * The creator of every page
+	 *
 	 * @return the page creator instance for creating a page inside of this pagination
 	 */
 	@NotNull PageCreator getPageCreator();
 	
-	@ApiStatus.Internal
-	void setCurrentOpener(Player player);
-	
 	/**
 	 * Opener for this pagination menu
+	 *
 	 * @return null if the menu is not open
 	 */
 	@Nullable Player getCurrentOpener();
+	
+	@ApiStatus.Internal
+	void setCurrentOpener(Player player);
 	
 	/**
 	 * @return The current index of the page being open.
@@ -61,18 +73,19 @@ public interface Pagination {
 	
 	/**
 	 * The page menu with index
-	 * @see Page
+	 *
 	 * @param index index of the page-menu to fetch
 	 * @return the page menu with specific index
+	 * @see Page
 	 */
 	@NotNull Optional<Page> getPageOrDefault(int index, int defaultIndex);
 	
-	
 	/**
 	 * The page menu with index
-	 * @see Page
+	 *
 	 * @param index index of the page-menu to fetch
 	 * @return the page menu with specific index
+	 * @see Page
 	 */
 	default @NotNull Optional<Page> getPage(int index) {
 		return getPageOrDefault(index, 0);
@@ -80,23 +93,28 @@ public interface Pagination {
 	
 	/**
 	 * Gets all pages
+	 *
 	 * @return all current pages
 	 */
 	@NotNull Collection<? extends Page> getPages();
 	
 	/**
 	 * uses the components of the provider
+	 *
 	 * @param provider providing the components per page
 	 */
 	void setComponentProvider(PageComponentsProvider provider);
 	
 	/**
 	 * Add the components
+	 *
 	 * @param components of the pagination
 	 */
 	void addComponents(List<PageComponent> components);
+	
 	/**
 	 * Creates the pages for the player opening
+	 *
 	 * @param opener the opener
 	 */
 	@ApiStatus.Internal
@@ -104,6 +122,7 @@ public interface Pagination {
 	
 	/**
 	 * Checks whether this page is the last one
+	 *
 	 * @param index the index of the page
 	 * @return whether this page is the last one
 	 */
@@ -112,8 +131,10 @@ public interface Pagination {
 	default boolean isLast(Page page) {
 		return isLast(page.getIndex());
 	}
+	
 	/**
 	 * Checks whether this page is the first one
+	 *
 	 * @param index the index of the page
 	 * @return whether this page is the last one
 	 */
@@ -130,20 +151,10 @@ public interface Pagination {
 	/**
 	 * Sets the page (caching it manually)
 	 *
-	 * @param index    the index of the page
+	 * @param index   the index of the page
 	 * @param creator the creator for this page
 	 */
 	void setPage(int index, PageCreator creator);
-	
-	static Pagination.Builder.Automatic auto(Lotus manager) {
-		return new Builder.Automatic(manager);
-	}
-	static Pagination.Builder.Plain plain(Lotus manager) {
-		return new Builder.Plain(manager);
-	}
-	
-
-	
 	
 	abstract class Builder {
 		
@@ -162,9 +173,10 @@ public interface Pagination {
 		public static class Automatic extends Builder {
 			
 			
-			private PageCreator creator;
 			private final LinkedList<PageComponent> components = Lists.newLinkedList();
+			private PageCreator creator;
 			private PageComponentsProvider provider;
+			
 			protected Automatic(Lotus manager) {
 				super(manager, true);
 			}
@@ -187,11 +199,11 @@ public interface Pagination {
 			
 			@Override
 			public Pagination build() {
-				if(creator == null)
+				if (creator == null)
 					throw new IllegalStateException("Didn't set creator for this pagination");
 				
-				PaginationImpl impl = new PaginationImpl(manager,auto, creator);
-				if(provider != null)
+				PaginationImpl impl = new PaginationImpl(manager, auto, creator);
+				if (provider != null)
 					impl.setComponentProvider(provider);
 				
 				impl.addComponents(components);
@@ -199,9 +211,10 @@ public interface Pagination {
 			}
 		}
 		
-		public static class Plain extends Builder{
+		public static class Plain extends Builder {
 			
 			private final Map<Integer, PageCreator> creators = new HashMap<>();
+			
 			protected Plain(Lotus manager) {
 				super(manager, false);
 			}
@@ -213,7 +226,7 @@ public interface Pagination {
 			
 			@Override
 			public Pagination build() {
-				PaginationImpl impl = new PaginationImpl(manager, auto,null);
+				PaginationImpl impl = new PaginationImpl(manager, auto, null);
 				creators.forEach(impl::setPage);
 				return impl;
 			}
