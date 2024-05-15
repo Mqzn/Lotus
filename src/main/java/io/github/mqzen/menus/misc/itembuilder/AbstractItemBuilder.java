@@ -42,6 +42,16 @@ public abstract class AbstractItemBuilder {
         metaConsumer.accept(meta);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends ItemMeta> void modify(Class<T> typeMeta, Consumer<T> metaConsumer) {
+        if (!itemStack.hasItemMeta())
+            return;
+        if (!typeMeta.isInstance(meta)) {
+            return;
+        }
+        metaConsumer.accept((T) meta);
+    }
+
     /**
      * Build the item into a new MenuItem.
      * @return the new MenuItem
