@@ -110,7 +110,6 @@ public interface Content {
 	void trim(int maxButtonsCount);
 	
 	class Builder {
-		
 		private final MenuContentImpl impl;
 		private final Capacity capacity;
 		
@@ -119,6 +118,15 @@ public interface Content {
 			impl = new MenuContentImpl(capacity);
 		}
 		
+		public Builder layout(Layout layout) {
+			for (int row = 0; row < capacity.getRows(); row++) {
+				for (int column = 0; column < capacity.getColumns(); column++) {
+					impl.setButton(Slot.of(row, column), layout.getMappedButton(row, column));
+				}
+			}
+			return this;
+		}
+
 		public Builder setButton(Slot slot, Button button) {
 			impl.setButton(slot, button);
 			return this;
@@ -229,14 +237,9 @@ public interface Content {
 		public Builder draw(Direction direction, ItemStack itemStack) {
 			return iterate(direction, (content, slot) -> content.setButton(slot, Button.empty(itemStack)));
 		}
-		
-		
+
 		public Content build() {
 			return impl;
 		}
-		
-		
 	}
-	
-	
 }
