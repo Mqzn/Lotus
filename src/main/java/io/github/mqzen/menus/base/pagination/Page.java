@@ -57,7 +57,7 @@ public final class Page extends PlayerMenu<PageCreator> {
 		if (originalPageContent.size() > maxButtonsCount) originalPageContent.trim(maxButtonsCount);
 		
 		currentOpenedData = new MenuCache(creator.createTitle(this.menuData, opener),
-			capacity, originalPageContent.mergeWith(creator.defaultContent(this, capacity, opener)));
+			capacity, originalPageContent.mergeWith(creator.defaultContent(this, capacity, opener, maxButtonsCount)));
 	}
 	
 	public void setData(Player opener) {

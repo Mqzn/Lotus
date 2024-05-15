@@ -1,8 +1,6 @@
 package io.github.mqzen.menus.misc.itembuilder;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.bukkit.enchantments.Enchantment;
 
 /**

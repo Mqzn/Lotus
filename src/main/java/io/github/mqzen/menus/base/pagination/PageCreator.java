@@ -36,7 +36,7 @@ public abstract class PageCreator implements MenuCreator {
 	
 	public abstract ItemStack previousPageItem(Player player);
 	
-	public final Content defaultContent(Page page, Capacity capacity, Player player) {
+	public final Content defaultContent(Page page, Capacity capacity, Player player, int componentPerPage) {
 		var previousButtonSlot = previousPageSlot(capacity);
 		var nextButtonSlot = nextPageSlot(capacity);
 		
@@ -44,14 +44,12 @@ public abstract class PageCreator implements MenuCreator {
 		
 		var content = Content.empty(capacity);
 		
-		int itemsPerPage = getPageButtonsCount(page, player);
-		
 		boolean isLast;
 		
 		if (!pagination.isAutomatic())
 			isLast = pagination.isLast(page);
 		else {
-			int endIndex = (page.getIndex() + 1) * itemsPerPage;
+			int endIndex = (page.getIndex() + 1) * componentPerPage;
 			int compSize = page.getPagination().getPageComponents().size();
 			isLast = (endIndex == compSize);
 		}
