@@ -5,6 +5,7 @@ import io.github.mqzen.menus.misc.itembuilder.AttributeEntry;
 import io.github.mqzen.menus.misc.itembuilder.EnchantmentEntry;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
@@ -48,10 +49,21 @@ public class SimpleItemBuilder extends AbstractItemBuilder {
       return unbreakable(true);
     }
 
-    private SimpleItemBuilder unbreakable(boolean unbreakable) {
+    public SimpleItemBuilder unbreakable(boolean unbreakable) {
         modify(itemMeta -> {
             itemMeta.setUnbreakable(unbreakable);
         });
+        return this;
+    }
+
+    public SimpleItemBuilder glow() {
+        enchant(EnchantmentEntry.of(Enchantment.DURABILITY, 1, true));
+        flags(ItemFlag.HIDE_ENCHANTS);
+        return this;
+    }
+
+    public SimpleItemBuilder amount(int amount) {
+        getItemStack().setAmount(amount);
         return this;
     }
 
@@ -69,9 +81,7 @@ public class SimpleItemBuilder extends AbstractItemBuilder {
         return this;
     }
 
-    public void test() {
 
-    }
 
 
 }
