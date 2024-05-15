@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class Layout {
+public final class Layout {
     @NotNull
     private final Map<Character, Button> mappedButtons;
 
