@@ -2,15 +2,21 @@ package io.github.mqzen.menus.base;
 
 import io.github.mqzen.menus.base.iterator.Direction;
 import io.github.mqzen.menus.base.iterator.SlotIterator;
-import io.github.mqzen.menus.misc.*;
+import io.github.mqzen.menus.misc.Capacity;
+import io.github.mqzen.menus.misc.Slot;
+import io.github.mqzen.menus.misc.Slots;
+import io.github.mqzen.menus.misc.button.Button;
+import io.github.mqzen.menus.misc.button.ButtonClickAction;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public interface Content {
 	
@@ -109,6 +115,8 @@ public interface Content {
 	
 	void trim(int maxButtonsCount);
 	
+	Stream<Map.Entry<Slot, Button>> stream();
+	
 	class Builder {
 		private final MenuContentImpl impl;
 		private final Capacity capacity;
@@ -126,7 +134,7 @@ public interface Content {
 			}
 			return this;
 		}
-
+		
 		public Builder setButton(Slot slot, Button button) {
 			impl.setButton(slot, button);
 			return this;
@@ -142,8 +150,8 @@ public interface Content {
 			return this;
 		}
 		
-		public Builder setButton(int slot, ItemStack buttonItem, ButtonAction buttonAction) {
-			impl.setButton(slot, Button.clickable(buttonItem, buttonAction));
+		public Builder setButton(int slot, ItemStack buttonItem, ButtonClickAction buttonClickAction) {
+			impl.setButton(slot, Button.clickable(buttonItem, buttonClickAction));
 			return this;
 		}
 		
@@ -237,7 +245,7 @@ public interface Content {
 		public Builder draw(Direction direction, ItemStack itemStack) {
 			return iterate(direction, (content, slot) -> content.setButton(slot, Button.empty(itemStack)));
 		}
-
+		
 		public Content build() {
 			return impl;
 		}

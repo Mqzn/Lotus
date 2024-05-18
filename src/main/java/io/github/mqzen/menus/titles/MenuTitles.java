@@ -6,15 +6,13 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public final class MenuTitles {
-	static LegacyComponentSerializer AMPERSAND_SERIALIZER = LegacyComponentSerializer.builder()
-		.hexColors().character('&').build();
-	
-	static LegacyComponentSerializer SECTION_SERIALIZER = LegacyComponentSerializer.builder()
-		.hexColors().character('§').build();
-	
-	static MiniMessage MINI_MESSAGE_API = MiniMessage.builder()
+	public final static MiniMessage MINI_MESSAGE_API = MiniMessage.builder()
 		.tags(TagResolver.standard())
 		.build();
+	static LegacyComponentSerializer AMPERSAND_SERIALIZER = LegacyComponentSerializer.builder()
+		.hexColors().character('&').build();
+	static LegacyComponentSerializer SECTION_SERIALIZER = LegacyComponentSerializer.builder()
+		.hexColors().character('§').build();
 	
 	public static MenuTitle createLegacy(String title) {
 		return new LegacyTitle(title);

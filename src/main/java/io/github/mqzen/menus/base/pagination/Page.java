@@ -1,73 +1,74 @@
 package io.github.mqzen.menus.base.pagination;
 
 import io.github.mqzen.menus.base.Content;
-import io.github.mqzen.menus.base.PlayerMenu;
+import io.github.mqzen.menus.base.Menu;
 import io.github.mqzen.menus.misc.Capacity;
-import io.github.mqzen.menus.misc.MenuCache;
-import lombok.Getter;
+import io.github.mqzen.menus.misc.Slot;
+import io.github.mqzen.menus.misc.button.Button;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
-@Getter
-public final class Page extends PlayerMenu<PageCreator> {
+public abstract class Page implements Menu {
 	
-	private final Pagination pagination;
-	private final int index;
+	protected Page() {
 	
-	private Page(Pagination pagination, PageCreator creator, int index) {
-		super(creator);
-		this.pagination = pagination;
-		this.index = index;
-		this.menuData.setData("index", index);
-		this.menuData.setData("pagination", pagination);
 	}
 	
-	private Page(Pagination pagination, int index) {
-		super(pagination.getPageCreator());
-		this.pagination = pagination;
-		this.index = index;
-		this.menuData.setData("index", index);
-		this.menuData.setData("pagination", pagination);
+	/**
+	 * The number of buttons this pageView should have
+	 *
+	 * @param pageView null if the pagination is automatic
+	 * @param opener   opener of this pagination
+	 * @return The number of buttons this pageView should have
+	 */
+	public abstract int getPageButtonsCount(@Nullable PageView pageView, Player opener);
+	
+	public Slot nextPageSlot(Capacity capacity) {
+		return Slot.last(capacity);
 	}
 	
-	static Page create(Pagination pagination, int index) {
-		return new Page(pagination, index);
+	public Slot previousPageSlot(Capacity capacity) {
+		return nextPageSlot(capacity).subtractBy(8);
 	}
 	
-	static Page create(Pagination pagination, PageCreator creator, int index) {
-		return new Page(pagination, creator, index);
-	}
+	public abstract ItemStack nextPageItem(Player player);
 	
-	public PageCreator getCreator() {
-		return creator;
-	}
+	public abstract ItemStack previousPageItem(Player player);
 	
-	public void open(Player opener) {
-		pagination.getManager().openMenu(Objects.requireNonNull(opener), this);
-	}
-	
-	@Override
-	public void setData(PageCreator creator, Player opener) {
-		Capacity capacity = creator.createCapacity(this.menuData, opener);
-		Content originalPageContent = creator.createContent(this.menuData, opener, capacity);
+	public final Content defaultContent(PageView pageView, Capacity capacity, Player player, int componentPerPage) {
+		var previousButtonSlot = previousPageSlot(capacity);
+		var nextButtonSlot = nextPageSlot(capacity);
 		
-		int maxButtonsCount = creator.getPageButtonsCount(this, opener);
-		if (originalPageContent.size() > maxButtonsCount) originalPageContent.trim(maxButtonsCount);
+		Pagination pagination = pageView.getPagination();
 		
-		currentOpenedData = new MenuCache(creator.createTitle(this.menuData, opener),
-			capacity, originalPageContent.mergeWith(creator.defaultContent(this, capacity, opener, maxButtonsCount)));
+		var content = Content.empty(capacity);
+		
+		boolean isLast;
+		
+		if (!pagination.isAutomatic())
+			isLast = pagination.isLast(pageView);
+		else {
+			int endIndex = (pageView.getIndex() + 1) * componentPerPage;
+			int compSize = pageView.getPagination().getPageComponents().size();
+			isLast = (endIndex == compSize);
+		}
+		
+		if (!isLast)
+			content.setButton(nextButtonSlot, Button.clickable(nextPageItem(player),
+				(menu, event) -> {
+					event.setCancelled(true);
+					pagination.next();
+				}));
+		
+		if (!pagination.isFirst(pageView))
+			content.setButton(previousButtonSlot, Button.clickable(previousPageItem(player),
+				(menu, event) -> {
+					event.setCancelled(true);
+					pagination.previous();
+				}));
+		
+		return content;
 	}
 	
-	public void setData(Player opener) {
-		setData(this.creator, opener);
-	}
-	
-	@Override
-	public synchronized void preClose(InventoryCloseEvent event) {
-		creator.onClose(this, event);
-		currentOpener = null;
-		currentOpenInventory = null;
-	}
 }

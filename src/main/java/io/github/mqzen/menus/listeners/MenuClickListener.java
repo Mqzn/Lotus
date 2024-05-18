@@ -1,7 +1,7 @@
 package io.github.mqzen.menus.listeners;
 
-import io.github.mqzen.menus.base.Lotus;
-import io.github.mqzen.menus.base.PlayerMenu;
+import io.github.mqzen.menus.Lotus;
+import io.github.mqzen.menus.base.MenuView;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,8 +13,8 @@ public final class MenuClickListener implements Listener {
 	
 	private final Lotus manager;
 	
-	public MenuClickListener(Lotus manager) {
-		this.manager = manager;
+	public MenuClickListener(Lotus api) {
+		this.manager = api;
 	}
 	
 	
@@ -28,9 +28,9 @@ public final class MenuClickListener implements Listener {
 		
 		//TODO create a powerful checker for bugs
 		
-		PlayerMenu<?> menu = manager.getOpenMenus(clicker.getUniqueId()).orElseGet(() -> {
-			if (topInventory.getHolder() instanceof PlayerMenu<?> playerMenu) {
-				manager.setOpenMenus(clicker, playerMenu);
+		MenuView<?> menu = manager.getMenuView(clicker.getUniqueId()).orElseGet(() -> {
+			if (topInventory.getHolder() instanceof MenuView<?> playerMenu) {
+				manager.setOpenView(clicker, playerMenu);
 				return playerMenu;
 			}
 			return null;
@@ -41,7 +41,6 @@ public final class MenuClickListener implements Listener {
 			return;
 		}
 		
-		int clickedSlot = e.getSlot();
 		if (clickedInventory == null)
 			return;
 		
@@ -49,7 +48,7 @@ public final class MenuClickListener implements Listener {
 			return;
 		
 		if (clickedInventory.equals(topInventory)) {
-			menu.executeItemAction(clickedSlot, e);
+			menu.onClick(e);
 		}
 	}
 	

@@ -1,7 +1,8 @@
 package io.github.mqzen.menus.base.pagination;
 
 import com.google.common.collect.Lists;
-import io.github.mqzen.menus.base.Lotus;
+import io.github.mqzen.menus.Lotus;
+import io.github.mqzen.menus.base.pagination.exception.PageDoesntExistException;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -9,6 +10,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * This class represents a container of many menu views described as 'page views"
+ * where each view is cached and have a specific index.
+ * It's either automatic or plain, check the wiki for more details about this.
+ */
 public interface Pagination {
 	
 	static Pagination.Builder.Automatic auto(Lotus manager) {
@@ -30,11 +36,11 @@ public interface Pagination {
 	void previous();
 	
 	/**
-	 * The manager of all menus
+	 * The handler of all menus
 	 *
-	 * @return the menu manager
+	 * @return the lotus api
 	 */
-	@NotNull Lotus getManager();
+	@NotNull Lotus getLotusAPI();
 	
 	/**
 	 * An automatic paginated menu is a pagination that automatically create pages depending on
@@ -49,10 +55,10 @@ public interface Pagination {
 	 *
 	 * @return the page creator instance for creating a page inside of this pagination
 	 */
-	@NotNull PageCreator getPageCreator();
+	@NotNull Page getPageCreator();
 	
 	/**
-	 * Opener for this pagination menu
+	 * ViewOpener for this pagination menu
 	 *
 	 * @return null if the menu is not open
 	 */
@@ -76,27 +82,17 @@ public interface Pagination {
 	 *
 	 * @param index index of the page-menu to fetch
 	 * @return the page menu with specific index
-	 * @see Page
+	 * @see PageView
 	 */
-	@NotNull Optional<Page> getPageOrDefault(int index, int defaultIndex);
+	@NotNull Optional<PageView> getPageOrDefault(int index, int defaultIndex);
 	
-	/**
-	 * The page menu with index
-	 *
-	 * @param index index of the page-menu to fetch
-	 * @return the page menu with specific index
-	 * @see Page
-	 */
-	default @NotNull Optional<Page> getPage(int index) {
-		return getPageOrDefault(index, 0);
-	}
 	
 	/**
 	 * Gets all pages
 	 *
 	 * @return all current pages
 	 */
-	@NotNull Collection<? extends Page> getPages();
+	@NotNull Collection<? extends PageView> getPages();
 	
 	/**
 	 * uses the components of the provider
@@ -128,25 +124,32 @@ public interface Pagination {
 	 */
 	boolean isLast(int index);
 	
-	default boolean isLast(Page page) {
-		return isLast(page.getIndex());
-	}
 	
 	/**
 	 * Checks whether this page is the first one
 	 *
 	 * @param index the index of the page
-	 * @return whether this page is the last one
+	 * @return whether this page is the first one
 	 */
 	boolean isFirst(int index);
 	
-	default boolean isFirst(Page page) {
-		return isFirst(page.getIndex());
-	}
 	
-	void openPage(int pageIndex, Player opener) throws Exception;
+	/**
+	 * Opens a page with specific index
+	 *
+	 * @param pageIndex the index of the page view to open
+	 * @param opener    the player to open the view for
+	 * @throws PageDoesntExistException if page is not registered in the pagination
+	 */
+	void openPage(int pageIndex, Player opener) throws PageDoesntExistException;
 	
-	void open(Player opener) throws Exception;
+	/**
+	 * Opens the first page view (index = 0) of the pagination
+	 *
+	 * @param opener the viewer of this page view
+	 * @throws PageDoesntExistException if pagination is empty without any page components or no pages are registered in general
+	 */
+	void open(Player opener) throws PageDoesntExistException;
 	
 	/**
 	 * Sets the page (caching it manually)
@@ -154,7 +157,39 @@ public interface Pagination {
 	 * @param index   the index of the page
 	 * @param creator the creator for this page
 	 */
-	void setPage(int index, PageCreator creator);
+	void setPage(int index, Page creator);
+	
+	/**
+	 * The page menu with index
+	 *
+	 * @param index index of the page-menu to fetch
+	 * @return the page menu with specific index
+	 * @see PageView
+	 */
+	default @NotNull Optional<PageView> getPage(int index) {
+		return getPageOrDefault(index, 0);
+	}
+	
+	
+	/**
+	 * Checks whether this page is the first one
+	 *
+	 * @param pageView the view of the page
+	 * @return whether this page is the first one
+	 */
+	default boolean isFirst(PageView pageView) {
+		return isFirst(pageView.getIndex());
+	}
+	
+	/**
+	 * Checks whether this page is the last one
+	 *
+	 * @param pageView the view of the page
+	 * @return whether this page is the last one
+	 */
+	default boolean isLast(PageView pageView) {
+		return isLast(pageView.getIndex());
+	}
 	
 	abstract class Builder {
 		
@@ -174,14 +209,14 @@ public interface Pagination {
 			
 			
 			private final LinkedList<PageComponent> components = Lists.newLinkedList();
-			private PageCreator creator;
+			private Page creator;
 			private PageComponentsProvider provider;
 			
 			protected Automatic(Lotus manager) {
 				super(manager, true);
 			}
 			
-			public Automatic creator(PageCreator creator) {
+			public Automatic creator(Page creator) {
 				this.creator = creator;
 				return this;
 			}
@@ -213,13 +248,13 @@ public interface Pagination {
 		
 		public static class Plain extends Builder {
 			
-			private final Map<Integer, PageCreator> creators = new HashMap<>();
+			private final Map<Integer, Page> creators = new HashMap<>();
 			
 			protected Plain(Lotus manager) {
 				super(manager, false);
 			}
 			
-			public Plain page(int index, PageCreator creator) {
+			public Plain page(int index, Page creator) {
 				creators.put(index, creator);
 				return this;
 			}

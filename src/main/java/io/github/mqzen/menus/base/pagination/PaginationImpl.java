@@ -1,9 +1,8 @@
 package io.github.mqzen.menus.base.pagination;
 
 import com.google.common.collect.Lists;
-import io.github.mqzen.menus.base.Lotus;
+import io.github.mqzen.menus.Lotus;
 import io.github.mqzen.menus.base.pagination.exception.PageDoesntExistException;
-import io.github.mqzen.menus.base.pagination.exception.PaginationIsEmptyException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -14,21 +13,21 @@ import java.util.*;
 class PaginationImpl implements Pagination {
 	
 	private final Lotus manager;
-	private final PageCreator creator;
+	private final Page pageModel;
 	private final List<PageComponent> components = Lists.newArrayList();
-	private final Map<Integer, Page> pages = new HashMap<>();
+	private final Map<Integer, PageView> pages = new HashMap<>();
 	private final boolean automatic;
 	private @Nullable Player currentOpener = null;
 	private int currentIndex = 0;
 	
 	PaginationImpl(Lotus manager,
-	               boolean automatic, PageCreator creator) {
-		if (automatic && creator == null)
+	               boolean automatic, Page pageModel) {
+		if (automatic && pageModel == null)
 			throw new IllegalStateException("Automatic pagination has no creator");
 		
 		this.manager = manager;
 		this.automatic = automatic;
-		this.creator = creator;
+		this.pageModel = pageModel;
 	}
 	
 	
@@ -69,7 +68,7 @@ class PaginationImpl implements Pagination {
 	 * @return the menu manager
 	 */
 	@Override
-	public @NotNull Lotus getManager() {
+	public @NotNull Lotus getLotusAPI() {
 		return manager;
 	}
 	
@@ -90,12 +89,12 @@ class PaginationImpl implements Pagination {
 	 * @return the page creator instance for creating a page inside of this pagination
 	 */
 	@Override
-	public @NotNull PageCreator getPageCreator() {
-		return creator;
+	public @NotNull Page getPageCreator() {
+		return pageModel;
 	}
 	
 	/**
-	 * Opener for this pagination menu
+	 * ViewOpener for this pagination menu
 	 *
 	 * @return null if the menu is not open
 	 */
@@ -131,10 +130,10 @@ class PaginationImpl implements Pagination {
 	 * @param index        index of the page-menu to fetch
 	 * @param defaultIndex default index if page with that index doesn't exist !
 	 * @return the page menu with specific index
-	 * @see Page
+	 * @see PageView
 	 */
 	@Override
-	public @NotNull Optional<Page> getPageOrDefault(int index, int defaultIndex) {
+	public @NotNull Optional<PageView> getPageOrDefault(int index, int defaultIndex) {
 		return Optional.ofNullable(pages.getOrDefault(index, pages.get(defaultIndex)));
 	}
 	
@@ -144,7 +143,7 @@ class PaginationImpl implements Pagination {
 	 * @return all current pages
 	 */
 	@Override
-	public @NotNull Collection<? extends Page> getPages() {
+	public @NotNull Collection<? extends PageView> getPages() {
 		return pages.values();
 	}
 	
@@ -175,10 +174,10 @@ class PaginationImpl implements Pagination {
 		
 		int maxPages = calculateMaxPages(opener);
 		for (int pageIndex = 0; pageIndex < maxPages; pageIndex++) {
-			Page page = Page.create(this, pageIndex);
-			page.setData(opener);
+			PageView pageView = PageViewFactory.createAuto(this, pageIndex);
+			pageView.initialize(this.pageModel, opener);
 			
-			final int buttonsPerPage = page.getCreator().getPageButtonsCount(page, opener);
+			final int buttonsPerPage = pageView.getMenu().getPageButtonsCount(pageView, opener);
 			
 			int startIndex = pageIndex * buttonsPerPage;
 			int endIndex = (pageIndex + 1) * buttonsPerPage;
@@ -186,15 +185,15 @@ class PaginationImpl implements Pagination {
 			for (int index = startIndex; index < endIndex; index++) {
 				PageComponent component = components.get(index);
 				if (component == null) break;
-				page.addButton(component.toButton());
+				pageView.addButtons(component.toButton());
 			}
-			pages.put(pageIndex, page);
+			pages.put(pageIndex, pageView);
 		}
 		
 	}
 	
 	private int calculateMaxPages(Player opener) {
-		int buttonsCountPerPage = creator.getPageButtonsCount(null, opener);
+		int buttonsCountPerPage = pageModel.getPageButtonsCount(null, opener);
 		return (int) Math.ceil((double) components.size() / buttonsCountPerPage);
 	}
 	
@@ -212,18 +211,17 @@ class PaginationImpl implements Pagination {
 	}
 	
 	@Override
-	public void openPage(int pageIndex, Player opener) throws Exception {
-		Page page = pages.get(pageIndex);
+	public void openPage(int pageIndex, Player opener) throws PageDoesntExistException {
+		PageView pageView = pages.get(pageIndex);
 		
-		if (page == null) {
-			if (pageIndex == 0) throw new PaginationIsEmptyException();
-			else throw new PageDoesntExistException(pageIndex);
-		}
-		Bukkit.getScheduler().runTaskLater(manager.getPlugin(), () -> page.open(opener), 1L);
+		if (pageView == null)
+			throw new PageDoesntExistException(pageIndex);
+		
+		Bukkit.getScheduler().runTaskLater(manager.getPlugin(), () -> this.getLotusAPI().openMenu(opener, pageView), 1L);
 	}
 	
 	@Override
-	public void open(Player opener) throws Exception {
+	public void open(Player opener) throws PageDoesntExistException {
 		if (this.isAutomatic())
 			paginate(opener);
 		
@@ -238,11 +236,11 @@ class PaginationImpl implements Pagination {
 	 * @param creator the creator for this page
 	 */
 	@Override
-	public void setPage(int index, PageCreator creator) {
+	public void setPage(int index, Page creator) {
 		if (automatic)
-			throw new IllegalStateException("Manual addition of a page cannot be done while the pagination is declared automatic !");
-		Page page = Page.create(this, creator, index);
-		pages.put(index, page);
+			throw new IllegalStateException("Manual addition of a pageView cannot be done while the pagination is declared automatic !");
+		PageView pageView = PageViewFactory.createView(this, creator, index);
+		pages.put(index, pageView);
 	}
 	
 	

@@ -1,17 +1,17 @@
 package io.github.mqzen.menus.listeners;
 
-import io.github.mqzen.menus.base.Lotus;
+import io.github.mqzen.menus.Lotus;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
-public class MenuCloseListener implements Listener {
+public final class MenuCloseListener implements Listener {
 	
-	private final Lotus manager;
+	private final Lotus api;
 	
-	public MenuCloseListener(Lotus manager) {
-		this.manager = manager;
+	public MenuCloseListener(Lotus api) {
+		this.api = api;
 	}
 	
 	
@@ -19,8 +19,8 @@ public class MenuCloseListener implements Listener {
 	public void onClose(InventoryCloseEvent e) {
 		
 		Player closer = (Player) e.getPlayer();
-		manager.getOpenMenus(closer.getUniqueId())
+		api.getMenuView(closer.getUniqueId())
 			.ifPresent((menu) ->
-				manager.preClosePlayerMenu(menu, e));
+				api.closeView(menu, e));
 	}
 }

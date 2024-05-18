@@ -1,20 +1,18 @@
 package io.github.mqzen.menus.base;
 
 import com.google.common.collect.Lists;
-import io.github.mqzen.menus.misc.Button;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.Slot;
 import io.github.mqzen.menus.misc.Slots;
+import io.github.mqzen.menus.misc.button.Button;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public final class MenuContentImpl implements Content {
 	
@@ -212,6 +210,11 @@ public final class MenuContentImpl implements Content {
 			Slot removed = slots.removeLast();
 			map.remove(removed);
 		}
+	}
+	
+	@Override
+	public Stream<Map.Entry<Slot, Button>> stream() {
+		return map.entrySet().stream();
 	}
 	
 }
