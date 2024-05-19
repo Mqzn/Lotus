@@ -161,7 +161,7 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	public void openView(ViewOpener viewOpener, Player player) {
 		currentOpener = player;
 		initialize(menu, player);
-		currentOpenInventory = viewOpener.openMenu(api, player, this, currentOpenedData);
+		currentOpenInventory = viewOpener.openMenu(player, this, currentOpenedData);
 	}
 	
 	/**

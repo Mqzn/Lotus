@@ -67,7 +67,7 @@ public final class PageView extends BaseMenuView<Page> {
 		if (!pagination.isAutomatic())
 			initialize(menu, player);
 		
-		currentOpenInventory = viewOpener.openMenu(api, player, this, currentOpenedData);
+		currentOpenInventory = viewOpener.openMenu(player, this, currentOpenedData);
 	}
 	
 	/**

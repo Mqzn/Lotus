@@ -16,9 +16,15 @@ public class Button {
 	
 	private @Nullable ItemStack item;
 	private @Nullable ButtonClickAction action = null;
-	
+
+
 	protected Button(@Nullable ItemStack item) {
 		this.item = item;
+	}
+
+	protected Button(@Nullable ItemStack item, @Nullable ButtonClickAction action) {
+		this.item = item;
+		this.action = action;
 	}
 	
 	//TODO add animation
