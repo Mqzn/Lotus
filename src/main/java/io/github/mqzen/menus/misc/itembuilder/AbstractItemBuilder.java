@@ -12,8 +12,7 @@ import java.util.function.Consumer;
 @Getter
 public abstract class AbstractItemBuilder {
 	private final ItemStack itemStack;
-	private ItemMeta meta;
-	
+
 	public AbstractItemBuilder(Material material) {
 		this(material, 1);
 	}
@@ -25,30 +24,30 @@ public abstract class AbstractItemBuilder {
 			throw new IllegalArgumentException("amount cannot be smaller than 1");
 		
 		this.itemStack = new ItemStack(material, amount);
-		if (itemStack.hasItemMeta())
-			this.meta = itemStack.getItemMeta();
+
 	}
 	
 	
 	public ItemStack build() {
-		itemStack.setItemMeta(meta);
 		return itemStack;
 	}
 	
 	public void modify(Consumer<ItemMeta> metaConsumer) {
 		if (!itemStack.hasItemMeta())
 			return;
-		metaConsumer.accept(meta);
+		itemStack.editMeta(metaConsumer);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public <T extends ItemMeta> void modify(Class<T> typeMeta, Consumer<T> metaConsumer) {
 		if (!itemStack.hasItemMeta())
 			return;
-		if (!typeMeta.isInstance(meta)) {
+		if (!typeMeta.isInstance(itemStack.getItemMeta())) {
 			return;
 		}
-		metaConsumer.accept((T) meta);
+		T customMeta = (T) itemStack.getItemMeta();
+		metaConsumer.accept(customMeta);
+		itemStack.setItemMeta(customMeta);
 	}
 	
 	/**
