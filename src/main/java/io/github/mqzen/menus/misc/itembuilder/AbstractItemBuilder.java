@@ -35,7 +35,9 @@ public abstract class AbstractItemBuilder {
 	public void modify(Consumer<ItemMeta> metaConsumer) {
 		if (!itemStack.hasItemMeta())
 			return;
-		itemStack.editMeta(metaConsumer);
+		ItemMeta meta = itemStack.getItemMeta();
+		metaConsumer.accept(meta);
+		itemStack.setItemMeta(meta);
 	}
 	
 	@SuppressWarnings("unchecked")

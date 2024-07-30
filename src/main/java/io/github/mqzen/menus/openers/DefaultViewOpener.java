@@ -4,7 +4,6 @@ import io.github.mqzen.menus.Lotus;
 import io.github.mqzen.menus.base.MenuView;
 import io.github.mqzen.menus.base.ViewOpener;
 import io.github.mqzen.menus.misc.ViewData;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -28,7 +27,7 @@ public final class DefaultViewOpener implements ViewOpener {
 	public @NotNull Inventory openMenu(Lotus manager, Player player,
 	                                   MenuView<?> menu, ViewData viewData) {
 		int size = viewData.capacity().getTotalSize();
-		Component title = viewData.title().asComponent();
+		String title = viewData.title().asString();
 		
 		Inventory inv = Bukkit.createInventory(menu, size, title);
 		

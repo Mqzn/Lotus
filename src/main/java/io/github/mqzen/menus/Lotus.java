@@ -12,7 +12,10 @@ import io.github.mqzen.menus.listeners.MenuOpenListener;
 import io.github.mqzen.menus.openers.DefaultViewOpener;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -45,9 +48,12 @@ public final class Lotus {
 	@Getter
 	@Setter
 	private boolean allowOutsideClick = true;
-	
+
+	private final BukkitAudiences audiences;
+
 	public Lotus(Plugin plugin) {
 		this.plugin = plugin;
+		this.audiences = BukkitAudiences.create(plugin);
 		registerOpeners();
 		Bukkit.getPluginManager().registerEvents(new MenuClickListener(this), plugin);
 		Bukkit.getPluginManager().registerEvents(new MenuOpenListener(this), plugin);
@@ -155,5 +161,8 @@ public final class Lotus {
 		getRegisteredMenu(menuName.toLowerCase()).ifPresent((menu) -> openMenu(player, menu));
 	}
 	
-	
+	public void sendComponent(CommandSender sender, Component component) {
+		audiences.sender(sender).sendMessage(component);
+	}
+
 }

@@ -117,7 +117,7 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	@Override
 	public void onClickedSlot(int slot, InventoryClickEvent event) {
 		if (!isOpen()) {
-			event.getWhoClicked().sendMessage(Component.text("Current Menu View's state (is closed and) doesn't allow for executing button actions ", NamedTextColor.RED));
+			api.sendComponent(event.getWhoClicked(), Component.text("Current Menu View's state (is closed and) doesn't allow for executing button actions ", NamedTextColor.RED));
 			return;
 		}
 		

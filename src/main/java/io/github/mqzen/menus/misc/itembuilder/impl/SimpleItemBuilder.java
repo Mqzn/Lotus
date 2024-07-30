@@ -1,8 +1,8 @@
 package io.github.mqzen.menus.misc.itembuilder.impl;
 
 import io.github.mqzen.menus.misc.itembuilder.AbstractItemBuilder;
-import io.github.mqzen.menus.misc.itembuilder.AttributeEntry;
 import io.github.mqzen.menus.misc.itembuilder.EnchantmentEntry;
+import io.github.mqzen.menus.titles.MenuTitles;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -24,7 +24,7 @@ public class SimpleItemBuilder extends AbstractItemBuilder {
 	}
 	
 	public SimpleItemBuilder display(Component component) {
-		modify(itemMeta -> itemMeta.displayName(component));
+		modify(itemMeta -> itemMeta.setDisplayName(MenuTitles.SECTION_SERIALIZER.serialize(component)));
 		return this;
 	}
 	
@@ -48,7 +48,7 @@ public class SimpleItemBuilder extends AbstractItemBuilder {
 	
 	public SimpleItemBuilder unbreakable(boolean unbreakable) {
 		modify(itemMeta -> {
-			itemMeta.setUnbreakable(unbreakable);
+			itemMeta.spigot().setUnbreakable(unbreakable);
 		});
 		return this;
 	}
@@ -65,17 +65,11 @@ public class SimpleItemBuilder extends AbstractItemBuilder {
 	}
 	
 	public SimpleItemBuilder lore(List<Component> lore) {
-		modify(itemMeta -> itemMeta.lore(lore));
+		modify(itemMeta -> itemMeta.setLore(lore.stream()
+				  .map(MenuTitles.SECTION_SERIALIZER::serialize)
+				  .toList()));
 		return this;
 	}
-	
-	public SimpleItemBuilder attribute(AttributeEntry... entry) {
-		modify(itemMeta -> {
-			for (AttributeEntry attributeEntry : entry) {
-				itemMeta.addAttributeModifier(attributeEntry.attribute(), attributeEntry.modifier());
-			}
-		});
-		return this;
-	}
+
 	
 }
