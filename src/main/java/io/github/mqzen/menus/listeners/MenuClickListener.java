@@ -3,6 +3,7 @@ package io.github.mqzen.menus.listeners;
 import io.github.mqzen.menus.Lotus;
 import io.github.mqzen.menus.base.MenuView;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -15,6 +16,7 @@ public final class MenuClickListener implements Listener {
 		this.manager = api;
 	}
 
+	@EventHandler
 	public void onClick(InventoryClickEvent e) {
 		if(e.isCancelled())
 			return;
@@ -24,8 +26,7 @@ public final class MenuClickListener implements Listener {
 		Inventory topInventory = e.getInventory();
 		Inventory bottomInventory = e.getView().getBottomInventory();
 		Inventory clickedInventory = e.getClickedInventory();
-		
-		//TODO create a powerful checker for bugs
+
 		
 		MenuView<?> menu = manager.getMenuView(clicker.getUniqueId()).orElseGet(() -> {
 			if (topInventory.getHolder() instanceof MenuView<?> playerMenu) {

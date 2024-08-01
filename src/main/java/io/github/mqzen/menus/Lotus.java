@@ -52,18 +52,18 @@ public final class Lotus {
 	private boolean allowOutsideClick = true;
 
 	@Getter
-	@Setter
-	private EventPriority clickPriority = EventPriority.NORMAL;
+	private final EventPriority clickPriority;
 
 	private final BukkitAudiences audiences;
 
-	public Lotus(Plugin plugin) {
+	public Lotus(Plugin plugin, EventPriority priority) {
 		this.plugin = plugin;
+		this.clickPriority = priority;
 		this.audiences = BukkitAudiences.create(plugin);
 		registerOpeners();
 
 		MenuClickListener listener = new MenuClickListener(this);
-		Bukkit.getPluginManager().registerEvent(InventoryCloseEvent.class,
+		Bukkit.getPluginManager().registerEvent(InventoryClickEvent.class,
 				  listener, clickPriority,
 				  (l, event)-> listener.onClick((InventoryClickEvent) event), plugin);
 
