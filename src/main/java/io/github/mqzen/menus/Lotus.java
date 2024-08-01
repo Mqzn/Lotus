@@ -17,6 +17,8 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.plugin.Plugin;
@@ -49,13 +51,22 @@ public final class Lotus {
 	@Setter
 	private boolean allowOutsideClick = true;
 
+	@Getter
+	@Setter
+	private EventPriority clickPriority = EventPriority.NORMAL;
+
 	private final BukkitAudiences audiences;
 
 	public Lotus(Plugin plugin) {
 		this.plugin = plugin;
 		this.audiences = BukkitAudiences.create(plugin);
 		registerOpeners();
-		Bukkit.getPluginManager().registerEvents(new MenuClickListener(this), plugin);
+
+		MenuClickListener listener = new MenuClickListener(this);
+		Bukkit.getPluginManager().registerEvent(InventoryCloseEvent.class,
+				  listener, clickPriority,
+				  (l, event)-> listener.onClick((InventoryClickEvent) event), plugin);
+
 		Bukkit.getPluginManager().registerEvents(new MenuOpenListener(this), plugin);
 		Bukkit.getPluginManager().registerEvents(new MenuCloseListener(this), plugin);
 	}
