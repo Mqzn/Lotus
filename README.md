@@ -21,6 +21,7 @@ Simple but yet powerful spigot menus api created using OOP principles
 This library depends mainly on the following :
 
 - Java 17
+- Adventure Components
 - [Paper API](https://docs.papermc.io/) (no longer required since Lotus v1.0.9) 
 
 ## Dependency
