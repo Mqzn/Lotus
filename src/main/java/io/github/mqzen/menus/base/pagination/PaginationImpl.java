@@ -16,6 +16,7 @@ class PaginationImpl implements Pagination {
 	private final Page pageModel;
 	private final List<PageComponent> components = Lists.newArrayList();
 	private final Map<Integer, PageView> pages = new HashMap<>();
+	private int lastPage;
 	private final boolean automatic;
 	private @Nullable Player currentOpener = null;
 	private int currentIndex = 0;
@@ -173,6 +174,8 @@ class PaginationImpl implements Pagination {
 			throw new IllegalStateException("Automatic pagination is only allowed to paginate and create pages automatically");
 		
 		int maxPages = calculateMaxPages(opener);
+		this.lastPage = maxPages-1;
+
 		for (int pageIndex = 0; pageIndex < maxPages; pageIndex++) {
 			PageView pageView = PageViewFactory.createAuto(this, pageIndex);
 			pageView.initialize(this.pageModel, opener);
@@ -208,9 +211,7 @@ class PaginationImpl implements Pagination {
 	
 	@Override
 	public boolean isLast(int index) {
-		int highestIndex = pages.keySet().stream().max(Comparator.comparingInt((i) -> i))
-			.orElse(0);
-		return index == highestIndex;
+		return index == lastPage;
 	}
 	
 	@Override
@@ -250,6 +251,9 @@ class PaginationImpl implements Pagination {
 		PageView pageView = PageViewFactory.createView(this, creator, index);
 		pages.put(index, pageView);
 	}
-	
-	
+
+
+	public void initLastPage() {
+		this.lastPage = pages.size()-1;
+	}
 }

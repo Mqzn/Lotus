@@ -263,11 +263,12 @@ public interface Pagination {
 			public Pagination build() {
 				PaginationImpl impl = new PaginationImpl(manager, auto, null);
 				creators.forEach(impl::setPage);
+				impl.initLastPage();
 				return impl;
 			}
 		}
 		
 	}
-	
-	
+
+
 }
