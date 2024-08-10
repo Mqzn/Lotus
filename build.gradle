@@ -2,6 +2,8 @@ plugins {
     id("java")
     id("maven-publish")
     //id("io.github.patrick.remapper") version "1.4.0"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+
 }
 
 group = "io.github.mqzen"
@@ -33,6 +35,14 @@ dependencies {
     compileOnly("net.kyori:adventure-text-minimessage:4.16.0")
     compileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
 
+    testCompileOnly("org.projectlombok:lombok:1.18.22")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.22")
+    testCompileOnly("org.jetbrains:annotations:21.0.1")
+    testImplementation("net.kyori:adventure-api:4.16.0")
+    testImplementation("net.kyori:adventure-platform-bukkit:4.3.2")
+    testImplementation("net.kyori:adventure-text-minimessage:4.16.0")
+    testCompileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
+
 }
 publishing {
     publications {
@@ -45,4 +55,8 @@ publishing {
             url 'https://jitpack.io'
         }
     }
+}
+
+shadowJar {
+
 }

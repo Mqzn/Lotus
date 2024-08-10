@@ -1,0 +1,5 @@
+name: Lotus-bukkit-test
+main: io.github.mqzen.menus.LotusExamplePlugin
+version: 1.0
+commands:
+  test:

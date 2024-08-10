@@ -183,13 +183,21 @@ class PaginationImpl implements Pagination {
 			int endIndex = (pageIndex + 1) * buttonsPerPage;
 			
 			for (int index = startIndex; index < endIndex; index++) {
-				PageComponent component = components.get(index);
+				PageComponent component = getComponent(components, index);
 				if (component == null) break;
 				pageView.addButtons(component.toButton());
 			}
 			pages.put(pageIndex, pageView);
 		}
 		
+	}
+
+	private static PageComponent getComponent(List<PageComponent> components, int index) {
+		try {
+			return components.get(index);
+		}catch (Exception ex) {
+			return null;
+		}
 	}
 	
 	private int calculateMaxPages(Player opener) {
