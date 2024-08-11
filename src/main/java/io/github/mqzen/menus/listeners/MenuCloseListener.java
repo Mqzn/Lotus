@@ -17,10 +17,8 @@ public final class MenuCloseListener implements Listener {
 	
 	@EventHandler
 	public void onClose(InventoryCloseEvent e) {
-		
 		Player closer = (Player) e.getPlayer();
 		api.getMenuView(closer.getUniqueId())
-			.ifPresent((menu) ->
-				api.closeView(menu, e));
+			.ifPresent((menu) -> api.closeView(menu, e));
 	}
 }

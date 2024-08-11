@@ -46,16 +46,22 @@ public final class SlotIterator implements Iterator<Slot> {
 	
 	/**
 	 * Returns {@code true} if the iteration has more elements.
-	 * (In other words, returns {@code true} if {@link #next} would
+	 * (In other words, returns {@code true} if {@link SlotIterator#next()} would
 	 * return an element rather than throwing an exception.)
 	 *
 	 * @return {@code true} if the iteration has more elements
 	 */
 	@Override
 	public boolean hasNext() {
-		return current.getSlot() >= 0 && current.getSlot() <= endSlot.getSlot();
+		Slot next = current;
+		return verify(next.getRow(), capacity.getRows())
+				  && verify(next.getColumn(), capacity.getColumns());
 	}
-	
+
+	private boolean verify(int value, int max) {
+		return value >= 0 && value <= (max-1);
+	}
+
 	/**
 	 * Returns the next element in the iteration.
 	 *
@@ -64,8 +70,9 @@ public final class SlotIterator implements Iterator<Slot> {
 	 */
 	@Override
 	public Slot next() {
+		Slot curr = current.copy();
 		current = direction.modify(current);
-		return current;
+		return curr;
 	}
 	
 	

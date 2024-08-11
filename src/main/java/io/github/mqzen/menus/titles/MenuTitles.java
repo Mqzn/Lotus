@@ -9,10 +9,9 @@ public final class MenuTitles {
 	public final static MiniMessage MINI_MESSAGE_API = MiniMessage.builder()
 		.tags(TagResolver.standard())
 		.build();
-	public final static LegacyComponentSerializer AMPERSAND_SERIALIZER = LegacyComponentSerializer.builder()
-		.hexColors().character('&').build();
-	public final static LegacyComponentSerializer SECTION_SERIALIZER = LegacyComponentSerializer.builder()
-		.hexColors().character('\u00a7').build();
+
+	public final static LegacyComponentSerializer AMPERSAND_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
+	public final static LegacyComponentSerializer SECTION_SERIALIZER = LegacyComponentSerializer.legacySection();
 	
 	public static MenuTitle createLegacy(String title) {
 		return new LegacyTitle(title);

@@ -18,6 +18,7 @@ public class MenuOpenListener implements Listener {
 	
 	@EventHandler
 	public void onOpen(InventoryOpenEvent e) {
+
 		Inventory inventory = e.getInventory();
 		if (!(inventory.getHolder() instanceof MenuView<?> menu))
 			return;

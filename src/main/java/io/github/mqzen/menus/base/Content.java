@@ -2,6 +2,7 @@ package io.github.mqzen.menus.base;
 
 import io.github.mqzen.menus.base.iterator.Direction;
 import io.github.mqzen.menus.base.iterator.SlotIterator;
+import io.github.mqzen.menus.base.style.Pane;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.Slot;
 import io.github.mqzen.menus.misc.Slots;
@@ -116,7 +117,8 @@ public interface Content {
 	void trim(int maxButtonsCount);
 	
 	Stream<Map.Entry<Slot, Button>> stream();
-	
+
+
 	class Builder {
 		private final MenuContentImpl impl;
 		private final Capacity capacity;
@@ -124,15 +126,6 @@ public interface Content {
 		Builder(Capacity capacity) {
 			this.capacity = capacity;
 			impl = new MenuContentImpl(capacity);
-		}
-		
-		public Builder layout(Layout layout) {
-			for (int row = 0; row < capacity.getRows(); row++) {
-				for (int column = 0; column < capacity.getColumns(); column++) {
-					impl.setButton(Slot.of(row, column), layout.getMappedButton(row, column));
-				}
-			}
-			return this;
 		}
 		
 		public Builder setButton(Slot slot, Button button) {
@@ -184,6 +177,7 @@ public interface Content {
 		public Builder iterate(SlotIterator iterator, BiConsumer<Content, Slot> consumer) {
 			while (iterator.hasNext()) {
 				Slot slot = iterator.next();
+				System.out.println("NEXT=" + slot.toString());
 				consumer.accept(impl, slot);
 			}
 			return this;
@@ -244,6 +238,16 @@ public interface Content {
 		
 		public Builder draw(Direction direction, ItemStack itemStack) {
 			return iterate(direction, (content, slot) -> content.setButton(slot, Button.empty(itemStack)));
+		}
+
+		public Builder apply(Consumer<Content> contentConsumer) {
+			contentConsumer.accept(impl);
+			return this;
+		}
+
+		public Builder applyPane(Pane pane) {
+			pane.applyOn(impl);
+			return this;
 		}
 		
 		public Content build() {

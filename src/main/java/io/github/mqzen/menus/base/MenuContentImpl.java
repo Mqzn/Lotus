@@ -216,5 +216,6 @@ public final class MenuContentImpl implements Content {
 	public Stream<Map.Entry<Slot, Button>> stream() {
 		return map.entrySet().stream();
 	}
-	
+
+
 }

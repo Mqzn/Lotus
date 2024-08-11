@@ -35,6 +35,7 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	
 	protected ViewData currentOpenedData = null;
 	protected Inventory currentOpenInventory = null;
+
 	protected Player currentOpener = null;
 	
 	public BaseMenuView(Lotus api, M menu) {

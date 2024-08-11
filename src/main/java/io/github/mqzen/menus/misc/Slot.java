@@ -5,11 +5,11 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 
+@Getter
 public final class Slot implements Comparable<Slot> {
 	
 	private final static int WIDTH = 9;
 	
-	@Getter
 	private final int slot, row, column;
 	
 	private Slot(int slot) {
@@ -55,5 +55,18 @@ public final class Slot implements Comparable<Slot> {
 	@Override
 	public int compareTo(@NotNull Slot o) {
 		return this.slot - o.slot;
+	}
+
+	public Slot copy() {
+		return new Slot(slot);
+	}
+
+	@Override
+	public String toString() {
+		return "Slot{" +
+				  "slot=" + slot +
+				  ", row=" + row +
+				  ", column=" + column +
+				  '}';
 	}
 }

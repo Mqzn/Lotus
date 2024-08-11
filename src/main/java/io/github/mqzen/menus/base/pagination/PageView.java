@@ -43,13 +43,31 @@ public final class PageView extends BaseMenuView<Page> {
 	@Override
 	public void initialize(Page page, Player opener) {
 		Capacity capacity = page.getCapacity(this.dataRegistry, opener);
-		Content originalPageContent = page.getContent(this.dataRegistry, opener, capacity);
-		
 		int maxButtonsCount = page.getPageButtonsCount(this, opener);
-		if (originalPageContent.size() > maxButtonsCount) originalPageContent.trim(maxButtonsCount);
-		
-		currentOpenedData = new ViewData(page.getTitle(this.dataRegistry, opener),
-			capacity, originalPageContent.mergeWith(page.defaultContent(this, capacity, opener, maxButtonsCount)));
+
+		if(maxButtonsCount > capacity.getTotalSize()) {
+			maxButtonsCount = capacity.getTotalSize();
+		}
+
+		final Content playerDefaultContent = page.getContent(this.dataRegistry, opener, capacity);
+		final Content pageDefaultContent = page.defaultContent(pagination, this, capacity, opener);
+
+		if(pagination.trimExtraContent()) {
+			playerDefaultContent.trim(maxButtonsCount);
+		}
+
+		final Content totalDefaultContent = playerDefaultContent.mergeWith(pageDefaultContent);
+		final int defaultContentExpectedCapacity = capacity.getTotalSize()-maxButtonsCount;
+		if(totalDefaultContent.size() > defaultContentExpectedCapacity) {
+			throw new IllegalStateException(
+					  String.format("Exceeded expected default capacity of the page \n " +
+							    "Expected= %s, Actual= %s", defaultContentExpectedCapacity, totalDefaultContent.size())
+			);
+		}
+
+		currentOpenedData = new ViewData(
+				  page.getTitle(this.dataRegistry, opener), capacity, totalDefaultContent
+		);
 	}
 	
 	/**
@@ -62,12 +80,12 @@ public final class PageView extends BaseMenuView<Page> {
 	 */
 	@Override
 	public void openView(ViewOpener viewOpener, Player player) {
-		currentOpener = player;
 		//in automatic page view , we MUSTN'T initialize the data that was already pre-initialized internally in Pagination
 		if (!pagination.isAutomatic())
 			initialize(menu, player);
 		
 		currentOpenInventory = viewOpener.openMenu(api, player, this, currentOpenedData);
+		currentOpener = player;
 	}
 	
 	/**

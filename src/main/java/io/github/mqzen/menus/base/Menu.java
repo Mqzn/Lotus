@@ -27,12 +27,14 @@ public interface Menu {
 	}
 	
 	/**
+	 * @param extraData the data container for this menu for extra data
 	 * @param opener the player who is opening this menu
 	 * @return the title for this menu
 	 */
 	@NotNull MenuTitle getTitle(DataRegistry extraData, Player opener);
 	
 	/**
+	 * @param extraData the data container for this menu for extra data
 	 * @param opener the player who is opening this menu
 	 * @return the capacity/size for this menu
 	 */
@@ -41,6 +43,7 @@ public interface Menu {
 	/**
 	 * Creates the content for the menu
 	 *
+	 * @param extraData the data container for this menu for extra data
 	 * @param opener   the player opening this menu
 	 * @param capacity the capacity set by the user above
 	 * @return the content of the menu to add (this includes items)

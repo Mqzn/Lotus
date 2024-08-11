@@ -176,4 +176,7 @@ public final class Lotus {
 		audiences.sender(sender).sendMessage(component);
 	}
 
+	public void debug(String msg, Object... args) {
+		plugin.getLogger().info(String.format(msg, args));
+	}
 }

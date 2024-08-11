@@ -36,25 +36,16 @@ public abstract class Page implements Menu {
 	
 	public abstract ItemStack previousPageItem(Player player);
 	
-	public final Content defaultContent(PageView pageView, Capacity capacity, Player player, int componentPerPage) {
+	public final Content defaultContent(Pagination pagination,
+	                                    PageView pageView,
+	                                    Capacity capacity,
+	                                    Player player) {
 		var previousButtonSlot = previousPageSlot(capacity);
 		var nextButtonSlot = nextPageSlot(capacity);
 		
-		Pagination pagination = pageView.getPagination();
-		
 		var content = Content.empty(capacity);
-		
-		boolean isLast;
-		
-		if (!pagination.isAutomatic())
-			isLast = pagination.isLast(pageView);
-		else {
-			int endIndex = (pageView.getIndex() + 1) * componentPerPage;
-			int compSize = pageView.getPagination().getPageComponents().size();
-			isLast = (endIndex == compSize);
-		}
-		
-		if (!isLast)
+
+		if (!pagination.isLast(pageView))
 			content.setButton(nextButtonSlot, Button.clickable(nextPageItem(player),
 				(menu, event) -> {
 					event.setCancelled(true);

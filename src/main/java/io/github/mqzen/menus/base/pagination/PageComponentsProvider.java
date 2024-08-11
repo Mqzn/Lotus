@@ -7,6 +7,6 @@ public interface PageComponentsProvider {
 	/**
 	 * @return the components of the page
 	 */
-	List<PageComponent> provide();
+	List<? extends PageComponent> provide();
 	
 }
