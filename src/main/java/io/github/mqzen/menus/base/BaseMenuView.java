@@ -208,8 +208,11 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	public void replaceButton(@NotNull Slot slot, @Nullable Button newButton) {
 		if (!isOpen())
 			return;
-		
 		getContent().setButton(slot, newButton);
+		if(newButton != null) {
+			this.currentOpenInventory.setItem(slot.getSlot(), newButton.getItem());
+			this.currentOpener.updateInventory();
+		}
 	}
 	
 	/**

@@ -17,8 +17,6 @@ import org.jetbrains.annotations.Nullable;
 public final class ExamplePlainPage extends Page {
 
 	private final int amountOfItems;
-
-
 	public ExamplePlainPage(int amountOfItems) {
 		this.amountOfItems = amountOfItems;
 	}
@@ -39,23 +37,24 @@ public final class ExamplePlainPage extends Page {
 	@Override
 	public ItemStack previousPageItem(Player player) {
 		return ItemBuilder.legacy(Material.PAPER)
-				  .setDisplay("&aPrevious page")
+				  .setDisplay("&ePrevious page")
 				  .build();
 	}
 
 	@Override
 	public String getName() {
-		return "Islands";
+		return "Example plain-pagination";
 	}
 
 	@Override
 	public @NotNull MenuTitle getTitle(DataRegistry dataRegistry, Player player) {
-		return MenuTitles.createLegacy("Islands");
+		int index = dataRegistry.getData("index");
+		return MenuTitles.createLegacy("&6Example Plain page #" + (index+1));
 	}
 
 	@Override
 	public @NotNull Capacity getCapacity(DataRegistry dataRegistry, Player player) {
-		return Capacity.ofRows(6);
+		return Capacity.ofRows(3);
 	}
 
 

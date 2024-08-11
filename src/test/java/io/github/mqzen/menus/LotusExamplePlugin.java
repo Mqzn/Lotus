@@ -32,9 +32,15 @@ public final class LotusExamplePlugin extends JavaPlugin implements CommandExecu
 	public boolean onCommand(CommandSender sender, Command command,
 	                         String label, String[] args) {
 
+		if(args.length == 0) {
+			lotus.openMenu((Player) sender, new ExampleMenu());
+			return true;
+		}
 		if(args.length != 1) {
 			return false;
 		}
+
+
 		String sub = args[0];
 		Pagination pagination;
 		if(sub.equalsIgnoreCase("auto")) {

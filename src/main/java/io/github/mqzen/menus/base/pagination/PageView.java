@@ -58,10 +58,15 @@ public final class PageView extends BaseMenuView<Page> {
 
 		final Content totalDefaultContent = playerDefaultContent.mergeWith(pageDefaultContent);
 		final int defaultContentExpectedCapacity = capacity.getTotalSize()-maxButtonsCount;
-		if(totalDefaultContent.size() > defaultContentExpectedCapacity) {
+		if(pagination.isAutomatic() && totalDefaultContent.size() > defaultContentExpectedCapacity) {
 			throw new IllegalStateException(
 					  String.format("Exceeded expected default capacity of the page \n " +
 							    "Expected= %s, Actual= %s", defaultContentExpectedCapacity, totalDefaultContent.size())
+			);
+		}
+		if(!pagination.isAutomatic() && totalDefaultContent.size() > capacity.getTotalSize()) {
+			throw new IllegalStateException(
+				String.format("Content of plain page #%s has exceeded the page's capacity(%s)", (index+1), capacity.getTotalSize())
 			);
 		}
 

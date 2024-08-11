@@ -26,6 +26,6 @@ public class ExampleMenuComponent implements PageComponent {
     public void onClick(PageView pageView, InventoryClickEvent event) {
         event.setCancelled(true);
         Player player = (Player) event.getWhoClicked();
-        player.sendMessage("Visiting island " + name);
+        player.sendMessage("Clicking on component '" + name + "'");
     }
 }

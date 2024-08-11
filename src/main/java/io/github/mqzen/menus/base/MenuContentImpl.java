@@ -75,7 +75,7 @@ public final class MenuContentImpl implements Content {
 	
 	@Override
 	public void fillRow(int row, Button button) {
-		fillRow(row, capacity.getColumns() + 1, button);
+		fillRow(row, capacity.getColumns()-1, button);
 	}
 	
 	@Override
@@ -123,7 +123,7 @@ public final class MenuContentImpl implements Content {
 	
 	@Override
 	public void fillColumn(final int column, Button button) {
-		fillColumn(column, capacity.getRows() + 1, button);
+		fillColumn(column, capacity.getRows()-1, button);
 	}
 	
 	@Override

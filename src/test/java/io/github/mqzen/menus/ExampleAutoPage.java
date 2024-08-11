@@ -34,19 +34,19 @@ public class ExampleAutoPage extends Page {
     @Override
     public ItemStack previousPageItem(Player player) {
         return ItemBuilder.legacy(Material.PAPER)
-                .setDisplay("Previous page")
+                .setDisplay("&ePrevious page")
                 .build();
     }
  
     @Override
     public String getName() {
-        return "Islands";
+        return "Example auto-pagination";
     }
  
     @Override
     public @NotNull MenuTitle getTitle(DataRegistry dataRegistry, Player player) {
         int index = dataRegistry.getData("index");
-        return MenuTitles.createModern("<gold>Islands Page #" + (index+1));
+        return MenuTitles.createModern("<gold>Example Page #" + (index+1));
     }
  
     @Override
@@ -62,8 +62,9 @@ public class ExampleAutoPage extends Page {
                 .setDisplay("Hi")
                 .build(),
                 (menuView, inventoryClickEvent) -> inventoryClickEvent.setCancelled(true));
+
         TextLayoutPane pane = new TextLayoutPane(capacity,
-                TextLayout.builder().setDefault(button).build(),
+                TextLayout.builder().set('#', button).build(),
                 "#########",
                         "#       #",
                         "#       #",
@@ -71,14 +72,6 @@ public class ExampleAutoPage extends Page {
                 );
 
         builder = builder.applyPane(pane);
-
-        /**
-         * old code here
-        builder.draw(0, 8, Direction.RIGHT,button);
-        builder.draw(9, 27, Direction.DOWNWARDS, button);
-        builder.draw(28, 35, Direction.RIGHT, button);
-        builder.draw(35, 8, Direction.UPWARDS, button);
-         **/
         return builder.build();
     }
 }

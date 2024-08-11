@@ -38,7 +38,7 @@ public class Button {
 	public static Button transformerItem(ItemStack item,
 	                                     BiFunction<MenuView<?>, InventoryClickEvent, ItemStack> transformer) {
 		return new Button(item, (view, click) ->
-			view.replaceClickedItemStack(click, transformer.apply(view, click)));
+			view.replaceClickedItemStack(click, transformer.apply(view, click), false));
 	}
 	
 	public boolean isClickable() {
