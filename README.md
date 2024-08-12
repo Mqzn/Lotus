@@ -1,4 +1,4 @@
-# Lotus
+# Lotus [![](https://jitpack.io/v/Mqzn/Lotus.svg)](https://jitpack.io/#Mqzn/Lotus)
 
 Simple but yet powerful spigot menus api created using OOP principles
 
