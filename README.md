@@ -29,7 +29,7 @@ This library depends mainly on the following :
 Lotus API is being hosted on jitpack. Here's an example on how to setup
 Lotus dependency on your project.
 
-**Note:** The current **latest version** is [1.1.0](https://github.com/Mqzn/Lotus/releases/tag/1.1.0)
+**Note:** The current **latest version** is [1.1.3](https://github.com/Mqzn/Lotus/releases/tag/1.1.3)
 
 ### Gradle
 
