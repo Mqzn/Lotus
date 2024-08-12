@@ -1,5 +1,6 @@
-# Lotus [![](https://jitpack.io/v/Mqzn/Lotus.svg)](https://jitpack.io/#Mqzn/Lotus)
+![Lotus-logo](https://github.com/Mqzn/Lotus/blob/master/img.png)
 
+# Lotus [![](https://jitpack.io/v/Mqzn/Lotus.svg)](https://jitpack.io/#Mqzn/Lotus)
 Simple but yet powerful spigot menus api created using OOP principles
 
 ## Features >>
