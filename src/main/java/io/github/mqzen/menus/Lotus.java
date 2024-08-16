@@ -9,6 +9,7 @@ import io.github.mqzen.menus.base.ViewOpener;
 import io.github.mqzen.menus.listeners.MenuClickListener;
 import io.github.mqzen.menus.listeners.MenuCloseListener;
 import io.github.mqzen.menus.listeners.MenuOpenListener;
+import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.openers.DefaultViewOpener;
 import lombok.Getter;
 import lombok.Setter;
@@ -157,10 +158,14 @@ public final class Lotus {
 	 * @param menu   the menu to open
 	 */
 	public void openMenu(Player player, Menu menu) {
-		MenuView<?> playerMenuView = new BaseMenuView<>(this, menu);
+		MenuView<?> playerMenuView = new BaseMenuView<>(this, menu, DataRegistry.empty());
 		openMenu(player, playerMenuView);
 	}
-	
+	public void openMenu(Player player, Menu menu, DataRegistry registry) {
+		MenuView<?> playerMenuView = new BaseMenuView<>(this, menu, registry);
+		openMenu(player, playerMenuView);
+	}
+
 	/**
 	 * Opens a menu using its name from a registry
 	 * if the menu with this name is not registered, it will not be opened and nothing happens

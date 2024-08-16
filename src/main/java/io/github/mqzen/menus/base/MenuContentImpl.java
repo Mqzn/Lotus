@@ -41,7 +41,12 @@ public final class MenuContentImpl implements Content {
 		
 		return -1;
 	}
-	
+
+	@Override
+	public ConcurrentHashMap<Slot, Button> getButtonMap() {
+		return map;
+	}
+
 	@Override
 	public void setButton(Slot slot, Button item) {
 		map.put(slot, item);

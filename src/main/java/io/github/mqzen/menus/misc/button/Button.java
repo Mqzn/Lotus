@@ -1,6 +1,8 @@
 package io.github.mqzen.menus.misc.button;
 
 import io.github.mqzen.menus.base.MenuView;
+import io.github.mqzen.menus.misc.DataRegistry;
+import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,19 +28,20 @@ public class Button {
 	public static Button empty(ItemStack item) {
 		return new Button(item);
 	}
-	
+
 	public static Button clickable(ItemStack item, @Nullable ButtonClickAction action) {
 		return new Button(item, action);
 	}
-	
+
 	public static Button transformerButton(ItemStack item, BiFunction<MenuView<?>, InventoryClickEvent, Button> transformer) {
-		return new Button(item, (menu, click) -> menu.replaceClickedButton(click, transformer.apply(menu, click)));
+		return new Button(item, ButtonClickAction.plain((menu, click) -> menu.replaceClickedButton(click, transformer.apply(menu, click))));
 	}
+
 	
 	public static Button transformerItem(ItemStack item,
 	                                     BiFunction<MenuView<?>, InventoryClickEvent, ItemStack> transformer) {
-		return new Button(item, (view, click) ->
-			view.replaceClickedItemStack(click, transformer.apply(view, click), false));
+		return new Button(item, ButtonClickAction.plain((view, click) ->
+				view.replaceClickedItemStack(click, transformer.apply(view, click), false)));
 	}
 	
 	public boolean isClickable() {
@@ -57,7 +60,8 @@ public class Button {
 	}
 	
 	public void executeOnClick(MenuView<?> menu, InventoryClickEvent event) {
-		if (action != null) action.execute(menu, event);
+		//if (action != null) action.execute(menu, event);
+		if (action != null) action.execute(menu, event, menu.getExtraData());
 	}
 	
 	

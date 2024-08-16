@@ -1,6 +1,7 @@
 package io.github.mqzen.menus.base.pagination;
 
 import io.github.mqzen.menus.misc.button.Button;
+import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -12,6 +13,6 @@ public interface PageComponent {
 	
 	default Button toButton() {
 		return Button.clickable(toItem(),
-			(menu, clickEvent) -> onClick((PageView) menu, clickEvent));
+				ButtonClickAction.plain((menu, clickEvent) -> onClick((PageView) menu, clickEvent)));
 	}
 }
