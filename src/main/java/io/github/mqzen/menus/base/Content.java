@@ -7,7 +7,7 @@ import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.Slot;
 import io.github.mqzen.menus.misc.Slots;
 import io.github.mqzen.menus.misc.button.Button;
-import io.github.mqzen.menus.misc.button.ButtonClickAction;
+import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
@@ -50,6 +51,8 @@ public interface Content {
 			setButton(nextSlot, button);
 		}
 	}
+
+	ConcurrentHashMap<Slot, Button> getButtonMap();
 	
 	void setButton(Slot slot, Button button);
 	
@@ -252,6 +255,13 @@ public interface Content {
 		
 		public Content build() {
 			return impl;
+		}
+
+		public Builder buttons(Map<Slot, Button> loadedButtons) {
+			for (Slot slot : loadedButtons.keySet()) {
+				setButton(slot, loadedButtons.get(slot));
+			}
+			return this;
 		}
 	}
 }

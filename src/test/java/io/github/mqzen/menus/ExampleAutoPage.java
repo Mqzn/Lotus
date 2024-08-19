@@ -8,6 +8,7 @@ import io.github.mqzen.menus.base.style.TextLayoutPane;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.misc.button.Button;
+import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import io.github.mqzen.menus.misc.itembuilder.ItemBuilder;
 import io.github.mqzen.menus.titles.MenuTitle;
 import io.github.mqzen.menus.titles.MenuTitles;
@@ -59,17 +60,17 @@ public class ExampleAutoPage extends Page {
         var builder = Content
                 .builder(capacity);
         var button = Button.clickable(ItemBuilder.legacy(Material.STAINED_GLASS_PANE, 1, (short) 5)
-                .setDisplay("Hi")
-                .build(),
-                (menuView, inventoryClickEvent) -> inventoryClickEvent.setCancelled(true));
+                        .setDisplay("Hi")
+                        .build(),
+                ButtonClickAction.plain((menuView, inventoryClickEvent) -> inventoryClickEvent.setCancelled(true)));
 
         TextLayoutPane pane = new TextLayoutPane(capacity,
                 TextLayout.builder().set('#', button).build(),
                 "#########",
-                        "#       #",
-                        "#       #",
-                        "#########"
-                );
+                "#       #",
+                "#       #",
+                "#########"
+        );
 
         builder = builder.applyPane(pane);
         return builder.build();

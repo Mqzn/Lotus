@@ -1,7 +1,6 @@
 package io.github.mqzen.menus.misc;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class DataRegistry {
 	
@@ -14,7 +13,16 @@ public final class DataRegistry {
 	public void setData(String key, Object object) {
 		objectMap.put(key, object);
 	}
-	
+
+	public Set<String> keys() {
+		return objectMap.keySet();
+	}
+
+	public Collection<Object> values() {
+		return objectMap.values();
+	}
+
+
 	@SuppressWarnings("unchecked")
 	public <T> T getData(String key) {
 		return (T) objectMap.get(key);

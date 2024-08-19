@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	
 	protected final M menu;
-	protected final DataRegistry dataRegistry = DataRegistry.empty();
+	protected final DataRegistry dataRegistry;
 	
 	protected final Lotus api;
 	
@@ -37,11 +37,17 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	protected Inventory currentOpenInventory = null;
 
 	protected Player currentOpener = null;
-	
+
 	public BaseMenuView(Lotus api, M menu) {
+		this(api, menu, DataRegistry.empty());
+	}
+
+	public BaseMenuView(Lotus api, M menu,DataRegistry registry) {
 		this.api = api;
 		this.menu = menu;
+		this.dataRegistry = registry;
 	}
+
 	
 	/**
 	 * @return The API instance
@@ -82,7 +88,6 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	 *
 	 * @return the extra data for this menu view
 	 */
-	@Override
 	public @NotNull DataRegistry getExtraData() {
 		return dataRegistry;
 	}

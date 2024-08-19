@@ -5,6 +5,7 @@ import io.github.mqzen.menus.base.Menu;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.Slot;
 import io.github.mqzen.menus.misc.button.Button;
+import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -47,17 +48,17 @@ public abstract class Page implements Menu {
 
 		if (!pagination.isLast(pageView))
 			content.setButton(nextButtonSlot, Button.clickable(nextPageItem(player),
-				(menu, event) -> {
-					event.setCancelled(true);
-					pagination.next();
-				}));
+					ButtonClickAction.plain((menu, event) -> {
+						event.setCancelled(true);
+						pagination.next();
+					})));
 		
 		if (!pagination.isFirst(pageView))
 			content.setButton(previousButtonSlot, Button.clickable(previousPageItem(player),
-				(menu, event) -> {
-					event.setCancelled(true);
-					pagination.previous();
-				}));
+					ButtonClickAction.plain((menu, event) -> {
+						event.setCancelled(true);
+						pagination.previous();
+					})));
 		
 		return content;
 	}

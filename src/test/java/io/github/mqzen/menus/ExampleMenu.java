@@ -5,13 +5,17 @@ import io.github.mqzen.menus.base.Menu;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.misc.button.Button;
+import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import io.github.mqzen.menus.misc.itembuilder.ItemBuilder;
 import io.github.mqzen.menus.titles.MenuTitle;
 import io.github.mqzen.menus.titles.MenuTitles;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public final class ExampleMenu implements Menu {
 
@@ -61,13 +65,14 @@ public final class ExampleMenu implements Menu {
 	@Override
 	public @NotNull Content getContent(DataRegistry extraData,
 	                                   Player opener, Capacity capacity) {
+
 		Button borderPane = Button.clickable(
-				  ItemBuilder.legacy(Material.STAINED_GLASS_PANE, 1, (short)5).build(),
-				  (menuView, event)-> {
-					  event.setCancelled(true);
-					  //we want nothing to happen here
-				  }
-		);
+				ItemBuilder.legacy(Material.STAINED_GLASS_PANE, 1, (short) 5).build(),
+				ButtonClickAction.plain((menuView, event) -> {
+							event.setCancelled(true);
+							//we want nothing to happen here
+						}
+				));
 		Button transformingFruit = Button.transformerItem(fruits[0], (menuView, event)-> {
 			event.setCancelled(true);
 			index++;
