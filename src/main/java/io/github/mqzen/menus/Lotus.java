@@ -6,6 +6,10 @@ import io.github.mqzen.menus.base.BaseMenuView;
 import io.github.mqzen.menus.base.Menu;
 import io.github.mqzen.menus.base.MenuView;
 import io.github.mqzen.menus.base.ViewOpener;
+import io.github.mqzen.menus.base.serialization.MenuSerializer;
+import io.github.mqzen.menus.base.serialization.SerializableMenu;
+import io.github.mqzen.menus.base.serialization.SerializedMenuIO;
+import io.github.mqzen.menus.base.serialization.SerializedMenuYaml;
 import io.github.mqzen.menus.listeners.MenuClickListener;
 import io.github.mqzen.menus.listeners.MenuCloseListener;
 import io.github.mqzen.menus.listeners.MenuOpenListener;
@@ -13,10 +17,13 @@ import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.openers.DefaultViewOpener;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.AudienceProvider;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -55,12 +62,23 @@ public final class Lotus {
 	@Getter
 	private final EventPriority clickPriority;
 
-	private final BukkitAudiences audiences;
-
-	public Lotus(Plugin plugin, EventPriority priority) {
+	private final AudienceProvider provider;
+	
+	@Getter
+	@Setter
+	private SerializedMenuIO<?> menuIO;
+	
+	@Getter
+	@Setter
+	private MenuSerializer menuSerializer;
+	
+	public Lotus(Plugin plugin, AudienceProvider provider, EventPriority priority) {
 		this.plugin = plugin;
 		this.clickPriority = priority;
-		this.audiences = BukkitAudiences.create(plugin);
+		this.provider = provider;
+		menuIO = new SerializedMenuYaml();
+		menuSerializer = MenuSerializer.newDefaultSerializer();
+		
 		registerOpeners();
 
 		MenuClickListener listener = new MenuClickListener(this);
@@ -72,10 +90,32 @@ public final class Lotus {
 		Bukkit.getPluginManager().registerEvents(new MenuCloseListener(this), plugin);
 	}
 	
+	public Lotus(Plugin plugin, EventPriority priority) {
+		this(plugin, BukkitAudiences.create(plugin), priority);
+	}
+	
+	
 	private void registerOpeners() {
 		//TODO register the rest of openers
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Menu readYamlMenu(YamlConfiguration configuration) {
+		if(!YamlConfiguration.class.isAssignableFrom(menuIO.fileType()))
+			throw new IllegalArgumentException("File type of menu IO does not support Yaml serialization");
+		
+		SerializedMenuIO<YamlConfiguration> yamlIO = (SerializedMenuIO<YamlConfiguration>) menuIO;
+		return menuSerializer.deserialize(yamlIO.read(configuration));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void writeYamlMenu(SerializableMenu menu, YamlConfiguration configuration) {
+		if(!YamlConfiguration.class.isAssignableFrom(menuIO.fileType()))
+			throw new IllegalArgumentException("File type of menu IO does not support Yaml serialization");
+		
+		SerializedMenuIO<YamlConfiguration> yamlIO = (SerializedMenuIO<YamlConfiguration>) menuIO;
+		yamlIO.write(menuSerializer.serialize(menu), configuration);
+	}
 	
 	/**
 	 * @param name the name of the cached menu
@@ -174,11 +214,13 @@ public final class Lotus {
 	 * @param menuName the name of the menu to open
 	 */
 	public void openMenu(Player player, String menuName) {
-		getRegisteredMenu(menuName.toLowerCase()).ifPresent((menu) -> openMenu(player, menu));
+		getRegisteredMenu(menuName.toLowerCase())
+						.ifPresent((menu) -> openMenu(player, menu));
 	}
 	
 	public void sendComponent(CommandSender sender, Component component) {
-		audiences.sender(sender).sendMessage(component);
+		Audience audience = sender instanceof Player player ? provider.player(player.getUniqueId()) : provider.console();
+		audience.sendMessage(component);
 	}
 
 	public void debug(String msg, Object... args) {

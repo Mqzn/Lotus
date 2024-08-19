@@ -2,7 +2,6 @@ package io.github.mqzen.menus.misc.button.actions;
 
 import io.github.mqzen.menus.base.MenuView;
 import io.github.mqzen.menus.misc.DataRegistry;
-import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.ArrayList;
@@ -12,13 +11,29 @@ import java.util.regex.Pattern;
 
 
 /**
- * @Author <a href="https://github.com/Cobeine">Cobeine</a>
+ * @author <a href="https://github.com/Cobeine">Cobeine</a>
+ * @author Mqzen (modified after Cobeine)
  */
 public interface ButtonClickAction {
-    Pattern pattern = Pattern.compile("\\((.*?)\\)");
+    
+    static ButtonClickAction of(String tag, ActionExecutor executor) {
+        return new ButtonClickAction() {
+            @Override
+            public String tag() {
+                return tag;
+            }
+            
+            @Override
+            public void execute(MenuView<?> menu, InventoryClickEvent event) {
+                executor.execute(menu, event);
+            }
+        };
+    }
+    
+    Pattern PATTERN = Pattern.compile("\\((.*?)\\)");
 
     String tag();
-    void execute(MenuView<?> menu, InventoryClickEvent event, DataRegistry data);
+    void execute(MenuView<?> menu, InventoryClickEvent event);
 
     default boolean isTargetedAction(String e) {
         return e.startsWith(tag());
@@ -29,7 +44,7 @@ public interface ButtonClickAction {
         List<String> actions = new ArrayList<>(data.getData("BTN:" + menu.getSlot()));
         actions.removeIf(e  -> !isTargetedAction(e));
         return actions.stream().map(e-> {
-            Matcher matcher = pattern.matcher(e);
+            Matcher matcher = PATTERN.matcher(e);
             if (!matcher.find()) return  null;
             return matcher.group(1);
         }).toList();
@@ -37,20 +52,10 @@ public interface ButtonClickAction {
     }
 
     default String getData(String action) {
-        return pattern.matcher(action).group();
+        return PATTERN.matcher(action).group();
     }
     static ButtonClickAction plain(ActionExecutor executor) {
-        return new ButtonClickAction() {
-            @Override
-            public String tag() {
-                return "";
-            }
-
-            @Override
-            public void execute(MenuView<?> menu, InventoryClickEvent event, DataRegistry data) {
-                executor.execute(menu, event);
-            }
-        };
+        return ButtonClickAction.of("", executor);
     }
 
     interface ActionExecutor {

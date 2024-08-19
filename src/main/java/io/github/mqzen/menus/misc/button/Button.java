@@ -1,7 +1,6 @@
 package io.github.mqzen.menus.misc.button;
 
 import io.github.mqzen.menus.base.MenuView;
-import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -61,7 +60,7 @@ public class Button {
 	
 	public void executeOnClick(MenuView<?> menu, InventoryClickEvent event) {
 		//if (action != null) action.execute(menu, event);
-		if (action != null) action.execute(menu, event, menu.getExtraData());
+		if (action != null) action.execute(menu, event);
 	}
 	
 	

@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unchecked")
@@ -46,6 +47,11 @@ public abstract class ItemBuilder<T, B extends ItemBuilder<T, B>> {
 
 	public B setLore(T... lore) {
 		itemMeta.setLore(Arrays.stream(lore).map(this::toString).toList());
+		return (B) this;
+	}
+	
+	public B setLore(List<String> lore) {
+		itemMeta.setLore(lore);
 		return (B) this;
 	}
 

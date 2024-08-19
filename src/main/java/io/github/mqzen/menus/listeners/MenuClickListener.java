@@ -37,20 +37,17 @@ public final class MenuClickListener implements Listener {
 		});
 		
 		if (menu == null) {
-
 			e.setCancelled(!manager.isAllowOutsideClick());
 			return;
 		}
 		
-		if (clickedInventory == null)
-			return;
-		
-		if (clickedInventory.equals(bottomInventory))
+		if (clickedInventory == null || clickedInventory.equals(bottomInventory))
 			return;
 		
 		if (clickedInventory.equals(topInventory)) {
 			menu.onClick(e);
 		}
+		
 	}
 	
 }

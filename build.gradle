@@ -46,6 +46,12 @@ dependencies {
     testCompileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
 
 }
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -55,9 +61,6 @@ publishing {
     repositories {
         maven {
             url 'https://jitpack.io'
-        }
-        maven {
-            url ''
         }
     }
 }

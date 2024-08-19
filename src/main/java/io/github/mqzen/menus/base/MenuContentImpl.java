@@ -7,7 +7,6 @@ import io.github.mqzen.menus.misc.Slots;
 import io.github.mqzen.menus.misc.button.Button;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;

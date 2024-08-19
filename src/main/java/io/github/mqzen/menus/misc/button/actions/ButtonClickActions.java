@@ -3,10 +3,15 @@ package io.github.mqzen.menus.misc.button.actions;
 import io.github.mqzen.menus.misc.button.actions.impl.CloseMenuAction;
 
 /**
- * @Author <a href="https://github.com/Cobeine">Cobeine</a>
+ * @author <a href="https://github.com/Cobeine">Cobeine</a>
+ * @author Mqzen (modifed after Cobeine)
  */
 
-public interface ButtonClickActions {
+public final class ButtonClickActions {
 
-    ButtonClickAction CLOSE_INVENTORY = new CloseMenuAction();
+    private ButtonClickActions() {
+        throw new IllegalAccessError();
+    }
+    
+    public final static ButtonClickAction CLOSE_INVENTORY = new CloseMenuAction();
 }
