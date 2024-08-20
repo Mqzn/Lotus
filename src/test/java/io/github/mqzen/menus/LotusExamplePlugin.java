@@ -2,13 +2,19 @@ package io.github.mqzen.menus;
 
 import io.github.mqzen.menus.base.pagination.Pagination;
 import io.github.mqzen.menus.base.pagination.exception.InvalidPageException;
+import io.github.mqzen.menus.base.serialization.SerializableMenu;
+import io.github.mqzen.menus.base.serialization.impl.SerializedMenuYaml;
+import io.github.mqzen.menus.misc.DataRegistry;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +25,47 @@ public final class LotusExamplePlugin extends JavaPlugin implements CommandExecu
 	public void onEnable() {
 		lotus = new Lotus(this, EventPriority.LOW);
 		this.getCommand("test").setExecutor(this);
+		getDataFolder().mkdirs();
+		getCommand("save").setExecutor((commandSender, command, s, strings) -> {
+			File exampleFile = new File(getDataFolder(), "example.yml");
+			if (!exampleFile.exists()) {
+				try {
+					exampleFile.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			ExampleMenu exampleMenu = new ExampleMenu();
+			DataRegistry registry = DataRegistry.empty();
+			SerializableMenu menu = new SerializableMenu(exampleMenu.getName(), exampleMenu.getTitle(registry, null).asString(),
+					exampleMenu.getCapacity(registry, null), exampleMenu.getContent(registry, null, exampleMenu.getCapacity(registry, null)));
+
+			YamlConfiguration configuration = YamlConfiguration.loadConfiguration(exampleFile);
+			SerializedMenuYaml yaml = (SerializedMenuYaml) lotus.getMenuIO();
+			yaml.write(lotus.getMenuSerializer().serialize(menu), configuration);
+			try {
+				configuration.save(exampleFile);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+			commandSender.sendMessage("saved");
+			return true;
+		});
+
+		getCommand("load").setExecutor((commandSender, command, s, strings) -> {
+			File exampleFile = new File(getDataFolder(), "example.yml");
+			if (!exampleFile.exists()) {
+			return true;
+			}
+			YamlConfiguration configuration = YamlConfiguration.loadConfiguration(exampleFile);
+			SerializedMenuYaml yaml = (SerializedMenuYaml) lotus.getMenuIO();
+
+			DataRegistry registry = yaml.read(configuration);
+			var  menu = lotus.getMenuSerializer().deserialize(registry);
+			lotus.openMenu((Player) commandSender,menu);
+			commandSender.sendMessage("loaded");
+			return true;
+		});
 	}
 
 

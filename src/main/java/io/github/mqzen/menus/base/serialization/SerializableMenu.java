@@ -11,6 +11,8 @@ import io.github.mqzen.menus.titles.MenuTitles;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -87,8 +89,12 @@ public final class SerializableMenu implements Menu {
 			modified.setButton(slot, modified.getButton(slot).map((b) -> {
 				if (b.getItem() == null) return b;
 				ItemStack oldItem = b.getItem();
-				String oldDisplay = oldItem.getItemMeta().getDisplayName();
+				String oldDisplay = "";
+				if (oldItem.getItemMeta().hasDisplayName()) {
+					oldDisplay = oldItem.getItemMeta().getDisplayName();
+				}
 				List<String> oldLore = oldItem.getItemMeta().getLore();
+				if (oldLore == null) oldLore = new ArrayList<>();
 				oldLore.replaceAll((str) -> str.replace(PLAYER_PLACEHOLDER, opener.getName()));
 				
 				return b.setItem(LegacyItemBuilder
