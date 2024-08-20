@@ -9,7 +9,7 @@ import io.github.mqzen.menus.base.ViewOpener;
 import io.github.mqzen.menus.base.serialization.MenuSerializer;
 import io.github.mqzen.menus.base.serialization.SerializableMenu;
 import io.github.mqzen.menus.base.serialization.SerializedMenuIO;
-import io.github.mqzen.menus.base.serialization.SerializedMenuYaml;
+import io.github.mqzen.menus.base.serialization.impl.SerializedMenuYaml;
 import io.github.mqzen.menus.listeners.MenuClickListener;
 import io.github.mqzen.menus.listeners.MenuCloseListener;
 import io.github.mqzen.menus.listeners.MenuOpenListener;
@@ -63,7 +63,7 @@ public final class Lotus {
 	private final EventPriority clickPriority;
 
 	private final AudienceProvider provider;
-	
+
 	@Getter
 	@Setter
 	private SerializedMenuIO<?> menuIO;
@@ -93,8 +93,7 @@ public final class Lotus {
 	public Lotus(Plugin plugin, EventPriority priority) {
 		this(plugin, BukkitAudiences.create(plugin), priority);
 	}
-	
-	
+
 	private void registerOpeners() {
 		//TODO register the rest of openers
 	}

@@ -1,6 +1,7 @@
-package io.github.mqzen.menus.base.serialization;
+package io.github.mqzen.menus.base.serialization.impl;
 
 import io.github.mqzen.menus.base.Content;
+import io.github.mqzen.menus.base.serialization.SerializedMenuIO;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.misc.Slot;
