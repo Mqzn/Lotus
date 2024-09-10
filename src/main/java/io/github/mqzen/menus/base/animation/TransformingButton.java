@@ -7,24 +7,21 @@ import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import java.time.Duration;
 
 @Getter
 public final class TransformingButton extends Button implements AnimatedButton {
     
    
-    private final Duration delay;
     private final ItemStack[] transformingItems;
     private int current = 0;
     
-    private TransformingButton(Duration delay, @NotNull ItemStack[] transformingItems) {
+    private TransformingButton(@NotNull ItemStack[] transformingItems) {
         super(transformingItems.length == 0 ? null : transformingItems[0]);
-        this.delay = delay;
         this.transformingItems = transformingItems;
     }
     
-    public static TransformingButton of(Duration delayBetweenTransformations, ItemStack[] transformingItems) {
-        return new TransformingButton(delayBetweenTransformations, transformingItems);
+    public static TransformingButton of(ItemStack[] transformingItems) {
+        return new TransformingButton(transformingItems);
     }
     
     public TransformingButton click(ButtonClickAction action) {
@@ -50,4 +47,8 @@ public final class TransformingButton extends Button implements AnimatedButton {
         this.setItem(next);
     }
     
+    @Override
+    public Button copy() {
+        return new TransformingButton(transformingItems);
+    }
 }

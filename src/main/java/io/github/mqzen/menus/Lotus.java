@@ -33,7 +33,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.plugin.Plugin;
-
 import java.util.*;
 
 /**
@@ -74,6 +73,12 @@ public final class Lotus {
 	@Getter
 	@Setter
 	private MenuSerializer menuSerializer;
+	
+	
+	private final MenuUpdateTask updateTask;
+	
+	@Getter
+	private long updateTicks = 15L;
     
     private Lotus(Plugin plugin, AdventureProvider<CommandSender> provider, EventPriority priority) {
 		this.plugin = plugin;
@@ -92,11 +97,18 @@ public final class Lotus {
 		Bukkit.getPluginManager().registerEvents(new MenuOpenListener(this), plugin);
 		Bukkit.getPluginManager().registerEvents(new MenuCloseListener(this), plugin);
         
-        MenuUpdateTask updateTask = MenuUpdateTask.newTask(this);
-		updateTask.runTaskTimerAsynchronously(plugin, 1L, 4L);
+        updateTask = MenuUpdateTask.newTask(this);
+		updateTask.runTaskTimerAsynchronously(plugin, 100L, updateTicks);
 	}
 	
-
+	public void setUpdateTicks(long updateTicks) {
+		this.updateTicks = updateTicks;
+		
+		//stop and run with new ticks
+		Bukkit.getScheduler().cancelTask(updateTask.getTaskId());
+		updateTask.runTaskTimerAsynchronously(plugin, 100L, updateTicks);
+	}
+	
 	private static AdventureProvider<CommandSender> loadAdventure(Plugin plugin) {
 		AdventureProvider<CommandSender> provider = new NoAdventure<>();
 		if (Reflections.findClass("net.kyori.adventure.audience.Audience")) {
@@ -249,7 +261,7 @@ public final class Lotus {
 
 	/**
 	 * Opens a menu using its name from a registry
-	 * if the menu with this name is not registered, it will not be opened and nothing happens
+	 * if the menu with this name is not registered, it will not be opened, and nothing happens
 	 *
 	 * @param player   the player to open the menu for
 	 * @param menuName the name of the menu to open

@@ -10,7 +10,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -23,7 +22,7 @@ public final class LotusExamplePlugin extends JavaPlugin implements CommandExecu
 	private Lotus lotus;
 	@Override
 	public void onEnable() {
-		lotus = new Lotus(this, EventPriority.LOW);
+		lotus = Lotus.load(this);
 		this.getCommand("test").setExecutor(this);
 		getDataFolder().mkdirs();
 		getCommand("save").setExecutor((commandSender, command, s, strings) -> {
@@ -51,7 +50,7 @@ public final class LotusExamplePlugin extends JavaPlugin implements CommandExecu
 			commandSender.sendMessage("saved");
 			return true;
 		});
-
+		
 		getCommand("load").setExecutor((commandSender, command, s, strings) -> {
 			File exampleFile = new File(getDataFolder(), "example.yml");
 			if (!exampleFile.exists()) {

@@ -330,7 +330,7 @@ public interface MenuView<M extends Menu> extends InventoryHolder {
 	 * @param event        the click-event
 	 * @param newItemStack the new ItemStack that will replace the old clicked ItemStack
 	 * @param overwrite    whether we just replace the ItemStack and the actions onClick are completely overwritten and hence become empty (by creating a new button internally)
-	 *                     or else we change the ItemStack only with retaining their actions onClick
+	 *                     or else, we change the ItemStack only with retaining their actions onClick
 	 */
 	default void replaceClickedItemStack(InventoryClickEvent event, @Nullable ItemStack newItemStack, boolean overwrite) {
 		int slot = event.getSlot();

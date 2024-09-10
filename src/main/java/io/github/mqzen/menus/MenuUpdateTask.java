@@ -3,7 +3,6 @@ package io.github.mqzen.menus;
 import io.github.mqzen.menus.base.MenuView;
 import io.github.mqzen.menus.base.animation.AnimatedButton;
 import io.github.mqzen.menus.misc.Slot;
-import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashSet;
@@ -23,12 +22,8 @@ public final class MenuUpdateTask extends BukkitRunnable {
     public void run() {
         for(MenuView<?> menuView : lotus.getOpenViews()) {
             var buttons = getAnimatedButtons(menuView);
-            buttons.parallelStream()
-                    .forEach((animatedButton)->
-                            Bukkit.getScheduler().runTaskLater(
-                                lotus.getPlugin(),
-                                ()-> animatedButton.button.animate(animatedButton.slot, menuView), animatedButton.button.getDelayInTicks())
-                    );
+            buttons.parallelStream().forEach((animatedButton)->
+                    menuView.updateButton(animatedButton.slot, (b)-> ((AnimatedButton)b).animate(animatedButton.slot, menuView)));
         }
     }
     private Set<AnimatedButtonEntry> getAnimatedButtons(MenuView<?> view) {

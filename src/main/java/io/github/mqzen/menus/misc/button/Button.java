@@ -63,5 +63,9 @@ public class Button {
 		if (action != null) action.execute(menu, event);
 	}
 	
+	public Button copy() {
+		return new Button(this.item, this.action);
+	}
+	
 	
 }

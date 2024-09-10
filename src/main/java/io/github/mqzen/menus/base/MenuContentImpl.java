@@ -59,7 +59,7 @@ public final class MenuContentImpl implements Content {
 
 	@Override
 	public void setButton(Slot slot, Button item) {
-		map.put(slot, item);
+		map.put(slot, item.copy());
 	}
 	
 	@Override
