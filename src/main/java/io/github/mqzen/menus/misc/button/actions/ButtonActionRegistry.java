@@ -18,7 +18,7 @@ public final class ButtonActionRegistry {
 	
 	private final Map<String, ButtonClickAction> actions = new HashMap<>();
 	private ButtonActionRegistry() {
-		registerAction(ButtonClickActions.CLOSE_INVENTORY);
+		registerAction(ButtonClickActions.CLOSE_MENU);
 	}
 	
 	public void registerAction(ButtonClickAction action) {

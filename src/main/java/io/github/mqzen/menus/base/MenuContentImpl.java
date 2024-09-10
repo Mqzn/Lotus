@@ -5,6 +5,7 @@ import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.Slot;
 import io.github.mqzen.menus.misc.Slots;
 import io.github.mqzen.menus.misc.button.Button;
+import io.github.mqzen.menus.misc.button.ButtonCondition;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import java.util.*;
@@ -30,6 +31,16 @@ public final class MenuContentImpl implements Content {
 	@Override
 	public Optional<Button> getButton(Slot slot) {
 		return Optional.ofNullable(map.get(slot));
+	}
+	
+	@Override
+	public Optional<Button> getConditionalButton(ButtonCondition condition) {
+		for(var entry : map.entrySet()) {
+			if(condition.accepts(entry.getKey(), entry.getValue())) {
+				return Optional.ofNullable(entry.getValue());
+			}
+		}
+		return Optional.empty();
 	}
 	
 	@Override

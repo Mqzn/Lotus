@@ -5,6 +5,7 @@ import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.titles.MenuTitle;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -51,12 +52,20 @@ public interface Menu {
 	@NotNull Content getContent(DataRegistry extraData, Player opener, Capacity capacity);
 	
 	/**
+	 * What's going to happen on click
+	 * @param playerMenuView the menu view that the player has clicked on.
+	 * @param event the click event
+	 */
+	default void onClick(MenuView<?> playerMenuView, InventoryClickEvent event) {
+	}
+	
+	/**
 	 * What's going to happen on close
 	 *
-	 * @param menu  the menu closing
+	 * @param playerMenuView  the menu closing
 	 * @param event the event of closing the inventory of this menu
 	 */
-	default void onClose(MenuView<?> menu, InventoryCloseEvent event) {
+	default void onClose(MenuView<?> playerMenuView, InventoryCloseEvent event) {
 	}
 	
 	/**

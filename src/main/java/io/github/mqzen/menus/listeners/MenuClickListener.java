@@ -45,7 +45,7 @@ public final class MenuClickListener implements Listener {
 			return;
 		
 		if (clickedInventory.equals(topInventory)) {
-			menu.onClick(e);
+			menu.handleOnClick(e);
 		}
 		
 	}

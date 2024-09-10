@@ -26,7 +26,7 @@ import java.util.function.Consumer;
  * This class represents an open view of a menu.
  * It holds the menu's contents, title, and size/capacity.
  * It also contains a lot of useful methods for accessing open menu-view/inventory,
- * allowing it to be modified in a fancy way !
+ * allowing it to be modified fancily!
  *
  * @param <M> the menu type this view is displayed using.
  */
@@ -57,7 +57,7 @@ public interface MenuView<M extends Menu> extends InventoryHolder {
 	
 	/**
 	 * sometimes menu views are opened with extra data embedded in them
-	 * for example: In page view , it has its index and its pagination objects embedded inside it.
+	 * for example, In page view, it has its index and its pagination objects embedded inside it.
 	 * so these objects are fetched through the method DataRegistry#getData()
 	 *
 	 * @return the extra data for this menu view
@@ -74,7 +74,7 @@ public interface MenuView<M extends Menu> extends InventoryHolder {
 	
 	/**
 	 * the current open inventory
-	 * returns null if the view is NOT OPEN for some reason !
+	 * returns null if the view is NOT OPEN for some reason!
 	 *
 	 * @return The open inventory
 	 */
@@ -82,7 +82,7 @@ public interface MenuView<M extends Menu> extends InventoryHolder {
 	@Nullable Inventory getInventory();
 	
 	/**
-	 * Fetches the button  in the contents of the view that corresponds to the slot parameter
+	 * Fetches the button in the contents of the view that corresponds to the slot parameter
 	 * then executes this button's cached actions regarding InventoryClickEvent
 	 *
 	 * @param slot  the slot clicked
@@ -129,7 +129,7 @@ public interface MenuView<M extends Menu> extends InventoryHolder {
 	 * @param slot      the slot
 	 * @param newItem   the new itemStack that will replace the old clicked itemStack
 	 * @param overwrite whether we just replace the ItemStack and the actions onClick are completely overwritten and hence become empty (by creating a new button internally)
-	 *                  or else we change the ItemStack only with retaining their actions onClick
+	 *                  or else, we change the ItemStack only with retaining their actions onClick
 	 */
 	void replaceItemStack(
 		Slot slot,
@@ -190,6 +190,14 @@ public interface MenuView<M extends Menu> extends InventoryHolder {
 	}
 	
 	/**
+	 * Defines what's going to happen after the button click action
+	 * @param event the click event
+	 */
+	default void onClick(InventoryClickEvent event) {
+		getMenu().onClick(this, event);
+	}
+	
+	/**
 	 * What occurs/is executed on opening of this menu view
 	 *
 	 * @param event the open event for the view's internal inventory
@@ -214,8 +222,9 @@ public interface MenuView<M extends Menu> extends InventoryHolder {
 	 *
 	 * @param event the click event
 	 */
-	default void onClick(InventoryClickEvent event) {
+	default void handleOnClick(InventoryClickEvent event) {
 		onClickedSlot(event.getSlot(), event);
+		onClick(event);
 	}
 	
 	/**

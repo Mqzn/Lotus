@@ -114,7 +114,7 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	}
 	
 	/**
-	 * Fetches the button  in the contents of the view that corresponds to the slot parameter
+	 * Fetches the button in the contents of the view that corresponds to the slot parameter
 	 * then executes this button's cached actions regarding InventoryClickEvent
 	 *
 	 * @param slot  the slot clicked
@@ -146,7 +146,7 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	}
 	
 	/**
-	 * @return whether the menu view been open yet or not
+	 * @return whether the menu view been already open
 	 */
 	@Override
 	public boolean isOpen() {
@@ -229,6 +229,7 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	@Override
 	public void updateButton(Slot slot, ButtonUpdater buttonUpdater) {
 		getContent().updateButton(slot, buttonUpdater::update);
+		updateButtonAt(slot);
 	}
 	
 	/**
@@ -244,10 +245,18 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 			itemStackUpdater.accept(buttonItem);
 			button.setItem(buttonItem);
 		});
+		updateButtonAt(slot);
+	}
+	
+	private void updateButtonAt(Slot slot) {
+		getContent().getButton(slot).ifPresent((updatedButton)-> {
+			currentOpenInventory.setItem(slot.getSlot(), updatedButton.getItem());
+			currentOpener.updateInventory();
+		});
 	}
 	
 	/**
-	 * Updates all buttons that meets a certain criteria
+	 * Updates all buttons that meet a certain criteria
 	 *
 	 * @param condition     the criteria that the buttons must meet so that they get updated
 	 * @param buttonUpdater the function that updates the buttons which meet the criteria

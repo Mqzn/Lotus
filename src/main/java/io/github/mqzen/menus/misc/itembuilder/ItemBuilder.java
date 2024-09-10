@@ -50,8 +50,8 @@ public abstract class ItemBuilder<T, B extends ItemBuilder<T, B>> {
 		return (B) this;
 	}
 	
-	public B setLore(List<String> lore) {
-		itemMeta.setLore(lore);
+	public B setLore(List<T> lore) {
+		itemMeta.setLore(lore.stream().map(this::toString).toList());
 		return (B) this;
 	}
 

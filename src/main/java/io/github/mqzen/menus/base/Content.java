@@ -7,6 +7,7 @@ import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.Slot;
 import io.github.mqzen.menus.misc.Slots;
 import io.github.mqzen.menus.misc.button.Button;
+import io.github.mqzen.menus.misc.button.ButtonCondition;
 import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -33,6 +34,8 @@ public interface Content {
 	Capacity capacity();
 	
 	Optional<Button> getButton(Slot slot);
+	
+	Optional<Button> getConditionalButton(ButtonCondition condition);
 	
 	default Optional<Button> getButton(int slot) {
 		return getButton(Slot.of(slot));
@@ -180,7 +183,6 @@ public interface Content {
 		public Builder iterate(SlotIterator iterator, BiConsumer<Content, Slot> consumer) {
 			while (iterator.hasNext()) {
 				Slot slot = iterator.next();
-				System.out.println("NEXT=" + slot.toString());
 				consumer.accept(impl, slot);
 			}
 			return this;

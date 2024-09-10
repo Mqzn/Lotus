@@ -2,6 +2,10 @@ package io.github.mqzen.menus;
 
 
 import com.google.common.base.Preconditions;
+import io.github.mqzen.menus.adventure.AdventureProvider;
+import io.github.mqzen.menus.adventure.BukkitAdventure;
+import io.github.mqzen.menus.adventure.CastingAdventure;
+import io.github.mqzen.menus.adventure.NoAdventure;
 import io.github.mqzen.menus.base.BaseMenuView;
 import io.github.mqzen.menus.base.Menu;
 import io.github.mqzen.menus.base.MenuView;
@@ -15,11 +19,10 @@ import io.github.mqzen.menus.listeners.MenuCloseListener;
 import io.github.mqzen.menus.listeners.MenuOpenListener;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.openers.DefaultViewOpener;
+import io.github.mqzen.menus.reflection.Reflections;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.AudienceProvider;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -35,8 +38,8 @@ import java.util.*;
 
 /**
  * This class represents the main handler for Lotus's API,
- * and it's also considered the core of the API itself
- * It handles the way menu views are opened and displayed for players
+ * and it's also considered the core of the API itself,
+ * It handles the way menu views are opened and displayed for players,
  * It also caches all open menu views along with pre-registered menus to use instead of creating a new instance
  * of your menu each time.
  *
@@ -62,7 +65,7 @@ public final class Lotus {
 	@Getter
 	private final EventPriority clickPriority;
 
-	private final AudienceProvider provider;
+	private final AdventureProvider<CommandSender> provider;
 
 	@Getter
 	@Setter
@@ -71,8 +74,8 @@ public final class Lotus {
 	@Getter
 	@Setter
 	private MenuSerializer menuSerializer;
-	
-	public Lotus(Plugin plugin, AudienceProvider provider, EventPriority priority) {
+    
+    private Lotus(Plugin plugin, AdventureProvider<CommandSender> provider, EventPriority priority) {
 		this.plugin = plugin;
 		this.clickPriority = priority;
 		this.provider = provider;
@@ -88,12 +91,43 @@ public final class Lotus {
 
 		Bukkit.getPluginManager().registerEvents(new MenuOpenListener(this), plugin);
 		Bukkit.getPluginManager().registerEvents(new MenuCloseListener(this), plugin);
+        
+        MenuUpdateTask updateTask = MenuUpdateTask.newTask(this);
+		updateTask.runTaskTimerAsynchronously(plugin, 1L, 4L);
 	}
 	
-	public Lotus(Plugin plugin, EventPriority priority) {
-		this(plugin, BukkitAudiences.create(plugin), priority);
-	}
 
+	private static AdventureProvider<CommandSender> loadAdventure(Plugin plugin) {
+		AdventureProvider<CommandSender> provider = new NoAdventure<>();
+		if (Reflections.findClass("net.kyori.adventure.audience.Audience")) {
+			if (Audience.class.isAssignableFrom(CommandSender.class)) {
+				//paper compatible
+				provider = new CastingAdventure<>();
+			} else if (Reflections.findClass("net.kyori.adventure.platform.bukkit.BukkitAudiences")) {
+				provider = new BukkitAdventure(plugin);
+			}
+		}
+		return provider;
+	}
+	
+	
+	public static Lotus load(Plugin plugin, AdventureProvider<CommandSender> adventureProvider, EventPriority priority) {
+		return new Lotus(plugin, adventureProvider, priority);
+	}
+	
+	public static Lotus load(Plugin plugin, AdventureProvider<CommandSender> adventureProvider) {
+		return new Lotus(plugin, adventureProvider, EventPriority.NORMAL);
+	}
+	
+	public static Lotus load(Plugin plugin, EventPriority priority) {
+		return load(plugin, loadAdventure(plugin), priority);
+	}
+	
+	public static Lotus load(Plugin plugin) {
+		return load(plugin, EventPriority.NORMAL);
+	}
+	
+	
 	private void registerOpeners() {
 		//TODO register the rest of openers
 	}
@@ -197,9 +231,17 @@ public final class Lotus {
 	 * @param menu   the menu to open
 	 */
 	public void openMenu(Player player, Menu menu) {
-		MenuView<?> playerMenuView = new BaseMenuView<>(this, menu, DataRegistry.empty());
-		openMenu(player, playerMenuView);
+		openMenu(player, menu, DataRegistry.empty());
 	}
+	
+	/**
+	 * Opens a menu by creating a new view for it internally
+	 * using a {@link DataRegistry}
+	 *
+	 * @param player the player to open the menu for
+	 * @param menu   the menu to open
+	 * @param registry the data cached to this menu
+	 */
 	public void openMenu(Player player, Menu menu, DataRegistry registry) {
 		MenuView<?> playerMenuView = new BaseMenuView<>(this, menu, registry);
 		openMenu(player, playerMenuView);
@@ -217,12 +259,16 @@ public final class Lotus {
 						.ifPresent((menu) -> openMenu(player, menu));
 	}
 	
+	/**
+	 * @return Retrieves the open {@link MenuView}
+	 */
+	public Collection<? extends MenuView<?>> getOpenViews() {
+		return openMenus.values();
+	}
+	
 	public void sendComponent(CommandSender sender, Component component) {
-		Audience audience = sender instanceof Player player ? provider.player(player.getUniqueId()) : provider.console();
+		Audience audience = provider.audience(sender);
 		audience.sendMessage(component);
 	}
-
-	public void debug(String msg, Object... args) {
-		plugin.getLogger().info(String.format(msg, args));
-	}
+	
 }

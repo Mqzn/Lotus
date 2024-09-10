@@ -7,7 +7,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 /**
  * @author <a href="https://github.com/Cobeine">Cobeine</a>
  */
-
 public final class CloseMenuAction implements ButtonClickAction {
 
     @Override
