@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashSet;
 import java.util.Set;
 
-public final class MenuUpdateTask extends BukkitRunnable {
+final class MenuUpdateTask extends BukkitRunnable {
     private final Lotus lotus;
     private MenuUpdateTask(Lotus lotus) {
         this.lotus = lotus;
