@@ -3,9 +3,10 @@ package io.github.mqzen.menus;
 import io.github.mqzen.menus.base.Content;
 import io.github.mqzen.menus.base.Menu;
 import io.github.mqzen.menus.base.MenuView;
-import io.github.mqzen.menus.base.animation.TransformingButton;
+import io.github.mqzen.menus.base.iterator.Direction;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
+import io.github.mqzen.menus.misc.Slot;
 import io.github.mqzen.menus.misc.button.Button;
 import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import io.github.mqzen.menus.misc.itembuilder.ItemBuilder;
@@ -71,17 +72,21 @@ public final class ExampleMenu implements Menu {
 				ButtonClickAction.plain((menuView, event) -> {
 							//event.setCancelled(true);
 							//we want nothing to happen here
-						}
-				));
-		Button transformingFruit = TransformingButton.of(fruits);
+					System.out.println("HI");
+					menuView.updateButton(event.getSlot(), (button)-> {
+                        assert button.getItem() != null;
+                        var item = button.getItem();
+						item.setDurability((short)6);
+						button.setItem(item);
+					});
+				})
+		);
 
 		return Content.builder(capacity)
-				  .apply(content -> {
-					  content.setButton(10, transformingFruit);
-					  content.setButton(11, transformingFruit);
-					  content.fillBorder(borderPane);
-				  })
-				  .build();
+				.iterate(Slot.of(10), Slot.of(16), Direction.RIGHT, ((content, slot) -> {
+					content.setButton(slot, borderPane);
+				}))
+				.build();
 	}
 	
 	@Override
