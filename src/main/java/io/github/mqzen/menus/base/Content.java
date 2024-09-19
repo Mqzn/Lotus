@@ -181,9 +181,10 @@ public interface Content {
 		}
 		
 		public Builder iterate(SlotIterator iterator, BiConsumer<Content, Slot> consumer) {
-			while (iterator.hasNext()) {
-				Slot slot = iterator.next();
-				consumer.accept(impl, slot);
+			while(iterator.canContinue()) {
+				Slot current = iterator.current();
+				consumer.accept(impl, current);
+				iterator.shift();
 			}
 			return this;
 		}

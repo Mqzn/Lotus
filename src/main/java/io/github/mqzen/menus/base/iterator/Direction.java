@@ -5,21 +5,61 @@ import io.github.mqzen.menus.misc.Slot;
 import java.util.function.Function;
 
 public enum Direction {
-	UPWARDS(slot -> Slot.of(slot.getRow() - 1, slot.getColumn())),
+	UPWARDS(slot -> Slot.of(slot.getRow() - 1, slot.getColumn())) {
+		@Override
+		boolean isOutsideBoundarySlot(Slot slot, Slot boundary) {
+			return slot.getSlot() < boundary.getSlot();
+		}
+	},
 	
-	DOWNWARDS(slot -> Slot.of(slot.getRow() + 1, slot.getColumn())),
+	DOWNWARDS(slot -> Slot.of(slot.getRow() + 1, slot.getColumn())) {
+		@Override
+		boolean isOutsideBoundarySlot(Slot slot, Slot boundary) {
+			return slot.getSlot() > boundary.getSlot();
+		}
+	},
 	
-	RIGHT(slot -> Slot.of(slot.getRow(), slot.getColumn() + 1)),
+	RIGHT(slot -> Slot.of(slot.getRow(), slot.getColumn() + 1)) {
+		@Override
+		boolean isOutsideBoundarySlot(Slot slot, Slot boundary) {
+			return slot.getSlot() > boundary.getSlot();
+		}
+	},
 	
-	LEFT(slot -> Slot.of(slot.getRow(), slot.getColumn() - 1)),
+	LEFT(slot -> Slot.of(slot.getRow(), slot.getColumn() - 1)) {
+		@Override
+		boolean isOutsideBoundarySlot(Slot slot, Slot boundary) {
+			return slot.getSlot() < boundary.getSlot();
+		}
+	},
 	
-	RIGHT_UPWARDS(slot -> Slot.of(slot.getRow() - 1, slot.getColumn() + 1)),
+	RIGHT_UPWARDS(slot -> Slot.of(slot.getRow() - 1, slot.getColumn() + 1)) {
+		@Override
+		boolean isOutsideBoundarySlot(Slot slot, Slot boundary) {
+			return slot.getSlot() < boundary.getSlot();
+		}
+	},
 	
-	LEFT_UPWARDS(slot -> Slot.of(slot.getRow() - 1, slot.getColumn() - 1)),
+	LEFT_UPWARDS(slot -> Slot.of(slot.getRow() - 1, slot.getColumn() - 1)) {
+		@Override
+		boolean isOutsideBoundarySlot(Slot slot, Slot boundary) {
+			return slot.getSlot() < boundary.getSlot();
+		}
+	},
 	
-	RIGHT_DOWNWARDS(slot -> Slot.of(slot.getRow() + 1, slot.getColumn() + 1)),
+	RIGHT_DOWNWARDS(slot -> Slot.of(slot.getRow() + 1, slot.getColumn() + 1)) {
+		@Override
+		boolean isOutsideBoundarySlot(Slot slot, Slot boundary) {
+			return slot.getSlot() > boundary.getSlot();
+		}
+	},
 	
-	LEFT_DOWNWARDS(slot -> Slot.of(slot.getRow() + 1, slot.getColumn() - 1));
+	LEFT_DOWNWARDS(slot -> Slot.of(slot.getRow() + 1, slot.getColumn() - 1)) {
+		@Override
+		boolean isOutsideBoundarySlot(Slot slot, Slot boundary) {
+			return slot.getSlot() > boundary.getSlot();
+		}
+	};
 	
 	private final Function<Slot, Slot> slotModifier;
 	
@@ -30,4 +70,6 @@ public enum Direction {
 	Slot modify(Slot input) {
 		return slotModifier.apply(input);
 	}
+	
+	abstract boolean isOutsideBoundarySlot(Slot slot, Slot boundary);
 }

@@ -4,14 +4,11 @@ import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.Slot;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.function.Predicate;
 
 @Getter
-public final class SlotIterator implements Iterator<Slot> {
+public final class SlotIterator {
 	
 	private final Capacity capacity;
 	private final Direction direction;
@@ -46,48 +43,40 @@ public final class SlotIterator implements Iterator<Slot> {
 	
 	/**
 	 * Returns {@code true} if the iteration has more elements.
-	 * (In other words, returns {@code true} if {@link SlotIterator#next()} would
+	 * (In other words, returns {@code true} if {@link SlotIterator#current()} would
 	 * return an element rather than throwing an exception.)
 	 *
 	 * @return {@code true} if the iteration has more elements
 	 */
-	@Override
-	public boolean hasNext() {
-		Slot next = current;
-		return verify(next.getRow(), capacity.getRows())
-				  && verify(next.getColumn(), capacity.getColumns());
+	public boolean canContinue() {
+		return current.getSlot() >= 0 && !direction.isOutsideBoundarySlot(current, endSlot)
+			&& verify(current.getRow(), capacity.getRows())
+			&& verify(current.getColumn(), capacity.getColumns());
 	}
 
 	private boolean verify(int value, int max) {
-		return value >= 0 && value <= (max-1);
+		return value >= 0 && value < max;
 	}
 
 	/**
-	 * Returns the next element in the iteration.
+	 * Returns the current element in the iteration.
 	 *
-	 * @return the next element in the iteration
+	 * @return the current element in the iteration
 	 * @throws NoSuchElementException if the iteration has no more elements
 	 */
-	@Override
-	public Slot next() {
-		Slot curr = current.copy();
-		current = direction.modify(current);
-		return curr;
+	public Slot current() {
+		if(!this.canContinue()) {
+			throw new NoSuchElementException();
+		}
+		return current.copy();
 	}
 	
-	
-	public @Nullable Slot next(Predicate<Slot> slotPredicate) {
-		
-		boolean found = false;
-		while (hasNext()) {
-			if (slotPredicate.test(current)) {
-				found = true;
-				break;
-			}
-			current = direction.modify(current);
-			
-		}
-		return found ? current : null;
+	/**
+	 * Shifts the current slot to the next target slot
+	 * depending on the {@link Direction} of this iterator
+	 */
+	public void shift() {
+		current = direction.modify(current);
 	}
 	
 }
