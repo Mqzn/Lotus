@@ -27,7 +27,7 @@ final class MenuUpdateTask extends BukkitRunnable {
                         menuView.updateButton(animatedButton.slot, (b) -> ((AnimatedButton) b).animate(animatedButton.slot, menuView)));
             }
         }catch (Throwable ex) {
-            ex.printStackTrace();
+            lotus.debugger.error("Failed to continue the menu update task", ex);
             this.cancel();
         }
     }

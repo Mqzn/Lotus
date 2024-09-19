@@ -47,7 +47,7 @@ import java.util.*;
  */
 public final class Lotus {
 	
-	private LotusDebugger debugger = LotusDebugger.EMPTY;
+	LotusDebugger debugger = LotusDebugger.EMPTY;
 	
 	@Getter
 	private final DefaultViewOpener defaultOpener = new DefaultViewOpener();
