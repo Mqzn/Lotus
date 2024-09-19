@@ -228,8 +228,10 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	 */
 	@Override
 	public void updateButton(Slot slot, ButtonUpdater buttonUpdater) {
-		getContent().updateButton(slot, buttonUpdater::update);
-		updateButtonAt(slot);
+		var butt = getContent().getButton(slot).orElse(null);
+		if(butt == null) return;
+		buttonUpdater.update(butt);
+		updateButtonAtWith(slot, butt);
 	}
 	
 	/**
@@ -253,6 +255,12 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 			currentOpenInventory.setItem(slot.getSlot(), updatedButton.getItem());
 			currentOpener.updateInventory();
 		});
+	}
+	
+	private void updateButtonAtWith(Slot slot, Button button) {
+		getContent().setButton(slot, button.copy());
+		currentOpenInventory.setItem(slot.getSlot(), button.getItem());
+		currentOpener.updateInventory();
 	}
 	
 	/**
