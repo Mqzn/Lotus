@@ -155,6 +155,10 @@ public final class Lotus {
 		this.debugger = new LotusDebugger(plugin.getLogger());
 	}
 	
+	public boolean isDebuggerEnabled() {
+		return !debugger.isEmpty();
+	}
+	
 	public void disableDebugger() {
 		this.debugger = LotusDebugger.EMPTY;
 	}
