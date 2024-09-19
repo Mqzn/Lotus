@@ -20,10 +20,15 @@ final class MenuUpdateTask extends BukkitRunnable {
     
     @Override
     public void run() {
-        for(MenuView<?> menuView : lotus.getOpenViews()) {
-            var buttons = getAnimatedButtons(menuView);
-            buttons.parallelStream().forEach((animatedButton)->
-                    menuView.updateButton(animatedButton.slot, (b)-> ((AnimatedButton)b).animate(animatedButton.slot, menuView)));
+        try {
+            for (MenuView<?> menuView : lotus.getOpenViews()) {
+                var buttons = getAnimatedButtons(menuView);
+                buttons.parallelStream().forEach((animatedButton) ->
+                        menuView.updateButton(animatedButton.slot, (b) -> ((AnimatedButton) b).animate(animatedButton.slot, menuView)));
+            }
+        }catch (Throwable ex) {
+            ex.printStackTrace();
+            this.cancel();
         }
     }
     private Set<AnimatedButtonEntry> getAnimatedButtons(MenuView<?> view) {
