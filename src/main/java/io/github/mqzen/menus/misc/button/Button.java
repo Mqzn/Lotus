@@ -1,6 +1,7 @@
 package io.github.mqzen.menus.misc.button;
 
 import io.github.mqzen.menus.base.MenuView;
+import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,8 @@ public class Button {
 	
 	private @Nullable ItemStack item;
 	private @Nullable ButtonClickAction action = null;
+	
+	private final DataRegistry data = new DataRegistry();
 	
 	protected Button(@Nullable ItemStack item) {
 		this.item = item;
@@ -67,5 +70,17 @@ public class Button {
 		return new Button(this.item, this.action);
 	}
 	
+	public Button setNamedData(String name, Object data) {
+		this.data.setData(name, data);
+		return this;
+	}
+	
+	public <T> T getNamedData(String name) {
+		return data.getData(name);
+	}
+	
+	public DataRegistry getDataRegistry() {
+		return data;
+	}
 	
 }
