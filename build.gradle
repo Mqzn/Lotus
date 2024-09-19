@@ -3,13 +3,11 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     id("java")
     id("maven-publish")
-    //id("io.github.patrick.remapper") version "1.4.0"
     id "com.github.johnrengelman.shadow" version "8.1.1"
-
 }
 
 group = "io.github.mqzen"
-version = "1.1.5"
+version = "1.1.7"
 
 repositories {
     gradlePluginPortal()
@@ -65,11 +63,8 @@ publishing {
     }
 }
 
-shadowJar {
-
-}
-
 tasks.register('bukkit', ShadowJar) {
+    setDestinationDirectory(new File("C:\\Users\\Bergo\\Desktop\\servers\\spigot test server 1.8.8\\plugins"))
     archiveClassifier.set("tests")
     from sourceSets.main.output, sourceSets.test.output
     configurations = [project.configurations.testRuntimeClasspath]
