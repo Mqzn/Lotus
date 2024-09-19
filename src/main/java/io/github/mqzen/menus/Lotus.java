@@ -47,6 +47,8 @@ import java.util.*;
  */
 public final class Lotus {
 	
+	private LotusDebugger debugger = LotusDebugger.EMPTY;
+	
 	@Getter
 	private final DefaultViewOpener defaultOpener = new DefaultViewOpener();
 	
@@ -83,6 +85,10 @@ public final class Lotus {
     private Lotus(Plugin plugin, AdventureProvider<CommandSender> provider, EventPriority priority) {
 		this.plugin = plugin;
 		this.clickPriority = priority;
+		if(provider instanceof NoAdventure<CommandSender>) {
+			debugger.warn("Couldn't find adventure on the server runtime");
+		}
+		
 		this.provider = provider;
 		menuIO = new SerializedMenuYaml();
 		menuSerializer = MenuSerializer.newDefaultSerializer();
@@ -119,6 +125,7 @@ public final class Lotus {
 				provider = new BukkitAdventure(plugin);
 			}
 		}
+		
 		return provider;
 	}
 	
@@ -142,6 +149,14 @@ public final class Lotus {
 	
 	private void registerOpeners() {
 		//TODO register the rest of openers
+	}
+	
+	public void enableDebugger() {
+		this.debugger = new LotusDebugger(plugin.getLogger());
+	}
+	
+	public void disableDebugger() {
+		this.debugger = LotusDebugger.EMPTY;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -268,7 +283,8 @@ public final class Lotus {
 	 */
 	public void openMenu(Player player, String menuName) {
 		getRegisteredMenu(menuName.toLowerCase())
-						.ifPresent((menu) -> openMenu(player, menu));
+						.ifPresentOrElse((menu) -> openMenu(player, menu),
+								()-> debugger.warn("Failed to open menu '%s' because it has not been registered", menuName));
 	}
 	
 	/**
