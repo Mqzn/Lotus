@@ -3,11 +3,10 @@ package io.github.mqzen.menus.misc.button;
 import io.github.mqzen.menus.base.MenuView;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
@@ -17,20 +16,28 @@ import java.util.function.BiFunction;
  * can perform an action when clicked.
  */
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Button {
 	
 	private @Nullable ItemStack item;
 	private @Nullable ButtonClickAction action = null;
 	
-	private final DataRegistry data = new DataRegistry();
+	protected DataRegistry data = DataRegistry.empty();
 	
 	protected Button(@Nullable ItemStack item) {
 		this.item = item;
 	}
-	
-	//TODO add animation
-	
+
+	//create constructor for each possible combination of field
+	protected Button(@Nullable ItemStack item, @Nullable ButtonClickAction action) {
+		this(item);
+		this.action = action;
+	}
+
+	protected Button(@Nullable ItemStack item, @Nullable ButtonClickAction action, @NotNull DataRegistry data) {
+		this(item, action);
+		this.data = data;
+	}
+
 	/**
 	 * Creates a button with the provided item and no action.
 	 *
@@ -132,7 +139,7 @@ public class Button {
 	 * @return A new Button instance with identical item and action properties as this Button.
 	 */
 	public Button copy() {
-		return new Button(this.item, this.action);
+		return new Button(this.item, this.action, this.data);
 	}
 	
 	/**

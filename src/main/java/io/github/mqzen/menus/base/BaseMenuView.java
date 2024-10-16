@@ -305,8 +305,9 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	}
 	
 	private void updateButtonAtWith(Slot slot, Button button) {
-		getContent().setButton(slot, button.copy());
-		currentOpenInventory.setItem(slot.getSlot(), button.getItem());
+		var copy = button.copy();
+		getContent().setButton(slot, copy);
+		currentOpenInventory.setItem(slot.getSlot(), copy.getItem());
 		currentOpener.updateInventory();
 	}
 	

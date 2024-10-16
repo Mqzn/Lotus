@@ -15,18 +15,10 @@ import io.github.mqzen.menus.titles.MenuTitles;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
 
 public final class ExampleMenu implements Menu {
 
-	private final ItemStack[] fruits =  {
-			  ItemBuilder.legacy(Material.APPLE).build(),
-			  ItemBuilder.legacy(Material.CARROT_ITEM).build(),
-			  ItemBuilder.legacy(Material.GOLDEN_APPLE).build(),
-			  ItemBuilder.legacy(Material.GOLDEN_CARROT).build()
-	};
 	/**
 	 * @return The unique name for this menu
 	 */
@@ -68,19 +60,26 @@ public final class ExampleMenu implements Menu {
 	                                   Player opener, Capacity capacity) {
 
 		Button borderPane = Button.clickable(
-				ItemBuilder.legacy(Material.STAINED_GLASS_PANE, 1, (short) 5).build(),
+				ItemBuilder.legacy(Material.STAINED_GLASS_PANE, 1, (short) 5)
+					.setDisplay("&r").build(),
 				ButtonClickAction.plain((menuView, event) -> {
-							//event.setCancelled(true);
-							//we want nothing to happen here
-					System.out.println("HI");
+					event.setCancelled(true);
+					//we want nothing to happen here
 					menuView.updateButton(event.getSlot(), (button)-> {
                         assert button.getItem() != null;
                         var item = button.getItem();
-						item.setDurability((short)6);
+						short buttonData = button.getNamedData("data");
+						buttonData++;
+						if(buttonData > 12) {
+							buttonData = 0;
+						}
+						button.setNamedData("data", buttonData);
+						item.setDurability(buttonData);
 						button.setItem(item);
 					});
+
 				})
-		);
+		).setNamedData("data", (short)5);
 
 		return Content.builder(capacity)
 				.iterate(Slot.of(10), Slot.of(16), Direction.RIGHT, ((content, slot) -> {

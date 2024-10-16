@@ -1,6 +1,7 @@
 package io.github.mqzen.menus.base.animation;
 
 import io.github.mqzen.menus.base.MenuView;
+import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.misc.Slot;
 import io.github.mqzen.menus.misc.button.Button;
 import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
@@ -23,9 +24,18 @@ public final class TransformingButton extends Button implements AnimatedButton {
         super(transformingItems.length == 0 ? null : transformingItems[0]);
         this.transformingItems = transformingItems;
     }
+
+    private TransformingButton(@NotNull ItemStack[] transformingItems, DataRegistry dataRegistry) {
+        super(transformingItems.length == 0 ? null : transformingItems[0], null, dataRegistry);
+        this.transformingItems = transformingItems;
+    }
     
     public static TransformingButton of(ItemStack[] transformingItems) {
         return new TransformingButton(transformingItems);
+    }
+
+    public static TransformingButton of(ItemStack[] transformingItems, DataRegistry dataRegistry) {
+        return new TransformingButton(transformingItems, dataRegistry);
     }
     
     public TransformingButton click(ButtonClickAction action) {
@@ -53,6 +63,6 @@ public final class TransformingButton extends Button implements AnimatedButton {
     
     @Override
     public Button copy() {
-        return new TransformingButton(transformingItems);
+        return new TransformingButton(transformingItems, data);
     }
 }
