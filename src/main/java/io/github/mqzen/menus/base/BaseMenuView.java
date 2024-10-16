@@ -31,20 +31,64 @@ import java.util.stream.Collectors;
  */
 public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	
+	/**
+	 * Holds the menu instance associated with this view.
+	 * It is used to create the menu and fetch its data.
+	 * This field is immutable and is initialized via constructor.
+	 */
 	protected final M menu;
+	/**
+	 * A protected final instance of DataRegistry used for storing and retrieving supplementary data
+	 * relevant to the menu view within the BaseMenuView class.
+	 */
 	protected final DataRegistry dataRegistry;
 	
+	/**
+	 * API instance of type Lotus used within the BaseMenuView.
+	 * This instance is intended to be final and protected,
+	 * ensuring it is only accessible within subclasses and cannot be modified.
+	 */
 	protected final Lotus api;
 	
+	/**
+	 * Holds the data of the currently opened menu view.
+	 * <p>
+	 * This variable contains the instance of {@link ViewData} representing the current state of the menu
+	 * for a specific player when the menu is open. If the menu is not open, this value may be null.
+	 * This data typically includes the menu's title, capacity, and content, and is used to render
+	 * the menu view properly.
+	 * </p>
+	 */
 	protected ViewData currentOpenedData = null;
+	/**
+	 * Represents the currently open inventory in the menu view.
+	 * It may be null if no inventory is currently open.
+	 */
 	protected Inventory currentOpenInventory = null;
 
+	/**
+	 * The current player opening this menu view.
+	 * This may be null if the menu-view is not yet open.
+	 */
 	protected Player currentOpener = null;
 
+	/**
+	 * Constructs a BaseMenuView with the specified API instance and menu, and initializes it with an empty DataRegistry.
+	 *
+	 * @param api  the API instance
+	 * @param menu the menu instance
+	 */
 	public BaseMenuView(Lotus api, M menu) {
 		this(api, menu, DataRegistry.empty());
 	}
 
+	/**
+	 * Constructs a new BaseMenuView with the specified API, menu, and data registry.
+	 *
+	 * @param api The API instance.
+	 * @param menu The menu instance to be used to create the menu view.
+	 * @param registry The data registry holding extra data for this menu view.
+	 */
 	public BaseMenuView(Lotus api, M menu,DataRegistry registry) {
 		this.api = api;
 		this.menu = menu;

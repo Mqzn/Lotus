@@ -14,7 +14,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public final class MenuContentImpl implements Content {
+final class MenuContentImpl implements Content {
 	
 	private final Capacity capacity;
 	private final ConcurrentHashMap<Slot, Button> map = new ConcurrentHashMap<>();

@@ -10,6 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * Represents a view for a paginated menu system in the Lotus framework.
+ * This class extends BaseMenuView and is internally used to handle the
+ * visualization and interaction of paginated content.
+ */
 @Getter
 @ApiStatus.Internal
 public final class PageView extends BaseMenuView<Page> {

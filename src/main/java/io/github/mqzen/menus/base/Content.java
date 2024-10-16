@@ -292,36 +292,90 @@ public interface Content {
 			impl = new MenuContentImpl(capacity);
 		}
 		
+		/**
+		 * Sets a button at the specified slot.
+		 *
+		 * @param slot the slot where the button will be placed
+		 * @param button the button to be set at the slot
+		 * @return the current Builder instance for method chaining
+		 */
 		public Builder setButton(Slot slot, Button button) {
 			impl.setButton(slot, button);
 			return this;
 		}
 		
+		/**
+		 * Sets a button at the specified slot.
+		 *
+		 * @param slot the slot index where the button will be placed
+		 * @param button the Button instance to set at the specified slot
+		 * @return the Builder instance for method chaining
+		 */
 		public Builder setButton(int slot, Button button) {
 			impl.setButton(slot, button);
 			return this;
 		}
 		
+		/**
+		 * Sets a button at the specified row and column in the builder's internal structure.
+		 *
+		 * @param row The row index where the button should be placed.
+		 * @param column The column index where the button should be placed.
+		 * @param button The button to be placed at the specified row and column.
+		 * @return The current Builder instance for chaining.
+		 */
 		public Builder setButton(int row, int column, Button button) {
 			impl.setButton(row, column, button);
 			return this;
 		}
 		
+		/**
+		 * Sets a button in the specified slot with the given item and click action.
+		 *
+		 * @param slot the slot number where the button will be placed
+		 * @param buttonItem the ItemStack to be used as the button
+		 * @param buttonClickAction the action to be executed when the button is clicked
+		 * @return the Builder instance for method chaining
+		 */
 		public Builder setButton(int slot, ItemStack buttonItem, ButtonClickAction buttonClickAction) {
 			impl.setButton(slot, Button.clickable(buttonItem, buttonClickAction));
 			return this;
 		}
 		
+		/**
+		 * Sets the button item in the specified slot.
+		 *
+		 * @param slot the slot index where the item should be placed
+		 * @param buttonItem the ItemStack to be set as the button item
+		 * @return the Builder instance for method chaining
+		 */
 		public Builder setButton(int slot, ItemStack buttonItem) {
 			impl.setButton(slot, Button.empty(buttonItem));
 			return this;
 		}
 		
+		/**
+		 * Assigns the specified button to the given set of slots repeatedly.
+		 *
+		 * @param slots the slots where the button will be repeated
+		 * @param button the button instance to be assigned
+		 * @return the builder instance with updated button assignments
+		 */
 		public Builder repeatButton(Slots slots, Button button) {
 			impl.setButton(slots, button);
 			return this;
 		}
 		
+		/**
+		 * Repeats the given button in the specified slot range (inclusive).
+		 *
+		 * @param startSlot the starting slot index, must be non-negative and not greater than endSlot
+		 * @param endSlot the ending slot index, must be non-negative and not less than startSlot
+		 * @param button the Button to be set in the specified slot range
+		 * @return the current instance of Builder for chaining
+		 * @throws IllegalStateException if startSlot or endSlot is negative, if startSlot is greater than endSlot,
+		 *                               or if endSlot exceeds the total size of the menu
+		 */
 		public Builder repeatButton(int startSlot, int endSlot, Button button) {
 			if (startSlot < 0 || endSlot < 0) throw new IllegalStateException("start and end slot must be positive");
 			if (startSlot > endSlot) throw new IllegalStateException("Start is larger than end");
@@ -334,10 +388,26 @@ public interface Content {
 			return this;
 		}
 		
+		/**
+		 * Repeats the given button between the specified start and end slots.
+		 *
+		 * @param start the start slot
+		 * @param endSlot the end slot
+		 * @param button the button to be repeated
+		 * @return the current Builder instance
+		 */
 		public Builder repeatButton(Slot start, Slot endSlot, Button button) {
 			return repeatButton(start.getSlot(), endSlot.getSlot(), button);
 		}
 		
+		/**
+		 * Iterates through slots in the inventory based on the provided iterator
+		 * and applies the given consumer to each slot.
+		 *
+		 * @param iterator the iterator that determines the sequence of slots to be iterated over
+		 * @param consumer the operation to be performed on each slot
+		 * @return the builder instance with the applied operations
+		 */
 		public Builder iterate(SlotIterator iterator, BiConsumer<Content, Slot> consumer) {
 			while(iterator.canContinue()) {
 				Slot current = iterator.current();
@@ -347,77 +417,209 @@ public interface Content {
 			return this;
 		}
 		
+		/**
+		 * Iterates through a series of slots from a starting slot to an ending slot in the specified direction,
+		 * applying the given consumer to each content-slot pair encountered during the traversal.
+		 *
+		 * @param startSlot   the initial slot to start iterating from.
+		 * @param endSlot     the final slot to end the iteration at.
+		 * @param direction   the direction in which to iterate through the slots.
+		 * @param consumer    a BiConsumer to process the content and the current slot during the iteration.
+		 * @return the Builder instance for method chaining.
+		 */
 		public Builder iterate(Slot startSlot, Slot endSlot, Direction direction, BiConsumer<Content, Slot> consumer) {
 			SlotIterator iterator = SlotIterator.create(startSlot, endSlot, capacity, direction);
 			return iterate(iterator, consumer);
 		}
 		
+		/**
+		 * Iterates over slots starting from a given slot in a specific direction using a provided consumer to perform actions on each slot.
+		 *
+		 * @param startSlot the starting slot for the iteration
+		 * @param direction the direction in which to iterate over the slots
+		 * @param consumer the consumer that performs actions on the content and slot during iteration
+		 * @return the builder instance with the applied iteration
+		 */
 		public Builder iterate(Slot startSlot, Direction direction, BiConsumer<Content, Slot> consumer) {
 			SlotIterator iterator = SlotIterator.create(startSlot, capacity, direction);
 			return iterate(iterator, consumer);
 		}
 		
 		
+		/**
+		 * Iterates over the slots in a given direction, starting from the initial slot,
+		 * applying the provided consumer action to each slot's content.
+		 *
+		 * @param direction The direction to iterate over the slots.
+		 * @param consumer The action to be performed on each slot's content.
+		 * @return The builder instance with the applied changes.
+		 */
 		public Builder iterate(Direction direction, BiConsumer<Content, Slot> consumer) {
 			return iterate(Slot.of(0), direction, consumer);
 		}
 		
+		/**
+		 * Draws a button between the specified start and end slots following a given direction.
+		 *
+		 * @param startSlot the starting slot of the drawing operation
+		 * @param endSlot the ending slot of the drawing operation
+		 * @param direction the direction in which to draw the button
+		 * @param button the button to be drawn
+		 * @return the original Builder instance with the button drawn as specified
+		 */
 		public Builder draw(Slot startSlot, Slot endSlot, Direction direction, Button button) {
 			return iterate(startSlot, endSlot, direction, (content, slot) -> content.setButton(slot, button));
 		}
 		
+		/**
+		 * Draws contents from the startSlot to the endSlot in the indicated direction with the given ItemStack.
+		 *
+		 * @param startSlot the starting slot where the drawing begins
+		 * @param endSlot the ending slot where the drawing stops
+		 * @param direction the direction in which to draw
+		 * @param itemStack the item stack to be placed in the slots
+		 * @return the builder instance with the drawn slots configured
+		 */
 		public Builder draw(Slot startSlot, Slot endSlot, Direction direction, ItemStack itemStack) {
 			return draw(startSlot, endSlot, direction, Button.empty(itemStack));
 		}
 		
+		/**
+		 * Draws a button in the specified direction starting from the given slot.
+		 *
+		 * @param startSlot the starting slot for the button to be drawn
+		 * @param direction the direction in which the button will be drawn
+		 * @param button the button to be drawn
+		 * @return the Builder instance for method chaining
+		 */
 		public Builder draw(Slot startSlot, Direction direction, Button button) {
 			return iterate(startSlot, direction, (content, slot) -> content.setButton(slot, button));
 		}
 		
+		/**
+		 * Draws an ItemStack in a specified direction starting from a given slot.
+		 *
+		 * @param startSlot   the slot to start drawing from
+		 * @param direction   the direction in which to draw
+		 * @param itemStack   the item stack to be drawn
+		 * @return the builder instance with the drawn item stack
+		 */
 		public Builder draw(Slot startSlot, Direction direction, ItemStack itemStack) {
 			return iterate(startSlot, direction, (content, slot) -> content.setButton(slot, Button.empty(itemStack)));
 		}
 		
 		
+		/**
+		 * Draws a path of buttons between the specified start and end slots in a given direction.
+		 *
+		 * @param start The starting slot index
+		 * @param end The ending slot index
+		 * @param direction The direction in which to draw the buttons
+		 * @param button The button to be drawn
+		 * @return The current Builder instance with the updated button path
+		 */
 		//---------
 		public Builder draw(int start, int end, Direction direction, Button button) {
 			return draw(Slot.of(start), Slot.of(end), direction, button);
 		}
 		
+		/**
+		 * Draws a sequence of ItemStacks from a starting slot to an ending slot in a given direction.
+		 *
+		 * @param start The starting slot index.
+		 * @param end The ending slot index.
+		 * @param direction The direction in which to draw the ItemStacks.
+		 * @param itemStack The ItemStack to be used in each slot.
+		 * @return The Builder instance for method chaining.
+		 */
 		public Builder draw(int start, int end, Direction direction, ItemStack itemStack) {
 			return draw(Slot.of(start), Slot.of(end), direction, Button.empty(itemStack));
 		}
 		
+		/**
+		 * Draws a button starting from a specified slot in a given direction.
+		 *
+		 * @param start the starting slot number
+		 * @param direction the direction in which to draw the button
+		 * @param button the Button to draw
+		 * @return the Builder instance for method chaining
+		 */
 		public Builder draw(int start, Direction direction, Button button) {
 			return draw(Slot.of(start), direction, button);
 		}
 		
+		/**
+		 * Draws an item stack starting from a specific slot and moving in a specified direction.
+		 *
+		 * @param startSlot   The starting slot for drawing the item stack.
+		 * @param direction   The direction in which to move while drawing the item stack.
+		 * @param itemStack   The item stack to draw.
+		 * @return The builder instance for method chaining.
+		 */
 		public Builder draw(int startSlot, Direction direction, ItemStack itemStack) {
 			return draw(Slot.of(startSlot), direction, itemStack);
 		}
 		
+		/**
+		 * Draws the specified button in a particular direction across the slots.
+		 *
+		 * @param direction The direction in which to draw the button.
+		 * @param button The button to be drawn.
+		 * @return The Builder instance for method chaining.
+		 */
 		public Builder draw(Direction direction, Button button) {
 			return iterate(direction, (content, slot) -> content.setButton(slot, button));
 		}
 		
+		/**
+		 * Draws a sequence of buttons in a specified direction starting from the initial slot,
+		 * filling each slot with an empty button created from the provided ItemStack.
+		 *
+		 * @param direction the direction of the slots to be filled
+		 * @param itemStack the ItemStack used to create the empty button
+		 * @return the Builder instance for chained calls
+		 */
 		public Builder draw(Direction direction, ItemStack itemStack) {
 			return iterate(direction, (content, slot) -> content.setButton(slot, Button.empty(itemStack)));
 		}
 
+		/**
+		 * Applies the given contentConsumer to manipulate the internal state of the Builder.
+		 *
+		 * @param contentConsumer the Consumer that defines the operations to be performed on the Builder's Content.
+		 * @return the current instance of the Builder for method chaining.
+		 */
 		public Builder apply(Consumer<Content> contentConsumer) {
 			contentConsumer.accept(impl);
 			return this;
 		}
 
+		/**
+		 * Applies the specified pane to the builder's content implementation.
+		 *
+		 * @param pane the pane to be applied to the builder's content
+		 * @return the Builder instance with the applied pane for method chaining
+		 */
 		public Builder applyPane(Pane pane) {
 			pane.applyOn(impl);
 			return this;
 		}
 		
+		/**
+		 * Constructs a Content object using the current state of the Builder.
+		 *
+		 * @return The built Content object.
+		 */
 		public Content build() {
 			return impl;
 		}
 
+		/**
+		 * Sets multiple buttons in their respective slots.
+		 *
+		 * @param loadedButtons a map where the keys are the slots and the values are the buttons to be set in those slots.
+		 * @return the Builder instance to allow for method chaining.
+		 */
 		public Builder buttons(Map<Slot, Button> loadedButtons) {
 			for (Slot slot : loadedButtons.keySet()) {
 				setButton(slot, loadedButtons.get(slot));
