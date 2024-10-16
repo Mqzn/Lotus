@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.github.mqzen"
-version = "1.1.8a"
+version = "1.1.8b"
 
 repositories {
     gradlePluginPortal()
