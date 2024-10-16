@@ -3,6 +3,7 @@ package io.github.mqzen.menus;
 import io.github.mqzen.menus.base.Content;
 import io.github.mqzen.menus.base.pagination.FillRange;
 import io.github.mqzen.menus.base.pagination.Page;
+import io.github.mqzen.menus.base.pagination.PageComponent;
 import io.github.mqzen.menus.base.pagination.Pagination;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
@@ -19,15 +20,17 @@ public class ExampleAutoPage extends Page {
 
 
     /**
-     * The number of buttons this pageView should have
+     * The range of button-filling of {@link PageComponent}
+     * this page should have
      *
      * @param capacity the capacity for the page
      * @param opener   opener of this pagination
-     * @return The number of buttons this pageView should have
+     * @return The range of button-filling of {@link PageComponent}
+     * @see FillRange
      */
     @Override
     public FillRange getFillRange(Capacity capacity, Player opener) {
-        return FillRange.start(capacity)
+        return FillRange.start(capacity) //here, the start is 0 automatically
             .end(Slot.of(12))
             .except(Slot.of(0));
     }
@@ -56,7 +59,7 @@ public class ExampleAutoPage extends Page {
         int index = dataRegistry.getData("index");
         Pagination pagination = dataRegistry.getData("pagination");
         int max = pagination.getMaximumPages();
-        return MenuTitles.createModern("<gold>Example Page #" + (index+1) + "/" + max);
+        return MenuTitles.createModern("<gold>Example Page " + (index+1) + "/" + max);
     }
  
     @Override
