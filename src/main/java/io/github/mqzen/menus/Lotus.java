@@ -14,9 +14,6 @@ import io.github.mqzen.menus.base.serialization.MenuSerializer;
 import io.github.mqzen.menus.base.serialization.SerializableMenu;
 import io.github.mqzen.menus.base.serialization.SerializedMenuIO;
 import io.github.mqzen.menus.base.serialization.impl.SerializedMenuYaml;
-import io.github.mqzen.menus.listeners.MenuClickListener;
-import io.github.mqzen.menus.listeners.MenuCloseListener;
-import io.github.mqzen.menus.listeners.MenuOpenListener;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.openers.DefaultViewOpener;
 import io.github.mqzen.menus.reflection.Reflections;
@@ -28,10 +25,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import java.util.*;
 
@@ -95,14 +96,13 @@ public final class Lotus {
 		
 		registerOpeners();
 
-		MenuClickListener listener = new MenuClickListener(this);
-		Bukkit.getPluginManager().registerEvent(InventoryClickEvent.class,
-				  listener, clickPriority,
-				  (l, event)-> listener.onClick((InventoryClickEvent) event), plugin);
+		LotusListener listener = new LotusListener();
 
-		Bukkit.getPluginManager().registerEvents(new MenuOpenListener(this), plugin);
-		Bukkit.getPluginManager().registerEvents(new MenuCloseListener(this), plugin);
-        
+		Bukkit.getPluginManager().registerEvents(listener, plugin);
+		Bukkit.getPluginManager().registerEvent(InventoryClickEvent.class,
+			listener, clickPriority,
+			(l, event)-> listener.onClick((InventoryClickEvent) event), plugin);
+
         updateTask = MenuUpdateTask.newTask(this);
 		updateTask.runTaskTimerAsynchronously(plugin, 100L, updateTicks);
 	}
@@ -302,5 +302,58 @@ public final class Lotus {
 		Audience audience = provider.audience(sender);
 		audience.sendMessage(component);
 	}
-	
+
+	final class LotusListener implements Listener {
+		@EventHandler
+		public void onClick(InventoryClickEvent e) {
+			if(e.isCancelled())
+				return;
+
+			Player clicker = (Player) e.getWhoClicked();
+
+			Inventory topInventory = e.getInventory();
+			Inventory bottomInventory = e.getView().getBottomInventory();
+			Inventory clickedInventory = e.getClickedInventory();
+
+
+			MenuView<?> menu = Lotus.this.getMenuView(clicker.getUniqueId()).orElseGet(() -> {
+				if (topInventory.getHolder() instanceof MenuView<?> playerMenu) {
+					Lotus.this.setOpenView(clicker, playerMenu);
+					return playerMenu;
+				}
+				return null;
+			});
+
+			if (menu == null) {
+				e.setCancelled(!Lotus.this.isAllowOutsideClick());
+				return;
+			}
+
+			if (clickedInventory == null || clickedInventory.equals(bottomInventory))
+				return;
+
+			if (clickedInventory.equals(topInventory)) {
+				menu.handleOnClick(e);
+			}
+
+		}
+
+		@EventHandler
+		public void onClose(InventoryCloseEvent e) {
+			Player closer = (Player) e.getPlayer();
+			Lotus.this.getMenuView(closer.getUniqueId())
+				.ifPresent((menu) -> Lotus.this.closeView(menu, e));
+		}
+
+		@EventHandler
+		public void onOpen(InventoryOpenEvent e) {
+
+			Inventory inventory = e.getInventory();
+			if (!(inventory.getHolder() instanceof MenuView<?> menu))
+				return;
+			Lotus.this.setOpenView((Player) e.getPlayer(), menu);
+			menu.onOpen(e);
+		}
+	}
+
 }

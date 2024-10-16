@@ -26,9 +26,9 @@ public enum Direction {
 	 * Represents the downwards direction in a grid.
 	 * The associated function advances a given slot to the slot directly below it.
 	 * This direction is used to move from a higher row to a lower row in the same column.
-	 *
+	 * <p>
 	 * The `isOutsideBoundarySlot` method checks if the slot is beyond the boundary when moving downwards.
-	 *
+	 * </p>
 	 * @see Slot
 	 */
 	DOWNWARDS(slot -> Slot.of(slot.getRow() + 1, slot.getColumn())) {
@@ -68,9 +68,7 @@ public enum Direction {
 	 * This direction is associated with a function that modifies a given Slot
 	 * to move one step up and one step to the right.
 	 *
-	 * @param slot A function that takes a Slot and returns a new Slot
-	 *             moved one row up and one column to the right.
-	 */
+     */
 	RIGHT_UPWARDS(slot -> Slot.of(slot.getRow() - 1, slot.getColumn() + 1)) {
 		@Override
 		boolean isOutsideBoundarySlot(Slot slot, Slot boundary) {
@@ -86,8 +84,7 @@ public enum Direction {
 	 * Additionally, it provides a method to determine whether a slot is outside the
 	 * boundary in this direction by comparing the slot's position with a boundary slot.
 	 *
-	 * @param slotModifier A function that modifies a given Slot to move it in this direction.
-	 */
+     */
 	LEFT_UPWARDS(slot -> Slot.of(slot.getRow() - 1, slot.getColumn() - 1)) {
 		@Override
 		boolean isOutsideBoundarySlot(Slot slot, Slot boundary) {
@@ -98,13 +95,11 @@ public enum Direction {
 	/**
 	 * Represents the movement direction "right downwards" on a grid.
 	 * When applied, it moves the given Slot one row down and one column to the right.
-	 *
+	 * <p>
 	 * The movement is encapsulated in a functional mapping from a Slot
 	 * to a new Slot with modified row and column indices.
-	 *
-	 * @param slot The initial slot.
-	 * @return A new Slot representing the position after moving one row down and one column to the right.
-	 */
+	 * </p>
+     */
 	RIGHT_DOWNWARDS(slot -> Slot.of(slot.getRow() + 1, slot.getColumn() + 1)) {
 		@Override
 		boolean isOutsideBoundarySlot(Slot slot, Slot boundary) {
@@ -116,8 +111,7 @@ public enum Direction {
 	 * Represents the direction of movement in a grid, specifically moving towards the left and downwards.
 	 * This direction changes the position of a given {@link Slot} by incrementing its row and decrementing its column.
 	 *
-	 * @param slotModifier A function that modifies a {@link Slot} to step left and downwards.
-	 */
+     */
 	LEFT_DOWNWARDS(slot -> Slot.of(slot.getRow() + 1, slot.getColumn() - 1)) {
 		@Override
 		boolean isOutsideBoundarySlot(Slot slot, Slot boundary) {
@@ -135,5 +129,12 @@ public enum Direction {
 		return slotModifier.apply(input);
 	}
 	
+	/**
+	 * Checks if the given slot is outside the boundary slot.
+	 *
+	 * @param slot the slot to check
+	 * @param boundary the boundary against which the slot is checked
+	 * @return true if the slot is outside the boundary, false otherwise
+	 */
 	abstract boolean isOutsideBoundarySlot(Slot slot, Slot boundary);
 }
