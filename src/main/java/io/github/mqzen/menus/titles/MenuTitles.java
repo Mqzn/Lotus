@@ -16,7 +16,7 @@ public final class MenuTitles {
 	/**
 	 * Creates a legacy menu title based on the provided string.
 	 *
-	 * @param title the title text to be used. It may contain legacy color codes using '&' or '§' characters.
+	 * @param title the title text to be used. It may contain legacy color codes
 	 * @return a MenuTitle object that represents the legacy title.
 	 */
 	public static MenuTitle createLegacy(String title) {
