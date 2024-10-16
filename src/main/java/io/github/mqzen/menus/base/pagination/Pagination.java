@@ -3,6 +3,7 @@ package io.github.mqzen.menus.base.pagination;
 import com.google.common.collect.Lists;
 import io.github.mqzen.menus.Lotus;
 import io.github.mqzen.menus.base.pagination.exception.InvalidPageException;
+import io.github.mqzen.menus.misc.Capacity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -200,7 +201,7 @@ public interface Pagination {
 	/**
 	 * @return Whether to trim page-content
 	 * if the content exceeds that of the max buttons count
-	 * which is decided by {@link Page#getPageButtonsCount(PageView, Player)}
+	 * which is decided by {@link Page#getFillRange(Capacity, Player)}
 	 */
 	boolean trimExtraContent();
 
