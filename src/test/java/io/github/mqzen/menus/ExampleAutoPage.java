@@ -1,15 +1,12 @@
 package io.github.mqzen.menus;
 
 import io.github.mqzen.menus.base.Content;
+import io.github.mqzen.menus.base.pagination.FillRange;
 import io.github.mqzen.menus.base.pagination.Page;
-import io.github.mqzen.menus.base.pagination.PageView;
 import io.github.mqzen.menus.base.pagination.Pagination;
-import io.github.mqzen.menus.base.style.TextLayout;
-import io.github.mqzen.menus.base.style.TextLayoutPane;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
-import io.github.mqzen.menus.misc.button.Button;
-import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
+import io.github.mqzen.menus.misc.Slot;
 import io.github.mqzen.menus.misc.itembuilder.ItemBuilder;
 import io.github.mqzen.menus.titles.MenuTitle;
 import io.github.mqzen.menus.titles.MenuTitles;
@@ -17,15 +14,24 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ExampleAutoPage extends Page {
- 
+
+
+    /**
+     * The number of buttons this pageView should have
+     *
+     * @param capacity the capacity for the page
+     * @param opener   opener of this pagination
+     * @return The number of buttons this pageView should have
+     */
     @Override
-    public int getPageButtonsCount(@Nullable PageView pageView, Player player) {
-        return 12;
+    public FillRange getFillRange(Capacity capacity, Player opener) {
+        return FillRange.start(capacity)
+            .end(Slot.of(12))
+            .except(Slot.of(0));
     }
- 
+
     @Override
     public ItemStack nextPageItem(Player player) {
         return ItemBuilder.legacy(Material.PAPER)
@@ -62,20 +68,6 @@ public class ExampleAutoPage extends Page {
     public @NotNull Content getContent(DataRegistry dataRegistry, Player player, Capacity capacity) {
         var builder = Content
                 .builder(capacity);
-        var button = Button.clickable(ItemBuilder.legacy(Material.STAINED_GLASS_PANE, 1, (short) 5)
-                        .setDisplay("Hi")
-                        .build(),
-                ButtonClickAction.plain((menuView, inventoryClickEvent) -> inventoryClickEvent.setCancelled(true)));
-
-        TextLayoutPane pane = new TextLayoutPane(capacity,
-                TextLayout.builder().set('#', button).build(),
-                "#########",
-                "#       #",
-                "#       #",
-                "#########"
-        );
-
-        builder = builder.applyPane(pane);
         return builder.build();
     }
 }

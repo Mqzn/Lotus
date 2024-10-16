@@ -3,11 +3,13 @@ package io.github.mqzen.menus.base.pagination;
 import com.google.common.collect.Lists;
 import io.github.mqzen.menus.Lotus;
 import io.github.mqzen.menus.base.pagination.exception.InvalidPageException;
+import io.github.mqzen.menus.misc.Capacity;
+import io.github.mqzen.menus.misc.DataRegistry;
+import io.github.mqzen.menus.misc.Slot;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.*;
 
 class PaginationImpl implements Pagination {
@@ -23,9 +25,14 @@ class PaginationImpl implements Pagination {
 	private final boolean trimExtra;
 	private int maxPages = 0;
 
-	PaginationImpl(Lotus manager,
-						boolean trimExtra,
-	               boolean automatic, Page pageModel) {
+	private final DataRegistry DEFAULT_PAGINATION_DATA = DataRegistry.empty();
+
+	PaginationImpl(
+		Lotus manager,
+		boolean trimExtra,
+		boolean automatic,
+		Page pageModel
+	) {
 		if (automatic && pageModel == null)
 			throw new IllegalStateException("Automatic pagination has no creator");
 		
@@ -33,6 +40,8 @@ class PaginationImpl implements Pagination {
 		this.trimExtra = trimExtra;
 		this.automatic = automatic;
 		this.pageModel = pageModel;
+		DEFAULT_PAGINATION_DATA.setData("index", 0);
+		DEFAULT_PAGINATION_DATA.setData("pagination", this);
 	}
 
 
@@ -187,8 +196,7 @@ class PaginationImpl implements Pagination {
 	public synchronized void paginate(Player opener) {
 		if (!automatic)
 			throw new IllegalStateException("Automatic pagination is only allowed to paginate and create pages automatically");
-
-		this.maxPages = calculateMaxPages(opener);
+		this.maxPages = calculateMaxPages(opener, getPageCreator().getCapacity(DEFAULT_PAGINATION_DATA, opener) );
 		this.lastPage = maxPages-1;
 
 		if(maxPages <= 0) {
@@ -202,16 +210,29 @@ class PaginationImpl implements Pagination {
 		for (int pageIndex = 0; pageIndex < maxPages; pageIndex++) {
 			PageView pageView = PageViewFactory.createAuto(this, pageIndex);
 			pageView.initialize(this.pageModel, opener);
-			
-			final int buttonsPerPage = pageView.getMenu().getPageButtonsCount(pageView, opener);
-			
+
+			FillRange fillRange = pageView.getMenu().getFillRange(pageView.getCapacity(), opener);
+			final int buttonsPerPage = fillRange.getCount();
 			int startIndex = pageIndex * buttonsPerPage;
 			int endIndex = (pageIndex + 1) * buttonsPerPage;
-			
+
+			int start = 0;
 			for (int index = startIndex; index < endIndex; index++) {
 				PageComponent component = getComponent(components, index);
 				if (component == null) break;
-				pageView.addButtons(component.toButton());
+
+				int nextEmptySlot = pageView.getContent().nextEmptySlot(start);
+				if(nextEmptySlot == -1)  {
+					break;
+				}
+
+				if(fillRange.isForbiddenSlot(Slot.of(nextEmptySlot))) {
+					start = nextEmptySlot+1;
+					index--;
+					continue;
+				}
+				pageView.getContent()
+					.setButton(nextEmptySlot, component.toButton());
 			}
 			pages.put(pageIndex, pageView);
 		}
@@ -228,8 +249,8 @@ class PaginationImpl implements Pagination {
 		}
 	}
 	
-	private int calculateMaxPages(Player opener) {
-		int buttonsCountPerPage = pageModel.getPageButtonsCount(null, opener);
+	private int calculateMaxPages(Player opener, Capacity capacity) {
+		int buttonsCountPerPage = pageModel.getFillRange(capacity, opener).getCount();
 		return (int) Math.ceil((double) components.size() / buttonsCountPerPage);
 	}
 	
@@ -280,7 +301,7 @@ class PaginationImpl implements Pagination {
 	/**
 	 * @return Whether to trim page-content
 	 * if the content exceeds that of the max buttons count
-	 * which is decided by {@link Page#getPageButtonsCount(PageView, Player)}
+	 * which is decided by {@link Page#getFillRange(Capacity, Player)}
 	 */
 	@Override
 	public boolean trimExtraContent() {

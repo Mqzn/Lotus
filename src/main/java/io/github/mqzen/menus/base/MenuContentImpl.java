@@ -44,8 +44,8 @@ public final class MenuContentImpl implements Content {
 	}
 	
 	@Override
-	public int nextEmptySlot() {
-		for (int slot = 0; slot < capacity.getTotalSize(); slot++) {
+	public int nextEmptySlot(int start) {
+		for (int slot = start; slot < capacity.getTotalSize(); slot++) {
 			if (getButton(slot).isEmpty()) return slot;
 		}
 		

@@ -1,10 +1,11 @@
 package io.github.mqzen.menus;
 
 import io.github.mqzen.menus.base.Content;
+import io.github.mqzen.menus.base.pagination.FillRange;
 import io.github.mqzen.menus.base.pagination.Page;
-import io.github.mqzen.menus.base.pagination.PageView;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
+import io.github.mqzen.menus.misc.Slot;
 import io.github.mqzen.menus.misc.itembuilder.ItemBuilder;
 import io.github.mqzen.menus.titles.MenuTitle;
 import io.github.mqzen.menus.titles.MenuTitles;
@@ -12,7 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class ExamplePlainPage extends Page {
 
@@ -21,11 +21,18 @@ public final class ExamplePlainPage extends Page {
 		this.amountOfItems = amountOfItems;
 	}
 
-	@Override
-	public int getPageButtonsCount(@Nullable PageView pageView, Player opener) {
-		return amountOfItems;
-	}
 
+	/**
+	 * The number of buttons this pageView should have
+	 *
+	 * @param capacity the capacity for the page
+	 * @param opener   opener of this pagination
+	 * @return The number of buttons this pageView should have
+	 */
+	@Override
+	public FillRange getFillRange(Capacity capacity, Player opener) {
+		return FillRange.start(capacity).end(Slot.of(amountOfItems));
+	}
 
 	@Override
 	public ItemStack nextPageItem(Player player) {

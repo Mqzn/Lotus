@@ -45,11 +45,11 @@ public interface Content {
 		return getButton(Slot.of(row, column));
 	}
 	
-	int nextEmptySlot();
+	int nextEmptySlot(int start);
 	
 	default void addButton(Button... buttons) {
 		for (var button : buttons) {
-			int nextSlot = nextEmptySlot();
+			int nextSlot = nextEmptySlot(0);
 			if (nextSlot == -1) break;
 			setButton(nextSlot, button);
 		}

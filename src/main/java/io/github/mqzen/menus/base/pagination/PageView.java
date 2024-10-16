@@ -16,7 +16,9 @@ public final class PageView extends BaseMenuView<Page> {
 	
 	private final Pagination pagination;
 	private final int index;
-	
+
+	private Capacity capacity;
+
 	PageView(Pagination pagination, Page creator, int index) {
 		super(pagination.getLotusAPI(), creator);
 		this.pagination = pagination;
@@ -42,8 +44,9 @@ public final class PageView extends BaseMenuView<Page> {
 	 */
 	@Override
 	public void initialize(Page page, Player opener) {
-		Capacity capacity = page.getCapacity(this.dataRegistry, opener);
-		int maxButtonsCount = page.getPageButtonsCount(this, opener);
+		capacity = page.getCapacity(this.dataRegistry, opener);
+
+		int maxButtonsCount = page.getFillRange(capacity, opener).getCount();
 
 		if(maxButtonsCount > capacity.getTotalSize()) {
 			maxButtonsCount = capacity.getTotalSize();

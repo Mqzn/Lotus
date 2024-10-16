@@ -8,7 +8,6 @@ import io.github.mqzen.menus.misc.button.Button;
 import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class Page implements Menu {
 	
@@ -17,13 +16,17 @@ public abstract class Page implements Menu {
 	}
 	
 	/**
-	 * The number of buttons this pageView should have
+	 * The range of button-filling of {@link PageComponent}
+	 * this page should have
 	 *
-	 * @param pageView null if the pagination is automatic
+	 * @param capacity the capacity for the page
 	 * @param opener   opener of this pagination
-	 * @return The number of buttons this pageView should have
+	 *
+	 * @see FillRange
+	 *
+	 * @return The range of button-filling of {@link PageComponent}
 	 */
-	public abstract int getPageButtonsCount(@Nullable PageView pageView, Player opener);
+	public abstract FillRange getFillRange(Capacity capacity, Player opener);
 	
 	public Slot nextPageSlot(Capacity capacity) {
 		return Slot.last(capacity);
@@ -37,10 +40,12 @@ public abstract class Page implements Menu {
 	
 	public abstract ItemStack previousPageItem(Player player);
 	
-	public final Content defaultContent(Pagination pagination,
-	                                    PageView pageView,
-	                                    Capacity capacity,
-	                                    Player player) {
+	public final Content defaultContent(
+		Pagination pagination,
+		PageView pageView,
+		Capacity capacity,
+		Player player
+	) {
 		var previousButtonSlot = previousPageSlot(capacity);
 		var nextButtonSlot = nextPageSlot(capacity);
 		
