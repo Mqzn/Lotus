@@ -130,14 +130,21 @@ public interface Content {
 	}
 	
 	/**
+	 * Sets the specified button at the given slot index.
 	 *
+	 * @param slot the index of the slot where the button should be placed
+	 * @param button the button to be placed in the specified slot
 	 */
 	default void setButton(int slot, Button button) {
 		setButton(Slot.of(slot), button);
 	}
 	
 	/**
+	 * Sets a button at the specified row and column in the grid.
 	 *
+	 * @param row the row number where the button should be placed
+	 * @param column the column number where the button should be placed
+	 * @param button the button to be placed at the specified row and column
 	 */
 	default void setButton(int row, int column, Button button) {
 		setButton(Slot.of(row, column), button);
@@ -224,7 +231,13 @@ public interface Content {
 	void fillColumn(int column, Button button, List<Integer> exceptRows);
 	
 	/**
-	 * F*/
+	 * Fills a specific column repeatedly with the given buttons.
+	 * The buttons will be placed in the column in the order they are received,
+	 * cycling through the buttons if there are more rows than buttons.
+	 *
+	 * @param column the column index to fill.
+	 * @param buttons the buttons to place in the column.
+	 */
 	void fillColumnRepeatedly(int column, Button... buttons);
 	
 	/**
@@ -234,17 +247,28 @@ public interface Content {
 	/**
 	 * Fills a rectangular area defined by four corner slots with a specified button.
 	 *
-	 * @param pos1   The first corner slot of the rectangle.
-	 * @param pos2   The second corner slot of the rectangle.
-	 * @param*/
+	 * @param pos1 the first corner slot of the rectangle
+	 * @param pos2 the second corner slot of the rectangle
+	 * @param pos3 the third corner slot of the rectangle
+	 * @param pos4 the fourth corner slot of the rectangle
+	 * @param button the button to fill the rectangle with
+	 */
 	void fillRectangle(Slot pos1, Slot pos2, Slot pos3, Slot pos4, Button button);
 	
 	/**
-	 * F*/
+	 * Fills the border of the content repeatedly with the given buttons.
+	 * The buttons will be placed in the border positions, cycling through
+	 * the buttons if more border positions are available than the number
+	 * of buttons provided.
+	 *
+	 * @param buttons the buttons to be used for filling the border repeatedly
+	 */
 	void fillBorderRepeatedly(Button... buttons);
 	
 	/**
+	 * Applies the given {@link BiConsumer} to each item in the content.
 	 *
+	 * @param consumer the {@link BiConsumer} to be applied to each {@link Slot} and {@link Button} pair
 	 */
 	void forEachItem(BiConsumer<Slot, Button> consumer);
 	
@@ -256,14 +280,25 @@ public interface Content {
 	@NotNull Collection<? extends Button> getAllButtons();
 	
 	/**
-	 * M*/
+	 * Merges this content instance with the specified other content instance.
+	 *
+	 * @param other the other Content instance to merge with this instance
+	 * @return a new Content instance that is the result of merging this instance with the specified other instance
+	 */
 	Content mergeWith(Content other);
 	
 	/**
+	 * Updates the button at the specified slot using the provided update operation.
+	 *
+	 * @param slot the slot where the button to be updated is located
+	 * @param buttonUpdate the operation to be applied to the button
 	 */
 	void updateButton(Slot slot, Consumer<Button> buttonUpdate);
 	
 	/**
+	 * Returns the number of buttons contained within the content.
+	 *
+	 * @return the total count of buttons.
 	 */
 	default int size() {
 		return getAllButtons().size();
