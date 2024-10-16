@@ -2,9 +2,9 @@ package io.github.mqzen.menus.misc;
 
 import lombok.Getter;
 
+@Getter
 public final class Slots {
 	
-	@Getter
 	private final Slot[] slots;
 	
 	private Slots(Slot[] slots) {

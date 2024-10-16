@@ -4,7 +4,7 @@ import net.kyori.adventure.text.Component;
 
 import static io.github.mqzen.menus.titles.MenuTitles.SECTION_SERIALIZER;
 
-public final class ModernTitle implements MenuTitle {
+final class ModernTitle implements MenuTitle {
 	
 	private final Component component;
 	

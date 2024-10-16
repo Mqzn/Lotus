@@ -5,8 +5,16 @@ import io.github.mqzen.menus.misc.Slot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Interface representing an animated button within a menu interface.
+ */
 public interface AnimatedButton {
     
+    /**
+     * Retrieves the current item stack being displayed by the animated button.
+     *
+     * @return the current item stack
+     */
     ItemStack getCurrentItem();
     
     /**

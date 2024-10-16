@@ -5,6 +5,13 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 
+/**
+ * Represents a Slot in a grid-like structure with a fixed width.
+ * <p>
+ * This class provides methods to create and manipulate slots using their slot numbers or
+ * their row and column coordinates.
+ * </p>
+ */
 @Getter
 public final class Slot implements Comparable<Slot> {
 	

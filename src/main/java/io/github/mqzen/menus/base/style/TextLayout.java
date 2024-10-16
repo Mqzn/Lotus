@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * The TextLayout class is a customized map that links characters to Button instances.
+ * It extends HashMap and implements Iterable to allow iteration over its character-button mappings.
+ */
 public final class TextLayout extends HashMap<Character, Button> implements Iterable<Map.Entry<Character, Button>> {
 
 	private TextLayout() {

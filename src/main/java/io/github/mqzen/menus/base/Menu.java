@@ -11,6 +11,12 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The Menu interface provides the structure for creating custom menus
+ * in an inventory system. It allows you to define the name, type, title,
+ * capacity, and content of the menu. Additionally, it provides hooks
+ * for handling events such as clicks, opening, and closing of the menu.
+ */
 public interface Menu {
 	
 	/**

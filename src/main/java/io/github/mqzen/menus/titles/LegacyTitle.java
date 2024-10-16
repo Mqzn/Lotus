@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 import static io.github.mqzen.menus.titles.MenuTitles.AMPERSAND_SERIALIZER;
 import static io.github.mqzen.menus.titles.MenuTitles.SECTION_SERIALIZER;
 
-public final class LegacyTitle implements MenuTitle {
+final class LegacyTitle implements MenuTitle {
 	
 	private final String text;
 	

@@ -24,7 +24,10 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * Represents player menu
+ * Base class for representing a menu view in the application.
+ * This view binds a {@link Menu} and handles the interaction and rendering of the menu contents.
+ *
+ * @param <M> the type of menu the view will handle
  */
 public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	

@@ -7,7 +7,8 @@ import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Defines how the menu view is being opened
+ * The ViewOpener interface defines a contract for creating and opening an
+ * inventory for a player using dynamic data from a cached menu within 'ViewData'.
  */
 public interface ViewOpener {
 	

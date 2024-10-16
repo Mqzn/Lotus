@@ -8,6 +8,10 @@ import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The TransformingButton class is an extension of Button that also implements the {@link AnimatedButton} interface.
+ * It allows for a button that can transform through a series of ItemStacks.
+ */
 @Getter
 public final class TransformingButton extends Button implements AnimatedButton {
     

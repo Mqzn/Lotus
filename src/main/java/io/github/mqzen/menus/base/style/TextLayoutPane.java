@@ -5,6 +5,10 @@ import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.button.Button;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The TextLayoutPane class is responsible for applying a pattern of text layout onto a content pane.
+ * This class implements the Pane interface.
+ */
 public final class TextLayoutPane implements Pane {
 
 	private final String[] pattern;
