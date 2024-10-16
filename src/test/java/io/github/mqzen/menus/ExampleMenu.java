@@ -19,78 +19,78 @@ import org.jetbrains.annotations.NotNull;
 
 public final class ExampleMenu implements Menu {
 
-	/**
-	 * @return The unique name for this menu
-	 */
-	@Override
-	public String getName() {
-		return "example menu";
-	}
+    /**
+     * @return The unique name for this menu
+     */
+    @Override
+    public String getName() {
+        return "example menu";
+    }
 
-	/**
-	 * @param extraData the data container for this menu for extra data
-	 * @param opener    the player who is opening this menu
-	 * @return the title for this menu
-	 */
-	@Override
-	public @NotNull MenuTitle getTitle(DataRegistry extraData, Player opener) {
-		return MenuTitles.createLegacy("&cExample Menu");
-	}
+    /**
+     * @param extraData the data container for this menu for extra data
+     * @param opener    the player who is opening this menu
+     * @return the title for this menu
+     */
+    @Override
+    public @NotNull MenuTitle getTitle(DataRegistry extraData, Player opener) {
+        return MenuTitles.createLegacy("&cExample Menu");
+    }
 
-	/**
-	 * @param extraData the data container for this menu for extra data
-	 * @param opener    the player who is opening this menu
-	 * @return the capacity/size for this menu
-	 */
-	@Override
-	public @NotNull Capacity getCapacity(DataRegistry extraData, Player opener) {
-		return Capacity.ofRows(3);//Alternative approach: Capacity.ofRows(3)
-	}
+    /**
+     * @param extraData the data container for this menu for extra data
+     * @param opener    the player who is opening this menu
+     * @return the capacity/size for this menu
+     */
+    @Override
+    public @NotNull Capacity getCapacity(DataRegistry extraData, Player opener) {
+        return Capacity.ofRows(3);//Alternative approach: Capacity.ofRows(3)
+    }
 
-	/**
-	 * Creates the content for the menu
-	 *
-	 * @param extraData the data container for this menu for extra data
-	 * @param opener    the player opening this menu
-	 * @param capacity  the capacity set by the user above
-	 * @return the content of the menu to add (this includes items)
-	 */
-	@Override
-	public @NotNull Content getContent(DataRegistry extraData,
-	                                   Player opener, Capacity capacity) {
+    /**
+     * Creates the content for the menu
+     *
+     * @param extraData the data container for this menu for extra data
+     * @param opener    the player opening this menu
+     * @param capacity  the capacity set by the user above
+     * @return the content of the menu to add (this includes items)
+     */
+    @Override
+    public @NotNull Content getContent(DataRegistry extraData,
+                                       Player opener, Capacity capacity) {
 
-		Button borderPane = Button.clickable(
-				ItemBuilder.legacy(Material.STAINED_GLASS_PANE, 1, (short) 5)
-					.setDisplay("&r").build(),
-				ButtonClickAction.plain((menuView, event) -> {
-					event.setCancelled(true);
-					//we want nothing to happen here
-					menuView.updateButton(event.getSlot(), (button)-> {
-                        assert button.getItem() != null;
-                        var item = button.getItem();
-						short buttonData = button.getNamedData("data");
-						buttonData++;
-						if(buttonData > 12) {
-							buttonData = 0;
-						}
-						button.setNamedData("data", buttonData);
-						item.setDurability(buttonData);
-						button.setItem(item);
-					});
+        Button borderPane = Button.clickable(
+            ItemBuilder.legacy(Material.STAINED_GLASS_PANE, 1, (short) 5)
+                .setDisplay("&r").build(),
+            ButtonClickAction.plain((menuView, event) -> {
+                event.setCancelled(true);
+                //we want nothing to happen here
+                menuView.updateButton(event.getSlot(), (button) -> {
+                    assert button.getItem() != null;
+                    var item = button.getItem();
+                    short buttonData = button.getNamedData("data");
+                    buttonData++;
+                    if (buttonData > 12) {
+                        buttonData = 0;
+                    }
+                    button.setNamedData("data", buttonData);
+                    item.setDurability(buttonData);
+                    button.setItem(item);
+                });
 
-				})
-		).setNamedData("data", (short)5);
+            })
+        ).setNamedData("data", (short) 5);
 
-		return Content.builder(capacity)
-				.iterate(Slot.of(10), Slot.of(16), Direction.RIGHT, ((content, slot) -> {
-					content.setButton(slot, borderPane);
-				}))
-				.build();
-	}
-	
-	@Override
-	public void onClick(MenuView<?> playerMenuView, InventoryClickEvent event) {
-		//happens after button click is executed
-		event.setCancelled(true);
-	}
+        return Content.builder(capacity)
+            .iterate(Slot.of(10), Slot.of(16), Direction.RIGHT, ((content, slot) -> {
+                content.setButton(slot, borderPane);
+            }))
+            .build();
+    }
+
+    @Override
+    public void onClick(MenuView<?> playerMenuView, InventoryClickEvent event) {
+        //happens after button click is executed
+        event.setCancelled(true);
+    }
 }
