@@ -21,6 +21,7 @@ class PaginationImpl implements Pagination {
 	private @Nullable Player currentOpener = null;
 	private int currentIndex = 0;
 	private final boolean trimExtra;
+	private int maxPages = 0;
 
 	PaginationImpl(Lotus manager,
 						boolean trimExtra,
@@ -33,8 +34,18 @@ class PaginationImpl implements Pagination {
 		this.automatic = automatic;
 		this.pageModel = pageModel;
 	}
-	
-	
+
+
+	/**
+	 * it's always zero if {@link Pagination#paginate(Player)} hasn't been called yet !
+	 *
+	 * @return the total number of pages created
+	 */
+	@Override
+	public int getMaximumPages() {
+		return maxPages;
+	}
+
 	/**
 	 * Moves to next page
 	 */
@@ -176,8 +187,8 @@ class PaginationImpl implements Pagination {
 	public synchronized void paginate(Player opener) {
 		if (!automatic)
 			throw new IllegalStateException("Automatic pagination is only allowed to paginate and create pages automatically");
-		
-		int maxPages = calculateMaxPages(opener);
+
+		this.maxPages = calculateMaxPages(opener);
 		this.lastPage = maxPages-1;
 
 		if(maxPages <= 0) {

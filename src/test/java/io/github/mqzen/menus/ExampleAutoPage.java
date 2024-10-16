@@ -3,6 +3,7 @@ package io.github.mqzen.menus;
 import io.github.mqzen.menus.base.Content;
 import io.github.mqzen.menus.base.pagination.Page;
 import io.github.mqzen.menus.base.pagination.PageView;
+import io.github.mqzen.menus.base.pagination.Pagination;
 import io.github.mqzen.menus.base.style.TextLayout;
 import io.github.mqzen.menus.base.style.TextLayoutPane;
 import io.github.mqzen.menus.misc.Capacity;
@@ -47,7 +48,9 @@ public class ExampleAutoPage extends Page {
     @Override
     public @NotNull MenuTitle getTitle(DataRegistry dataRegistry, Player player) {
         int index = dataRegistry.getData("index");
-        return MenuTitles.createModern("<gold>Example Page #" + (index+1));
+        Pagination pagination = dataRegistry.getData("pagination");
+        int max = pagination.getMaximumPages();
+        return MenuTitles.createModern("<gold>Example Page #" + (index+1) + "/" + max);
     }
  
     @Override

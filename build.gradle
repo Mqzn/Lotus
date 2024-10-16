@@ -64,7 +64,7 @@ publishing {
 }
 
 tasks.register('bukkit', ShadowJar) {
-    setDestinationDirectory(new File("C:\\Users\\Bergo\\Desktop\\servers\\spigot test server 1.8.8\\plugins"))
+    setDestinationDirectory(new File("F:\\Test-Local-Server-MC\\1.8-Server\\plugins"))
     archiveClassifier.set("tests")
     from sourceSets.main.output, sourceSets.test.output
     configurations = [project.configurations.testRuntimeClasspath]

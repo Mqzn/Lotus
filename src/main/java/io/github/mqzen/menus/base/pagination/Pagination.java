@@ -24,7 +24,13 @@ public interface Pagination {
 	static Pagination.Builder.Plain plain(Lotus manager) {
 		return new Builder.Plain(manager);
 	}
-	
+
+	/**
+	 * it's always zero if {@link Pagination#paginate(Player)} hasn't been called yet !
+	 * @return the total number of pages created
+	 */
+	int getMaximumPages();
+
 	/**
 	 * Moves to next page
 	 */
@@ -49,7 +55,7 @@ public interface Pagination {
 	 * @return whether the paginated menu is automatic
 	 */
 	boolean isAutomatic();
-	
+
 	/**
 	 * The creator of every page
 	 *
