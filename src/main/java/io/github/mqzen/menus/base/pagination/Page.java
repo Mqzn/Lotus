@@ -7,7 +7,9 @@ import io.github.mqzen.menus.misc.Slot;
 import io.github.mqzen.menus.misc.button.Button;
 import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Abstract class representing a Page in a paginated menu system.
@@ -93,6 +95,7 @@ public abstract class Page implements Menu {
 			content.setButton(nextButtonSlot, Button.clickable(nextPageItem(player),
 					ButtonClickAction.plain((menu, event) -> {
 						event.setCancelled(true);
+						onSwitchingToNextPage(pagination, capacity, nextButtonSlot, (PageView) menu, event);
 						pagination.next();
 					})));
 		
@@ -100,10 +103,30 @@ public abstract class Page implements Menu {
 			content.setButton(previousButtonSlot, Button.clickable(previousPageItem(player),
 					ButtonClickAction.plain((menu, event) -> {
 						event.setCancelled(true);
+						onSwitchingToPreviousPage(pagination, capacity, previousButtonSlot, (PageView) menu, event);
 						pagination.previous();
 					})));
 		
 		return content;
 	}
-	
+
+	protected void onSwitchingToNextPage(
+		@NotNull Pagination pagination,
+		@NotNull Capacity capacity,
+		@NotNull Slot clickedSlot,
+		@NotNull PageView clickedView,
+		@NotNull InventoryClickEvent event
+	) {
+
+	}
+
+	protected void onSwitchingToPreviousPage(
+		@NotNull Pagination pagination,
+		@NotNull Capacity capacity,
+		@NotNull Slot clickedSlot,
+		@NotNull PageView clickedView,
+		@NotNull InventoryClickEvent event
+	) {
+
+	}
 }

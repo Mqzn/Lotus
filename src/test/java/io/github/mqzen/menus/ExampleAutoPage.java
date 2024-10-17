@@ -1,10 +1,7 @@
 package io.github.mqzen.menus;
 
 import io.github.mqzen.menus.base.Content;
-import io.github.mqzen.menus.base.pagination.FillRange;
-import io.github.mqzen.menus.base.pagination.Page;
-import io.github.mqzen.menus.base.pagination.PageComponent;
-import io.github.mqzen.menus.base.pagination.Pagination;
+import io.github.mqzen.menus.base.pagination.*;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.misc.Slot;
@@ -12,7 +9,9 @@ import io.github.mqzen.menus.misc.itembuilder.ItemBuilder;
 import io.github.mqzen.menus.titles.MenuTitle;
 import io.github.mqzen.menus.titles.MenuTitles;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -72,5 +71,29 @@ public class ExampleAutoPage extends Page {
         var builder = Content
                 .builder(capacity);
         return builder.build();
+    }
+
+    @Override
+    protected void onSwitchingToNextPage(
+        @NotNull Pagination pagination,
+        @NotNull Capacity capacity,
+        @NotNull Slot slot,
+        @NotNull PageView clickedView,
+        @NotNull InventoryClickEvent event
+    ) {
+        Player player = (Player) event.getWhoClicked();
+        player.playSound(player.getLocation(), Sound.ARROW_HIT, 1, 1);
+    }
+
+    @Override
+    protected void onSwitchingToPreviousPage(
+        @NotNull Pagination pagination,
+        @NotNull Capacity capacity,
+        @NotNull Slot slot,
+        @NotNull PageView clickedView,
+        @NotNull InventoryClickEvent event
+    ) {
+        Player player = (Player) event.getWhoClicked();
+        player.playSound(player.getLocation(), Sound.VILLAGER_NO, 1, 1);
     }
 }
