@@ -216,7 +216,7 @@ class PaginationImpl implements Pagination {
 			int startIndex = pageIndex * buttonsPerPage;
 			int endIndex = (pageIndex + 1) * buttonsPerPage;
 
-			int start = 0;
+			int start = fillRange.getStart().getSlot();
 			for (int index = startIndex; index < endIndex; index++) {
 				PageComponent component = getComponent(components, index);
 				if (component == null) break;

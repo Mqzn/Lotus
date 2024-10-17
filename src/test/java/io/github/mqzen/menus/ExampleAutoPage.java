@@ -30,9 +30,9 @@ public class ExampleAutoPage extends Page {
      */
     @Override
     public FillRange getFillRange(Capacity capacity, Player opener) {
-        return FillRange.start(capacity) //here, the start is 0 automatically
-            .end(Slot.of(12))
-            .except(Slot.of(0));
+        return FillRange.start(capacity, Slot.of(10)) //here, the start is 0 automatically
+            .end(Slot.of(25))
+            .except(Slot.of(17), Slot.of(18));
     }
 
     @Override
