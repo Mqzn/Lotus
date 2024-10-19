@@ -26,7 +26,6 @@ public interface Menu {
 	
 	/**
 	 * Type of inventory you're creating
-	 *
 	 * @return the type of inventory
 	 */
 	default InventoryType getMenuType() {

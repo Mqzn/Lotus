@@ -23,6 +23,7 @@ public final class LotusExamplePlugin extends JavaPlugin implements CommandExecu
 	@Override
 	public void onEnable() {
 		lotus = Lotus.load(this);
+		lotus.enableDebugger();
 		this.getCommand("test").setExecutor(this);
 		getDataFolder().mkdirs();
 		getCommand("save").setExecutor((commandSender, command, s, strings) -> {

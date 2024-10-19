@@ -392,5 +392,15 @@ public interface MenuView<M extends Menu> extends InventoryHolder {
 	default void updateItemStack(int row, int col, Consumer<ItemStack> itemStackConsumer) {
 		updateItemStack(Slot.of(row, col), itemStackConsumer);
 	}
-	
+
+	/**
+	 * Refreshes the current state of the object.
+	 * <p>
+	 * This method is used to reinitialize or reset the object's state,
+	 * ensuring that it is up-to-date with any changes or updates that
+	 * may have occurred. Implementing this method may involve tasks
+	 * such as clearing caches, reloading configuration settings, or
+	 * reinitializing internal variables to their default states.
+	 */
+	void refresh();
 }

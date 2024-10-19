@@ -16,7 +16,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -197,6 +196,7 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	 */
 	@Override
 	public boolean isOpen() {
+		api.debug("current-opened-data='%s', current-opener='%s', current-inv='%s'", currentOpenedData, currentOpener, currentOpenInventory);
 		return currentOpenedData != null
 			&& currentOpener != null
 			&& currentOpenInventory != null;
@@ -324,5 +324,21 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 			this.updateButton(slot, buttonUpdater);
 		});
 	}
-	
+
+	/**
+	 * Refreshes the current state of the object.
+	 * <p>
+	 * This method is used to reinitialize or reset the object's state,
+	 * ensuring that it is up-to-date with any changes or updates that
+	 * may have occurred. Implementing this method may involve tasks
+	 * such as clearing caches, reloading configuration settings, or
+	 * reinitializing internal variables to their default states.
+	 */
+	@Override
+	public void refresh() {
+		initialize(menu, currentOpener);
+		currentOpenedData.content().forEachItem((slot, button) ->
+			currentOpenInventory.setItem(slot.getSlot(), button.getItem()));
+	}
+
 }

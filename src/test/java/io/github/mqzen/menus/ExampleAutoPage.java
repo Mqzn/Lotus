@@ -5,6 +5,8 @@ import io.github.mqzen.menus.base.pagination.*;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.misc.Slot;
+import io.github.mqzen.menus.misc.button.Button;
+import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import io.github.mqzen.menus.misc.itembuilder.ItemBuilder;
 import io.github.mqzen.menus.titles.MenuTitle;
 import io.github.mqzen.menus.titles.MenuTitles;
@@ -69,7 +71,11 @@ public class ExampleAutoPage extends Page {
     @Override
     public @NotNull Content getContent(DataRegistry dataRegistry, Player player, Capacity capacity) {
         var builder = Content
-                .builder(capacity);
+            .builder(capacity)
+            .setButton(31, Button.clickable(new ItemStack(Material.BARRIER), ButtonClickAction.plain((menu, event) -> {
+                event.setCancelled(true);
+                player.closeInventory();
+            })));
         return builder.build();
     }
 

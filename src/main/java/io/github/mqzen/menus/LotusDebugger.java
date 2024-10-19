@@ -3,7 +3,7 @@ package io.github.mqzen.menus;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-final class LotusDebugger {
+public final class LotusDebugger {
     
     static LotusDebugger EMPTY = new LotusDebugger(null);
 

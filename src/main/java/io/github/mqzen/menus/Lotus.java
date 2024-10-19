@@ -303,6 +303,10 @@ public final class Lotus {
 		audience.sendMessage(component);
 	}
 
+	public void debug(String msg, Object... args) {
+		debugger.debug(msg, args);
+	}
+
 	final class LotusListener implements Listener {
 		@EventHandler
 		public void onClick(InventoryClickEvent e) {
@@ -333,6 +337,7 @@ public final class Lotus {
 				return;
 
 			if (clickedInventory.equals(topInventory)) {
+				Lotus.this.debug("Triggering InventoryClickEvent");
 				menu.handleOnClick(e);
 			}
 
@@ -341,6 +346,7 @@ public final class Lotus {
 		@EventHandler
 		public void onClose(InventoryCloseEvent e) {
 			Player closer = (Player) e.getPlayer();
+			Lotus.this.debug("Triggering InventoryCloseEvent");
 			Lotus.this.getMenuView(closer.getUniqueId())
 				.ifPresent((menu) -> Lotus.this.closeView(menu, e));
 		}
