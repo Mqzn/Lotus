@@ -188,13 +188,17 @@ public interface MenuView<M extends Menu> extends InventoryHolder {
 	default InventoryType getType() {
 		return getMenu().getMenuType();
 	}
-	
+
+	default boolean onPreClick(InventoryClickEvent event) {
+		return getMenu().onPreClick(this, event);
+	}
+
 	/**
 	 * Defines what's going to happen after the button click action
 	 * @param event the click event
 	 */
-	default void onClick(InventoryClickEvent event) {
-		getMenu().onClick(this, event);
+	default void onPostClick(InventoryClickEvent event) {
+		getMenu().onPostClick(this, event);
 	}
 	
 	/**
@@ -223,8 +227,11 @@ public interface MenuView<M extends Menu> extends InventoryHolder {
 	 * @param event the click event
 	 */
 	default void handleOnClick(InventoryClickEvent event) {
+		if(!onPreClick(event) ) {
+			return;
+		}
 		onClickedSlot(event.getSlot(), event);
-		onClick(event);
+		onPostClick(event);
 	}
 	
 	/**

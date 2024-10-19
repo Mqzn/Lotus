@@ -57,11 +57,21 @@ public interface Menu {
 	@NotNull Content getContent(DataRegistry extraData, Player opener, Capacity capacity);
 	
 	/**
-	 * What's going to happen on click
+	 * What's going to happen before the click
+	 * @param playerMenuView the menu view that the player has clicked on.
+	 * @param event the click event
+	 * @return if true, it continues to initiate the click actions of the button, otherwise it doesn't
+	 */
+	default boolean onPreClick(MenuView<?> playerMenuView, InventoryClickEvent event) {
+		return true;
+	}
+
+	/**
+	 * What's going to happen after the click
 	 * @param playerMenuView the menu view that the player has clicked on.
 	 * @param event the click event
 	 */
-	default void onClick(MenuView<?> playerMenuView, InventoryClickEvent event) {
+	default void onPostClick(MenuView<?> playerMenuView, InventoryClickEvent event) {
 	}
 	
 	/**

@@ -27,10 +27,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import java.util.*;
@@ -300,7 +297,7 @@ public final class Lotus {
 			Player clicker = (Player) e.getWhoClicked();
 
 			Inventory topInventory = e.getInventory();
-			Inventory bottomInventory = e.getView().getBottomInventory();
+			//Inventory bottomInventory = e.getView().getBottomInventory();
 			Inventory clickedInventory = e.getClickedInventory();
 
 
@@ -317,14 +314,11 @@ public final class Lotus {
 				return;
 			}
 
-			if (clickedInventory == null || clickedInventory.equals(bottomInventory))
+			if (clickedInventory == null)
 				return;
 
-			if (clickedInventory.equals(topInventory)) {
-				Lotus.this.debug("Triggering InventoryClickEvent");
-				menu.handleOnClick(e);
-			}
-
+			Lotus.this.debug("Triggering InventoryClickEvent");
+			menu.handleOnClick(e);
 		}
 
 		@EventHandler
