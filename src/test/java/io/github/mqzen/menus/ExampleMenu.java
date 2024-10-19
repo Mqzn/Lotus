@@ -89,8 +89,7 @@ public final class ExampleMenu implements Menu {
     }
 
     @Override
-    public void onClick(MenuView<?> playerMenuView, InventoryClickEvent event) {
+    public void onPostClick(MenuView<?> playerMenuView, InventoryClickEvent event) {
         //happens after button click is executed
-        event.setCancelled(true);
     }
 }

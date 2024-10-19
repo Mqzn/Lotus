@@ -5,10 +5,7 @@ import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.titles.MenuTitle;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -91,6 +88,15 @@ public interface Menu {
 	 */
 	default void onOpen(MenuView<?> playerMenuView, InventoryOpenEvent event) {
 	}
-	
+
+	/**
+	 * Handles the inventory drag event within the menu. This method is called when a player
+	 * drags an item within the inventory associated with this menu.
+	 *
+	 * @param playerMenuView the menu view that the player is interacting with.
+	 * @param event the drag event that occurred in the inventory.
+	 */
+	default void onDrag(MenuView<?> playerMenuView, InventoryDragEvent event) {
+	}
 	
 }

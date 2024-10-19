@@ -195,7 +195,6 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	 */
 	@Override
 	public boolean isOpen() {
-		api.debug("current-opened-data='%s', current-opener='%s', current-inv='%s'", currentOpenedData, currentOpener, currentOpenInventory);
 		return currentOpenedData != null
 			&& currentOpener != null
 			&& currentOpenInventory != null;

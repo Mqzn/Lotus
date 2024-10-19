@@ -8,10 +8,7 @@ import io.github.mqzen.menus.misc.button.Button;
 import io.github.mqzen.menus.misc.button.ButtonCondition;
 import io.github.mqzen.menus.misc.button.ButtonUpdater;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -209,7 +206,16 @@ public interface MenuView<M extends Menu> extends InventoryHolder {
 	default void onOpen(InventoryOpenEvent event) {
 		getMenu().onOpen(this, event);
 	}
-	
+
+	/**
+	 * Handles the drag event in an inventory.
+	 *
+	 * @param event the InventoryDragEvent that occurs when an item is dragged within the inventory
+	 */
+	default void onDrag(InventoryDragEvent event) {
+		getMenu().onDrag(this, event);
+	}
+
 	/**
 	 * What occurs/is executed on closing of this menu view
 	 *

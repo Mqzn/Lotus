@@ -25,12 +25,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class represents the main handler for Lotus's API,
@@ -287,7 +290,7 @@ public final class Lotus {
 	}
 
 	final class LotusListener implements Listener {
-		@EventHandler
+		@EventHandler(priority = EventPriority.LOW)
 		public void onClick(InventoryClickEvent e) {
 			if(e.isCancelled())
 				return;
@@ -319,7 +322,44 @@ public final class Lotus {
 			menu.handleOnClick(e);
 		}
 
-		@EventHandler
+		@EventHandler(priority = EventPriority.LOW)
+		public void onDrag(InventoryDragEvent e) {
+
+			var view = e.getView();
+			if(view == null) return;
+
+			Player clicker = (Player) e.getWhoClicked();
+			var topInventory = view.getTopInventory();
+			var clickedInventory = e.getInventory();
+
+			MenuView<?> menu = Lotus.this.getMenuView(clicker.getUniqueId()).orElseGet(() -> {
+				if (topInventory.getHolder() instanceof MenuView<?> playerMenu) {
+					Lotus.this.setOpenView(clicker, playerMenu);
+					return playerMenu;
+				}
+				return null;
+			});
+
+			if(menu == null) {
+				e.setCancelled(!Lotus.this.isAllowOutsideClick());
+				return;
+			}
+			/*
+			if(menu != null && lastClickEvent != null && lastClickEvent.getInventory() == clickedInventory) {
+				InventoryClickEvent clickEvent = new InventoryClickEvent(
+					lastClickEvent.getView(), lastClickEvent.getSlotType(), lastClickEvent.getSlot(), lastClickEvent.getClick(), lastClickEvent.getAction()
+				);
+                menu.handleOnClick(clickEvent);
+			}
+			*/
+
+			if(clickedInventory != null && clickedInventory == topInventory) {
+				Lotus.this.debug("Triggering InventoryDragEvent");
+				menu.onDrag(e);
+			}
+		}
+
+		@EventHandler(priority = EventPriority.LOW)
 		public void onClose(InventoryCloseEvent e) {
 			Player closer = (Player) e.getPlayer();
 			Lotus.this.debug("Triggering InventoryCloseEvent");
@@ -327,7 +367,7 @@ public final class Lotus {
 				.ifPresent((menu) -> Lotus.this.closeView(menu, e));
 		}
 
-		@EventHandler
+		@EventHandler(priority = EventPriority.LOW)
 		public void onOpen(InventoryOpenEvent e) {
 
 			Inventory inventory = e.getInventory();
@@ -336,6 +376,7 @@ public final class Lotus {
 			Lotus.this.setOpenView((Player) e.getPlayer(), menu);
 			menu.onOpen(e);
 		}
+
 	}
 
 }
