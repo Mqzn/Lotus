@@ -88,9 +88,7 @@ public final class Lotus {
 		
 		registerOpeners();
 
-		LotusListener listener = new LotusListener();
-
-		Bukkit.getPluginManager().registerEvents(listener, plugin);
+		Bukkit.getPluginManager().registerEvents(new LotusListener(), plugin);
 
         updateTask = MenuUpdateTask.newTask(this);
 		updateTask.runTaskTimerAsynchronously(plugin, 100L, updateTicks);
