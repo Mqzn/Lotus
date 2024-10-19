@@ -26,7 +26,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -64,9 +63,6 @@ public final class Lotus {
 	@Setter
 	private boolean allowOutsideClick = true;
 
-	@Getter
-	private final EventPriority clickPriority;
-
 	private final AdventureProvider<CommandSender> provider;
 
 	@Getter
@@ -83,9 +79,8 @@ public final class Lotus {
 	@Getter
 	private long updateTicks = 15L;
     
-    private Lotus(Plugin plugin, AdventureProvider<CommandSender> provider, EventPriority priority) {
+    private Lotus(Plugin plugin, AdventureProvider<CommandSender> provider) {
 		this.plugin = plugin;
-		this.clickPriority = priority;
 		if(provider instanceof NoAdventure<CommandSender>) {
 			debugger.warn("Couldn't find adventure on the server runtime");
 		}
@@ -99,9 +94,6 @@ public final class Lotus {
 		LotusListener listener = new LotusListener();
 
 		Bukkit.getPluginManager().registerEvents(listener, plugin);
-		Bukkit.getPluginManager().registerEvent(InventoryClickEvent.class,
-			listener, clickPriority,
-			(l, event)-> listener.onClick((InventoryClickEvent) event), plugin);
 
         updateTask = MenuUpdateTask.newTask(this);
 		updateTask.runTaskTimerAsynchronously(plugin, 100L, updateTicks);
@@ -130,22 +122,14 @@ public final class Lotus {
 	}
 	
 	
-	public static Lotus load(Plugin plugin, AdventureProvider<CommandSender> adventureProvider, EventPriority priority) {
-		return new Lotus(plugin, adventureProvider, priority);
-	}
-	
 	public static Lotus load(Plugin plugin, AdventureProvider<CommandSender> adventureProvider) {
-		return new Lotus(plugin, adventureProvider, EventPriority.NORMAL);
+		return new Lotus(plugin, adventureProvider);
 	}
-	
-	public static Lotus load(Plugin plugin, EventPriority priority) {
-		return load(plugin, loadAdventure(plugin), priority);
-	}
-	
+
 	public static Lotus load(Plugin plugin) {
-		return load(plugin, EventPriority.NORMAL);
+		return load(plugin, loadAdventure(plugin));
 	}
-	
+
 	
 	private void registerOpeners() {
 		//TODO register the rest of openers
