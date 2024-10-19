@@ -151,7 +151,6 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	
 	/**
 	 * the current open inventory
-	 *
 	 * @return The open inventory
 	 */
 	@Override
