@@ -56,4 +56,15 @@ public final class Capacity {
 	public static Capacity ofRows(int rows) {
 		return new Capacity(rows, 9);
 	}
+
+	public static Capacity flexible(final int numberOfButtons, final int maxSize) {
+		// Calculate required size, rounding up to the nearest multiple of 9
+		int requiredSize = (numberOfButtons + 8) / 9 * 9;
+
+		// Limit to the maximum size that is also a multiple of 9
+		int limitedSize = Math.min(requiredSize, maxSize);
+
+		// Ensure that we return a valid GUI size (must be a multiple of 9)
+		return Capacity.of(limitedSize - (limitedSize % 9));
+	}
 }
