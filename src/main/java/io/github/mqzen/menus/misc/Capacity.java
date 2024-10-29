@@ -57,6 +57,15 @@ public final class Capacity {
 		return new Capacity(rows, 9);
 	}
 
+
+	/**
+	 * Creates a flexible/dynamic {@link Capacity} instance that calculates the size according to
+	 * the specified number of buttons and a max size of the gui
+	 *
+	 * @param numberOfButtons the number of buttons to set for the capacity
+	 * @param maxSize  the max size of the gui
+	 * @return a new {@link Capacity} instance
+	 */
 	public static Capacity flexible(final int numberOfButtons, final int maxSize) {
 		// Calculate required size, rounding up to the nearest multiple of 9
 		int requiredSize = (numberOfButtons + 8) / 9 * 9;
@@ -66,5 +75,15 @@ public final class Capacity {
 
 		// Ensure that we return a valid GUI size (must be a multiple of 9)
 		return Capacity.of(limitedSize - (limitedSize % 9));
+	}
+	/**
+	 * Creates a flexible/dynamic {@link Capacity} instance that calculates the size according to
+	 * the specified number of buttons, where the max size of the gui can be up to 54 slots
+	 *
+	 * @param numberOfButtons the number of buttons to set for the capacity
+	 * @return a new {@link Capacity} instance
+	 */
+	public static Capacity flexible(final int numberOfButtons) {
+		return flexible(numberOfButtons, 54);
 	}
 }
