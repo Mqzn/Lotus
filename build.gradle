@@ -27,8 +27,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.projectlombok:lombok:1.18.22")
-    annotationProcessor("org.projectlombok:lombok:1.18.22")
+    compileOnly("org.projectlombok:lombok:1.18.36")
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
+
     compileOnly("org.jetbrains:annotations:21.0.1")
     compileOnly("net.kyori:adventure-api:4.16.0")
     compileOnly("net.kyori:adventure-platform-bukkit:4.3.2")

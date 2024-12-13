@@ -25,7 +25,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -33,7 +32,6 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * This class represents the main handler for Lotus's API,
@@ -311,7 +309,7 @@ public final class Lotus {
 			});
 
 			if (menu == null) {
-				e.setCancelled(!Lotus.this.isAllowOutsideClick());
+				e.setCancelled(!Lotus.this.allowOutsideClick);
 				return;
 			}
 
@@ -341,7 +339,7 @@ public final class Lotus {
 			});
 
 			if(menu == null) {
-				e.setCancelled(!Lotus.this.isAllowOutsideClick());
+				e.setCancelled(!Lotus.this.allowOutsideClick);
 				return;
 			}
 			/*
