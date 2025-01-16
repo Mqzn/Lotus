@@ -3,10 +3,8 @@ package io.github.mqzen.menus;
 import io.github.mqzen.menus.base.Content;
 import io.github.mqzen.menus.base.Menu;
 import io.github.mqzen.menus.base.MenuView;
-import io.github.mqzen.menus.base.iterator.Direction;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
-import io.github.mqzen.menus.misc.Slot;
 import io.github.mqzen.menus.misc.button.Button;
 import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import io.github.mqzen.menus.misc.itembuilder.ItemBuilder;
@@ -15,6 +13,7 @@ import io.github.mqzen.menus.titles.MenuTitles;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public final class ExampleMenu implements Menu {
@@ -82,14 +81,15 @@ public final class ExampleMenu implements Menu {
         ).setNamedData("data", (short) 5);
 
         return Content.builder(capacity)
-            .iterate(Slot.of(10), Slot.of(16), Direction.RIGHT, ((content, slot) -> {
-                content.setButton(slot, borderPane);
-            }))
+            .setButton(0, Button.clickable(new ItemStack(Material.GOLDEN_APPLE), ButtonClickAction.plain((menu, event)-> {
+                menu.getAPI().openMenu(opener,new ExampleMenu2());
+            })))
             .build();
     }
 
     @Override
     public void onPostClick(MenuView<?> playerMenuView, InventoryClickEvent event) {
         //happens after button click is executed
+        event.setCancelled(true);
     }
 }
