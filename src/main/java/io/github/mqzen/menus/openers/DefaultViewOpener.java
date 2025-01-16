@@ -8,7 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
-import java.util.Objects;
 
 public final class DefaultViewOpener implements ViewOpener {
 	
@@ -32,7 +31,8 @@ public final class DefaultViewOpener implements ViewOpener {
 		
 		viewData.content().forEachItem((slot, button) ->
 			inv.setItem(slot.getSlot(), button.getItem()));
-		
-		return Objects.requireNonNull(player.openInventory(inv)).getTopInventory();
+
+		player.openInventory(inv);
+		return inv;
 	}
 }
