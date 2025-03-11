@@ -1,8 +1,7 @@
 package io.github.mqzen.menus.titles;
 
 import net.kyori.adventure.text.Component;
-
-import static io.github.mqzen.menus.titles.MenuTitles.SECTION_SERIALIZER;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 final class ModernTitle implements MenuTitle {
 	
@@ -20,6 +19,6 @@ final class ModernTitle implements MenuTitle {
 	
 	@Override
 	public String asString() {
-		return SECTION_SERIALIZER.serialize(component);
+		return LegacyComponentSerializer.legacySection().serialize(component);
 	}
 }

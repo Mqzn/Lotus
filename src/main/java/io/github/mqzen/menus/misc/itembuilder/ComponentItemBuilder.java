@@ -1,7 +1,7 @@
 package io.github.mqzen.menus.misc.itembuilder;
 
-import io.github.mqzen.menus.titles.MenuTitles;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,6 +29,6 @@ public final class ComponentItemBuilder extends ItemBuilder<Component, Component
 
 	@Override
 	protected String toString(Component component) {
-		return MenuTitles.SECTION_SERIALIZER.serialize(component);
+		return LegacyComponentSerializer.legacySection().serialize(component);
 	}
 }

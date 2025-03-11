@@ -1,10 +1,8 @@
 package io.github.mqzen.menus.titles;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
-
-import static io.github.mqzen.menus.titles.MenuTitles.AMPERSAND_SERIALIZER;
-import static io.github.mqzen.menus.titles.MenuTitles.SECTION_SERIALIZER;
 
 final class LegacyTitle implements MenuTitle {
 	
@@ -16,8 +14,8 @@ final class LegacyTitle implements MenuTitle {
 	
 	@Override
 	public Component asComponent() {
-		return text.contains("&") ? AMPERSAND_SERIALIZER.deserialize(text)
-			: SECTION_SERIALIZER.deserialize(text);
+		return text.contains("&") ? LegacyComponentSerializer.legacyAmpersand().deserialize(text)
+			: LegacyComponentSerializer.legacySection().deserialize(text);
 	}
 	
 	@Override

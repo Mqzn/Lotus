@@ -6,12 +6,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public final class MenuTitles {
-	public final static MiniMessage MINI_MESSAGE_API = MiniMessage.builder()
-		.tags(TagResolver.standard())
-		.build();
-
-	public final static LegacyComponentSerializer AMPERSAND_SERIALIZER = LegacyComponentSerializer.legacyAmpersand();
-	public final static LegacyComponentSerializer SECTION_SERIALIZER = LegacyComponentSerializer.legacySection();
 	
 	/**
 	 * Creates a legacy menu title based on the provided string.
@@ -51,6 +45,6 @@ public final class MenuTitles {
 	 * @return a MenuTitle object representing the deserialized Component
 	 */
 	public static MenuTitle createModern(String miniMessage) {
-		return createModern(MINI_MESSAGE_API, miniMessage);
+		return createModern(MiniMessage.miniMessage(), miniMessage);
 	}
 }
