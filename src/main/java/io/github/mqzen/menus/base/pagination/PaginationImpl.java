@@ -200,6 +200,7 @@ class PaginationImpl implements Pagination {
 		this.lastPage = maxPages-1;
 
 		if(maxPages <= 0) {
+			maxPages = 1;
 			lastPage = 0;
 			PageView pageView = PageViewFactory.createAuto(this, lastPage);
 			pageView.initialize(this.pageModel, opener);
