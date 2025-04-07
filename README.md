@@ -3,7 +3,7 @@
 # Lotus [![](https://jitpack.io/v/Mqzn/Lotus.svg)](https://jitpack.io/#Mqzn/Lotus)   
 Simple but yet powerful spigot menus api created using OOP principles
 
-## Features >>
+## Features 
 
 - High performance
 - High quality user-friendly API
@@ -21,11 +21,10 @@ Simple but yet powerful spigot menus api created using OOP principles
 
 This library depends mainly on the following :
 
-- Java 17
-- [Adventure Components](https://docs.advntr.dev/getting-started.html)
-- [Paper API](https://docs.papermc.io/) (no longer required since Lotus v1.0.9) 
+- Java 8
+- **_(OPTIONAL)_** [Adventure Components](https://docs.advntr.dev/getting-started.html) 
 
-## Dependency
+## Installation
 
 Lotus API is being hosted on jitpack. Here's an example on how to setup
 Lotus dependency on your project.
