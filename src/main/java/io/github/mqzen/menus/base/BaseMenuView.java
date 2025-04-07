@@ -273,7 +273,7 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	 */
 	@Override
 	public void updateButton(Slot slot, ButtonUpdater buttonUpdater) {
-		var butt = getContent().getButton(slot).orElse(null);
+		Button butt = getContent().getButton(slot).orElse(null);
 		if(butt == null) return;
 		buttonUpdater.update(butt);
 		updateButtonAtWith(slot, butt);
@@ -303,7 +303,7 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	}
 	
 	private void updateButtonAtWith(Slot slot, Button button) {
-		var copy = button.copy();
+		Button copy = button.copy();
 		getContent().setButton(slot, copy);
 		currentOpenInventory.setItem(slot.getSlot(), copy.getItem());
 		currentOpener.updateInventory();
@@ -335,7 +335,7 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	@Override
 	public void refresh() {
 		initialize(menu, currentOpener);
-		currentOpenedData.content().forEachItem((slot, button) ->
+		currentOpenedData.getContent().forEachItem((slot, button) ->
 			currentOpenInventory.setItem(slot.getSlot(), button.getItem()));
 	}
 
