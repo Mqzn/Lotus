@@ -46,7 +46,8 @@ public final class Slot implements Comparable<Slot> {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof Slot slot1)) return false;
+		if (!(o instanceof Slot)) return false;
+		Slot slot1 = (Slot) o;
 		return slot == slot1.slot;
 	}
 	

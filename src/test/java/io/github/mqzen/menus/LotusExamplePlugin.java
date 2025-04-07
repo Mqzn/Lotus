@@ -1,5 +1,6 @@
 package io.github.mqzen.menus;
 
+import dev.velix.imperat.BukkitImperat;
 import io.github.mqzen.menus.base.pagination.Pagination;
 import io.github.mqzen.menus.base.pagination.exception.InvalidPageException;
 import io.github.mqzen.menus.base.serialization.SerializableMenu;
@@ -11,7 +12,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,10 +20,16 @@ import java.util.List;
 public final class LotusExamplePlugin extends JavaPlugin implements CommandExecutor {
 
 	private Lotus lotus;
+	private BukkitImperat bukkitImperat;
+
 	@Override
 	public void onEnable() {
 		lotus = Lotus.load(this);
 		lotus.enableDebugger();
+
+		this.bukkitImperat = BukkitImperat.builder(this)
+				.build();
+
 		this.getCommand("test").setExecutor(this);
 		getDataFolder().mkdirs();
 		getCommand("save").setExecutor((commandSender, command, s, strings) -> {
@@ -51,7 +57,6 @@ public final class LotusExamplePlugin extends JavaPlugin implements CommandExecu
 			commandSender.sendMessage("saved");
 			return true;
 		});
-		
 		getCommand("load").setExecutor((commandSender, command, s, strings) -> {
 			File exampleFile = new File(getDataFolder(), "example.yml");
 			if (!exampleFile.exists()) {

@@ -1,4 +1,4 @@
-package io.github.mqzen.menus.reflection;
+package io.github.mqzen.menus;
 
 /**
  * An interface for retrieving the field content. (Credits: TinyProtocol)
@@ -6,7 +6,7 @@ package io.github.mqzen.menus.reflection;
  * @param <T> - field type.
  * @author Kristian
  */
-public interface FieldAccessor<T> {
+interface FieldAccessor<T> {
 
     /**
      * Retrieve the content of a field.

@@ -84,6 +84,7 @@ public final class ExampleMenu implements Menu {
             .setButton(0, Button.clickable(new ItemStack(Material.GOLDEN_APPLE), ButtonClickAction.plain((menu, event)-> {
                 menu.getAPI().openMenu(opener,new ExampleMenu2());
             })))
+            .setButton(1, new ExampleAutoAnimatedButton())
             .build();
     }
 

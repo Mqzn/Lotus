@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.github.mqzen"
-version = "1.4.3"
+version = "1.4.4"
 
 repositories {
     gradlePluginPortal()
@@ -40,11 +40,14 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.34")
     annotationProcessor("org.projectlombok:lombok:1.18.34")
 
+    testImplementation("dev.velix:imperat-core:1.7.3")
+    testImplementation("dev.velix:imperat-bukkit:1.7.3")
+
     testCompileOnly("org.projectlombok:lombok:1.18.34")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.34")
     testCompileOnly("org.jetbrains:annotations:21.0.1")
-    testCompileOnly("net.kyori:adventure-platform-bukkit:4.3.4")
-    testCompileOnly("net.kyori:adventure-text-minimessage:4.19.0")
+    testImplementation("net.kyori:adventure-platform-bukkit:4.3.4")
+    testImplementation("net.kyori:adventure-text-minimessage:4.19.0")
     testCompileOnly("org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT")
 
 }

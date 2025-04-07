@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Interface defining actions triggered by button clicks in a menu.
@@ -92,7 +93,7 @@ public interface ButtonClickAction {
             Matcher matcher = PATTERN.matcher(e);
             if (!matcher.find()) return  null;
             return matcher.group(1);
-        }).toList();
+        }).collect(Collectors.toList());
 
     }
 

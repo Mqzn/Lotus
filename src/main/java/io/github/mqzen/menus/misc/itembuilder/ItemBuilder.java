@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * An abstract builder class for creating and modifying ItemStack objects with a fluent API.
@@ -71,7 +72,7 @@ public abstract class ItemBuilder<T, B extends ItemBuilder<T, B>> {
 	 * @return the current instance of the builder for method chaining.
 	 */
 	public B setLore(T... lore) {
-		itemMeta.setLore(Arrays.stream(lore).map(this::toString).toList());
+		itemMeta.setLore(Arrays.stream(lore).map(this::toString).collect(Collectors.toList()));
 		return (B) this;
 	}
 	
@@ -82,7 +83,7 @@ public abstract class ItemBuilder<T, B extends ItemBuilder<T, B>> {
 	 * @return The current instance of the item builder for method chaining.
 	 */
 	public B setLore(List<T> lore) {
-		itemMeta.setLore(lore.stream().map(this::toString).toList());
+		itemMeta.setLore(lore.stream().map(this::toString).collect(Collectors.toList()));
 		return (B) this;
 	}
 

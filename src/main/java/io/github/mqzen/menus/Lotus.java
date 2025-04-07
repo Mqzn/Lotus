@@ -16,7 +16,6 @@ import io.github.mqzen.menus.base.serialization.SerializedMenuIO;
 import io.github.mqzen.menus.base.serialization.impl.SerializedMenuYaml;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.openers.DefaultViewOpener;
-import io.github.mqzen.menus.reflection.Reflections;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.audience.Audience;
@@ -30,6 +29,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.Plugin;
 import java.util.*;
 
@@ -79,7 +79,7 @@ public final class Lotus {
     
     private Lotus(Plugin plugin, AdventureProvider<CommandSender> provider) {
 		this.plugin = plugin;
-		if(provider instanceof NoAdventure<CommandSender>) {
+		if(provider instanceof NoAdventure) {
 			debugger.warn("Couldn't find adventure on the server runtime");
 		}
 		
@@ -231,7 +231,7 @@ public final class Lotus {
 	 */
 	public void openMenu(Player player, MenuView<?> view) {
 		setOpenView(player, view);
-		var opener = getViewOpener(view.getType()).orElse(defaultOpener);
+		ViewOpener opener = getViewOpener(view.getType()).orElse(defaultOpener);
 		view.openView(opener, player);
 	}
 	
@@ -266,9 +266,13 @@ public final class Lotus {
 	 * @param menuName the name of the menu to open
 	 */
 	public void openMenu(Player player, String menuName) {
-		getRegisteredMenu(menuName.toLowerCase())
-						.ifPresentOrElse((menu) -> openMenu(player, menu),
-								()-> debugger.warn("Failed to open menu '%s' because it has not been registered", menuName));
+		Menu menu = getRegisteredMenu(menuName.toLowerCase()).orElse(null);
+		if(menu == null) {
+			debugger.warn("Failed to open menu '%s' because it has not been registered", menuName);
+		}
+		else {
+			openMenu(player, menu);
+		}
 	}
 	
 	/**
@@ -301,7 +305,8 @@ public final class Lotus {
 
 
 			MenuView<?> menu = Lotus.this.getMenuView(clicker.getUniqueId()).orElseGet(() -> {
-				if (topInventory.getHolder() instanceof MenuView<?> playerMenu) {
+				if (topInventory.getHolder() instanceof MenuView<?>) {
+					MenuView<?> playerMenu = (MenuView<?>) topInventory.getHolder();
 					Lotus.this.setOpenView(clicker, playerMenu);
 					return playerMenu;
 				}
@@ -323,15 +328,16 @@ public final class Lotus {
 		@EventHandler(priority = EventPriority.LOW)
 		public void onDrag(InventoryDragEvent e) {
 
-			var view = e.getView();
+			InventoryView view = e.getView();
 			if(view == null) return;
 
 			Player clicker = (Player) e.getWhoClicked();
-			var topInventory = view.getTopInventory();
-			var clickedInventory = e.getInventory();
+			Inventory topInventory = view.getTopInventory();
+			Inventory clickedInventory = e.getInventory();
 
 			MenuView<?> menu = Lotus.this.getMenuView(clicker.getUniqueId()).orElseGet(() -> {
-				if (topInventory.getHolder() instanceof MenuView<?> playerMenu) {
+				if (topInventory.getHolder() instanceof MenuView<?>) {
+					MenuView<?> playerMenu = (MenuView<?>)topInventory.getHolder();
 					Lotus.this.setOpenView(clicker, playerMenu);
 					return playerMenu;
 				}
@@ -369,8 +375,9 @@ public final class Lotus {
 		public void onOpen(InventoryOpenEvent e) {
 
 			Inventory inventory = e.getInventory();
-			if (!(inventory.getHolder() instanceof MenuView<?> menu))
+			if (!(inventory.getHolder() instanceof MenuView<?>))
 				return;
+			MenuView<?> menu = (MenuView<?>)inventory.getHolder();
 			Lotus.this.setOpenView((Player) e.getPlayer(), menu);
 			menu.onOpen(e);
 		}

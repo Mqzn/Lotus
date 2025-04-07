@@ -1,11 +1,11 @@
-package io.github.mqzen.menus.reflection;
+package io.github.mqzen.menus;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
-public final class Reflections {
+final class Reflections {
 
     /**
      * Retrieve a field accessor for a specific field type and name.

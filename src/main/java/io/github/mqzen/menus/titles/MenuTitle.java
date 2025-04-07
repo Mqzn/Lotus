@@ -8,7 +8,7 @@ import net.kyori.adventure.text.Component;
  * Classes implementing this interface can convert the title to either
  * a Component or a String.
  */
-public sealed interface MenuTitle permits LegacyTitle, ModernTitle {
+public interface MenuTitle {
 	
 	/**
 	 * Converts the menu title to a Component representation.
