@@ -1,6 +1,6 @@
 package io.github.mqzen.menus;
 
-import dev.velix.imperat.BukkitImperat;
+import io.github.mqzen.menus.base.Menu;
 import io.github.mqzen.menus.base.pagination.Pagination;
 import io.github.mqzen.menus.base.pagination.exception.InvalidPageException;
 import io.github.mqzen.menus.base.serialization.SerializableMenu;
@@ -20,15 +20,11 @@ import java.util.List;
 public final class LotusExamplePlugin extends JavaPlugin implements CommandExecutor {
 
 	private Lotus lotus;
-	private BukkitImperat bukkitImperat;
 
 	@Override
 	public void onEnable() {
 		lotus = Lotus.load(this);
 		lotus.enableDebugger();
-
-		this.bukkitImperat = BukkitImperat.builder(this)
-				.build();
 
 		this.getCommand("test").setExecutor(this);
 		getDataFolder().mkdirs();
@@ -66,7 +62,7 @@ public final class LotusExamplePlugin extends JavaPlugin implements CommandExecu
 			SerializedMenuYaml yaml = (SerializedMenuYaml) lotus.getMenuIO();
 
 			DataRegistry registry = yaml.read(configuration);
-			var  menu = lotus.getMenuSerializer().deserialize(registry);
+			Menu menu = lotus.getMenuSerializer().deserialize(registry);
 			lotus.openMenu((Player) commandSender,menu);
 			commandSender.sendMessage("loaded");
 			return true;

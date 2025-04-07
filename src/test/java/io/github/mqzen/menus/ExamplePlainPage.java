@@ -68,7 +68,7 @@ public final class ExamplePlainPage extends Page {
 
     @Override
     public @NotNull Content getContent(DataRegistry extraData, Player opener, Capacity capacity) {
-        var builder = Content.builder(capacity);
+        Content.Builder builder = Content.builder(capacity);
         for (int i = 0; i < amountOfItems; i++) {
             builder.setButton(i, new ExampleMenuComponent("" + i).toButton());
         }

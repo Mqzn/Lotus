@@ -66,7 +66,7 @@ public final class ExampleMenu implements Menu {
                 //we want nothing to happen here
                 menuView.updateButton(event.getSlot(), (button) -> {
                     assert button.getItem() != null;
-                    var item = button.getItem();
+                    ItemStack item = button.getItem();
                     short buttonData = button.getNamedData("data");
                     buttonData++;
                     if (buttonData > 12) {

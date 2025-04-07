@@ -70,7 +70,7 @@ public class ExampleAutoPage extends Page {
  
     @Override
     public @NotNull Content getContent(DataRegistry dataRegistry, Player player, Capacity capacity) {
-        var builder = Content
+        Content.Builder builder = Content
             .builder(capacity)
             .setButton(31, Button.clickable(new ItemStack(Material.BARRIER), ButtonClickAction.plain((menu, event) -> {
                 event.setCancelled(true);

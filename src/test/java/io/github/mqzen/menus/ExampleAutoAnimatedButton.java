@@ -12,12 +12,14 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public final class ExampleAutoAnimatedButton extends Button implements AnimatedButton {
 
     public ExampleAutoAnimatedButton() {
-        super(ItemBuilder.legacy(Material.EMERALD).setDisplay(frames[0]).setLore(List.of(loreFrames[0])).build());
+        super(ItemBuilder.legacy(Material.EMERALD).setDisplay(frames[0]).setLore(Collections.singletonList(loreFrames[0])).build());
         this.data.setData("frame", 0);
     }
 
@@ -43,7 +45,7 @@ public final class ExampleAutoAnimatedButton extends Button implements AnimatedB
     public static ItemStack newItem(String[] frames, int frame) {
         return ItemBuilder.legacy(Material.EMERALD)
                 .setDisplay(frames[frame])
-                .setLore(List.of(loreFrames[frame])).build();
+                .setLore(Collections.singletonList(loreFrames[frame])).build();
     }
 
     @Override

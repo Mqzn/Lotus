@@ -32,7 +32,7 @@ public final class ExampleMenu2 implements Menu {
 
     @Override
     public @NotNull Content getContent(DataRegistry extraData, Player opener, Capacity capacity) {
-        var b = Content.builder(capacity);
+        Content.Builder b = Content.builder(capacity);
         b.apply(content -> {
             for(ChatColor color : ChatColor.values()) {
                 content.addButton(Button.clickable(ItemBuilder.legacy(Material.NAME_TAG).setDisplay(color.name()).build(), ButtonClickAction.plain((menu, event)-> {
