@@ -58,11 +58,14 @@ to the syntax as following:
     </repository>
 </repositories>
 
-<dependency>
-    <groupId>com.github.mqzn</groupId>
-    <artifactId>Lotus</artifactId>
-    <version>VERSION</version>
-</dependency>
+<dependencies>
+    <dependency>
+        <groupId>com.github.mqzn</groupId>
+        <artifactId>Lotus</artifactId>
+        <version>VERSION</version>
+    </dependency>
+</dependencies>
+
 ```
 
 ## Usage/Examples
