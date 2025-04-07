@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 
 public final class SerializedMenuYaml implements SerializedMenuIO<YamlConfiguration> {
 	
@@ -41,7 +42,7 @@ public final class SerializedMenuYaml implements SerializedMenuIO<YamlConfigurat
 		if(content == null) {
 			return;
 		}
-		var buttonMap = content.getButtonMap();
+		Map<Slot, Button> buttonMap = content.getButtonMap();
 		for (Slot slot : buttonMap.keySet()) {
 			//since there's no input, the default button name will be lowercase ("slot_{num}");
 			String key = "slot_" + slot.getSlot();

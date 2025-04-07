@@ -335,7 +335,7 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	@Override
 	public void refresh() {
 		initialize(menu, currentOpener);
-		currentOpenedData.getContent().forEachItem((slot, button) ->
+		currentOpenedData.content().forEachItem((slot, button) ->
 			currentOpenInventory.setItem(slot.getSlot(), button.getItem()));
 	}
 

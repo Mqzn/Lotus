@@ -35,7 +35,7 @@ final class MenuContentImpl implements Content {
 	
 	@Override
 	public Optional<Button> getConditionalButton(ButtonCondition condition) {
-		for(var entry : map.entrySet()) {
+		for(Map.Entry<Slot, Button> entry : map.entrySet()) {
 			if(condition.accepts(entry.getKey(), entry.getValue())) {
 				return Optional.ofNullable(entry.getValue());
 			}
@@ -46,7 +46,7 @@ final class MenuContentImpl implements Content {
 	@Override
 	public int nextEmptySlot(int start) {
 		for (int slot = start; slot < capacity.getTotalSize(); slot++) {
-			if (getButton(slot).isEmpty()) return slot;
+			if (!getButton(slot).isPresent()) return slot;
 		}
 		
 		return -1;
@@ -70,7 +70,7 @@ final class MenuContentImpl implements Content {
 	@Override
 	public Slots getItemSlots(ItemStack item) {
 		List<Slot> slots = Lists.newArrayList();
-		for (var buttonEntry : map.entrySet()) {
+		for (Map.Entry<Slot, Button> buttonEntry : map.entrySet()) {
 			Slot slot = buttonEntry.getKey();
 			Button button = buttonEntry.getValue();
 			

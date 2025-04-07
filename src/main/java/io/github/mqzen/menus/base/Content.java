@@ -96,7 +96,7 @@ public interface Content {
 	 * @param buttons the buttons to be added
 	 */
 	default void addButton(Button... buttons) {
-		for (var button : buttons) {
+		for (Button button : buttons) {
 			int nextSlot = nextEmptySlot(0);
 			if (nextSlot == -1) break;
 			setButton(nextSlot, button);

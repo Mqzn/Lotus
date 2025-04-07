@@ -86,10 +86,10 @@ public abstract class Page implements Menu {
 		Capacity capacity,
 		Player player
 	) {
-		var previousButtonSlot = previousPageSlot(capacity);
-		var nextButtonSlot = nextPageSlot(capacity);
+		Slot previousButtonSlot = previousPageSlot(capacity);
+		Slot nextButtonSlot = nextPageSlot(capacity);
 		
-		var content = Content.empty(capacity);
+		Content content = Content.empty(capacity);
 
 		if (!pagination.isLast(pageView))
 			content.setButton(nextButtonSlot, Button.clickable(nextPageItem(player),
