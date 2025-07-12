@@ -64,9 +64,9 @@ publishing {
     }
 }
 
-shadowJar{
+/*shadowJar{
     archiveClassifier.set("tests")
     destinationDirectory.set(file(project.rootProject.property("shadowJarOutputDir")))
     configurations = [project.configurations.testRuntimeClasspath]
     from sourceSets.main.output, sourceSets.test.output
-}
+}*/
