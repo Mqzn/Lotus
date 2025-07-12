@@ -2,10 +2,6 @@ package io.github.mqzen.menus;
 
 
 import com.google.common.base.Preconditions;
-import io.github.mqzen.menus.adventure.AdventureProvider;
-import io.github.mqzen.menus.adventure.BukkitAdventure;
-import io.github.mqzen.menus.adventure.CastingAdventure;
-import io.github.mqzen.menus.adventure.NoAdventure;
 import io.github.mqzen.menus.base.BaseMenuView;
 import io.github.mqzen.menus.base.Menu;
 import io.github.mqzen.menus.base.MenuView;
@@ -18,10 +14,7 @@ import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.openers.DefaultViewOpener;
 import lombok.Getter;
 import lombok.Setter;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -60,9 +53,7 @@ public final class Lotus {
 	@Getter
 	@Setter
 	private boolean allowOutsideClick = true;
-
-	private final AdventureProvider<CommandSender> provider;
-
+	
 	@Getter
 	@Setter
 	private SerializedMenuIO<?> menuIO;
@@ -77,13 +68,8 @@ public final class Lotus {
 	@Getter
 	private long updateTicks = 15L;
     
-    private Lotus(Plugin plugin, AdventureProvider<CommandSender> provider) {
+    private Lotus(Plugin plugin) {
 		this.plugin = plugin;
-		if(provider instanceof NoAdventure) {
-			debugger.warn("Couldn't find adventure on the server runtime");
-		}
-		
-		this.provider = provider;
 		menuIO = new SerializedMenuYaml();
 		menuSerializer = MenuSerializer.newDefaultSerializer();
 		
@@ -101,29 +87,6 @@ public final class Lotus {
 		//stop and run with new ticks
 		Bukkit.getScheduler().cancelTask(updateTask.getTaskId());
 		updateTask.runTaskTimerAsynchronously(plugin, 100L, updateTicks);
-	}
-	
-	private static AdventureProvider<CommandSender> loadAdventure(Plugin plugin) {
-		AdventureProvider<CommandSender> provider = new NoAdventure<>();
-		if (Reflections.findClass("net.kyori.adventure.audience.Audience")) {
-			if (Audience.class.isAssignableFrom(CommandSender.class)) {
-				//paper compatible
-				provider = new CastingAdventure<>();
-			} else if (Reflections.findClass("net.kyori.adventure.platform.bukkit.BukkitAudiences")) {
-				provider = new BukkitAdventure(plugin);
-			}
-		}
-		
-		return provider;
-	}
-	
-	
-	public static Lotus load(Plugin plugin, AdventureProvider<CommandSender> adventureProvider) {
-		return new Lotus(plugin, adventureProvider);
-	}
-
-	public static Lotus load(Plugin plugin) {
-		return load(plugin, loadAdventure(plugin));
 	}
 
 	
@@ -280,11 +243,6 @@ public final class Lotus {
 	 */
 	public Collection<? extends MenuView<?>> getOpenViews() {
 		return openMenus.values();
-	}
-	
-	public void sendComponent(CommandSender sender, Component component) {
-		Audience audience = provider.audience(sender);
-		audience.sendMessage(component);
 	}
 
 	public void debug(String msg, Object... args) {

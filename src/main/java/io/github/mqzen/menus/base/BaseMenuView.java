@@ -10,6 +10,7 @@ import io.github.mqzen.menus.misc.button.ButtonCondition;
 import io.github.mqzen.menus.misc.button.ButtonUpdater;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -168,7 +169,7 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	@Override
 	public void onClickedSlot(int slot, InventoryClickEvent event) {
 		if (!isOpen()) {
-			api.sendComponent(event.getWhoClicked(), Component.text("Current Menu View's state (is closed and) doesn't allow for executing button actions ", NamedTextColor.RED));
+			event.getWhoClicked().sendMessage(ChatColor.RED + "Current Menu View's state (is closed and) doesn't allow for executing button actions");
 			return;
 		}
 		
