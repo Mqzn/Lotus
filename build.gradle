@@ -1,13 +1,11 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 plugins {
     id("java")
     id("maven-publish")
-    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.2"
 }
 
 group = "io.github.mqzen"
-version = "1.4.4b"
+version = "1.5.0"
 
 repositories {
     gradlePluginPortal()
@@ -66,9 +64,9 @@ publishing {
     }
 }
 
-tasks.register('bukkit', ShadowJar) {
-    shadowJar.destinationDirectory = file(file(project.rootProject.property("shadowJarOutputDir")))
+shadowJar{
     archiveClassifier.set("tests")
-    from sourceSets.main.output, sourceSets.test.output
+    destinationDirectory.set(file(project.rootProject.property("shadowJarOutputDir")))
     configurations = [project.configurations.testRuntimeClasspath]
+    from sourceSets.main.output, sourceSets.test.output
 }

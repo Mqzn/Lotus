@@ -75,6 +75,11 @@ public final class Lotus {
 		Bukkit.getPluginManager().registerEvents(new LotusListener(), plugin);
 	}
 	
+	public static Lotus load(Plugin plugin) {
+		Preconditions.checkNotNull(plugin, "Plugin cannot be null");
+		return new Lotus(plugin);
+	}
+	
 	private void registerOpeners() {
 		//TODO register the rest of openers
 	}

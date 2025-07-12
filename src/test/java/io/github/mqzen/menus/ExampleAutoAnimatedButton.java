@@ -2,29 +2,37 @@ package io.github.mqzen.menus;
 
 import io.github.mqzen.menus.base.MenuView;
 import io.github.mqzen.menus.base.animation.AnimatedButton;
+import io.github.mqzen.menus.base.animation.AnimationTaskData;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.misc.Slot;
-import io.github.mqzen.menus.misc.button.Button;
 import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import io.github.mqzen.menus.misc.itembuilder.ItemBuilder;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
-public final class ExampleAutoAnimatedButton extends Button implements AnimatedButton {
+public final class ExampleAutoAnimatedButton extends AnimatedButton {
 
     public ExampleAutoAnimatedButton() {
-        super(ItemBuilder.legacy(Material.EMERALD).setDisplay(frames[0]).setLore(Collections.singletonList(loreFrames[0])).build());
-        this.data.setData("frame", 0);
+        super(
+                AnimationTaskData.builder()
+                        .delay(0L)
+                        .ticks(1L)
+                        .async(true)
+                        .build(),
+                
+                ItemBuilder.legacy(Material.EMERALD)
+                        .setDisplay(frames[0])
+                        .setLore(Collections.singletonList(loreFrames[0]))
+                        .build()
+        );
     }
 
     public ExampleAutoAnimatedButton(@Nullable ItemStack item, @Nullable ButtonClickAction action, DataRegistry data) {
-        super(item, action, data);
+        super(AnimationTaskData.defaultData(), item, action, data);
     }
 
     private final static String[] frames = {
@@ -40,6 +48,8 @@ public final class ExampleAutoAnimatedButton extends Button implements AnimatedB
             "§7✧ Click to cast",
             "§7✧ Click to conjure"
     };
+    
+    private int frame = 0;
 
 
     public static ItemStack newItem(String[] frames, int frame) {
@@ -49,22 +59,12 @@ public final class ExampleAutoAnimatedButton extends Button implements AnimatedB
     }
 
     @Override
-    public ItemStack getCurrentItem() {
-        return this.getItem();
-    }
-
-    @Override
     public void animate(Slot slot, @NotNull MenuView<?> view) {
-        Integer frame = data.getData("frame");
         frame = (frame + 1) % frames.length;
-
-        System.out.println("Frame= " + frame);
-        data.setData("frame", frame);
         this.setItem(newItem(frames, frame));
+        
+        view.replaceButton(slot, this);
+        System.out.println("EXAMPLE animated BUTTON FOR PLAYER " + view.getPlayer().map(Player::getName).orElse("N/A") + ", Running !");
     }
-
-    @Override
-    public Button copy() {
-        return new ExampleAutoAnimatedButton(this.getItem(), this.getAction(), this.data);
-    }
+    
 }

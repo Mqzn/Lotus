@@ -78,6 +78,7 @@ public interface MenuView<M extends Menu> extends InventoryHolder {
 	@Override
 	@Nullable Inventory getInventory();
 	
+	
 	/**
 	 * Fetches the button in the contents of the view that corresponds to the slot parameter
 	 * then executes this button's cached actions regarding InventoryClickEvent

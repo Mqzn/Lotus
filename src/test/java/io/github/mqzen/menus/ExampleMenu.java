@@ -3,10 +3,10 @@ package io.github.mqzen.menus;
 import io.github.mqzen.menus.base.Content;
 import io.github.mqzen.menus.base.Menu;
 import io.github.mqzen.menus.base.MenuView;
+import io.github.mqzen.menus.base.animation.AnimationTaskData;
+import io.github.mqzen.menus.base.animation.TransformingButton;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
-import io.github.mqzen.menus.misc.button.Button;
-import io.github.mqzen.menus.misc.button.actions.ButtonClickAction;
 import io.github.mqzen.menus.misc.itembuilder.ItemBuilder;
 import io.github.mqzen.menus.titles.MenuTitle;
 import io.github.mqzen.menus.titles.MenuTitles;
@@ -45,46 +45,44 @@ public final class ExampleMenu implements Menu {
     public @NotNull Capacity getCapacity(DataRegistry extraData, Player opener) {
         return Capacity.ofRows(3);//Alternative approach: Capacity.ofRows(3)
     }
-
-    /**
-     * Creates the content for the menu
-     *
-     * @param extraData the data container for this menu for extra data
-     * @param opener    the player opening this menu
-     * @param capacity  the capacity set by the user above
-     * @return the content of the menu to add (this includes items)
-     */
+    
+    
+    private final static ItemStack[] ITEM_FRAMES = {
+            ItemBuilder.legacy(Material.FIREWORK).build(),
+            ItemBuilder.legacy(Material.TNT).build(),
+            ItemBuilder.legacy(Material.SKULL_ITEM, 1, (short)1).build(),
+            ItemBuilder.legacy(Material.SNOW_BALL).build()
+    };
+    
     @Override
-    public @NotNull Content getContent(DataRegistry extraData,
-                                       Player opener, Capacity capacity) {
-
-        Button borderPane = Button.clickable(
-            ItemBuilder.legacy(Material.STAINED_GLASS_PANE, 1, (short) 5)
-                .setDisplay("&r").build(),
-            ButtonClickAction.plain((menuView, event) -> {
-                event.setCancelled(true);
-                //we want nothing to happen here
-                menuView.updateButton(event.getSlot(), (button) -> {
-                    assert button.getItem() != null;
-                    ItemStack item = button.getItem();
-                    short buttonData = button.getNamedData("data");
-                    buttonData++;
-                    if (buttonData > 12) {
-                        buttonData = 0;
-                    }
-                    button.setNamedData("data", buttonData);
-                    item.setDurability(buttonData);
-                    button.setItem(item);
-                });
-
-            })
-        ).setNamedData("data", (short) 5);
+    public @NotNull Content getContent(
+            DataRegistry extraData,
+            Player opener,
+            Capacity capacity
+    ) {
+        
+        TransformingButton randomGameButton = new TransformingButton(
+                AnimationTaskData
+                        .builder()
+                        .delay(10L)
+                        .ticks(12L) // Change the delay to 20 ticks (1 second)
+                        .async(true)
+                        .build(),
+                
+                (item) -> ItemBuilder.legacy(item)
+                        .setDisplay("&aRandom Game")
+                        .setLore("&7Click to play a random game")
+                        .build(),
+                ITEM_FRAMES
+        ).click((view, event) -> {
+            // Handle the click event here
+            Player player = (Player) event.getWhoClicked();
+            player.sendMessage("You clicked the random game button!");
+        });
 
         return Content.builder(capacity)
-            .setButton(0, Button.clickable(new ItemStack(Material.GOLDEN_APPLE), ButtonClickAction.plain((menu, event)-> {
-                menu.getAPI().openMenu(opener,new ExampleMenu2());
-            })))
             .setButton(1, new ExampleAutoAnimatedButton())
+            .setButton(2, randomGameButton)
             .build();
     }
 

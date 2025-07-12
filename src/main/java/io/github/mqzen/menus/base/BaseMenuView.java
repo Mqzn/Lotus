@@ -1,6 +1,8 @@
 package io.github.mqzen.menus.base;
 
 import io.github.mqzen.menus.Lotus;
+import io.github.mqzen.menus.base.animation.AnimatedButton;
+import io.github.mqzen.menus.base.animation.ButtonAnimationTask;
 import io.github.mqzen.menus.misc.Capacity;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.misc.Slot;
@@ -8,13 +10,17 @@ import io.github.mqzen.menus.misc.ViewData;
 import io.github.mqzen.menus.misc.button.Button;
 import io.github.mqzen.menus.misc.button.ButtonCondition;
 import io.github.mqzen.menus.misc.button.ButtonUpdater;
+import io.github.mqzen.menus.titles.MenuTitle;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -70,6 +76,9 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	 */
 	protected Player currentOpener = null;
 
+	
+	protected final Map<AnimatedButton, ButtonAnimationTask> animationTasks = new HashMap<>();
+	
 	/**
 	 * Constructs a BaseMenuView with the specified API instance and menu, and initializes it with an empty DataRegistry.
 	 *
@@ -184,9 +193,12 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 	 */
 	@Override
 	public void initialize(M menu, Player player) {
+		
+		MenuTitle title = menu.getTitle(dataRegistry, player);
 		Capacity capacity = menu.getCapacity(dataRegistry, player);
-		currentOpenedData = new ViewData(menu.getTitle(dataRegistry, player),
-			capacity, menu.getContent(dataRegistry, player, capacity));
+		Content content = menu.getContent(dataRegistry, player, capacity);
+		
+		currentOpenedData = new ViewData(title, capacity, content);
 	}
 	
 	/**
@@ -212,6 +224,44 @@ public class BaseMenuView<M extends Menu> implements MenuView<M> {
 		currentOpener = player;
 		initialize(menu, player);
 		currentOpenInventory = viewOpener.openMenu(api, player, this, currentOpenedData);
+		//after we open, we start all animation tasks
+		for(Map.Entry<Slot, Button> entry : currentOpenedData.content().getButtonMap().entrySet()) {
+			Slot slot = entry.getKey();
+			Button button = entry.getValue();
+			
+			if(!(button instanceof AnimatedButton)) continue;
+			AnimatedButton animatedButton = (AnimatedButton) button;
+			ButtonAnimationTask task = ButtonAnimationTask.of(
+				slot,
+				animatedButton,
+				this
+			);
+			animationTasks.put(animatedButton, task);
+			task.start(api.getPlugin());
+		}
+		
+	}
+	
+	/**
+	 * What occurs/is executed on closing of this menu view
+	 *
+	 * @param event the close event for the view's internal inventory
+	 */
+	@Override
+	public void onClose(InventoryCloseEvent event) {
+		MenuView.super.onClose(event);
+		for(Map.Entry<Slot, Button> entry : currentOpenedData.content().getButtonMap().entrySet()) {
+			Button button = entry.getValue();
+			
+			if(!(button instanceof AnimatedButton)) continue;
+			AnimatedButton animatedButton = (AnimatedButton) button;
+			ButtonAnimationTask task = animationTasks.get(animatedButton);
+			if(task != null) {
+				task.cancel();
+				animationTasks.remove(animatedButton);
+			}
+		}
+		animationTasks.clear();
 	}
 	
 	/**
