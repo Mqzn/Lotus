@@ -62,9 +62,6 @@ public final class Lotus {
 	@Setter
 	private MenuSerializer menuSerializer;
 	
-	
-	private final MenuUpdateTask updateTask;
-	
 	@Getter
 	private long updateTicks = 15L;
     
@@ -76,19 +73,7 @@ public final class Lotus {
 		registerOpeners();
 
 		Bukkit.getPluginManager().registerEvents(new LotusListener(), plugin);
-
-        updateTask = MenuUpdateTask.newTask(this);
-		updateTask.runTaskTimerAsynchronously(plugin, 100L, updateTicks);
 	}
-	
-	public void setUpdateTicks(long updateTicks) {
-		this.updateTicks = updateTicks;
-		
-		//stop and run with new ticks
-		Bukkit.getScheduler().cancelTask(updateTask.getTaskId());
-		updateTask.runTaskTimerAsynchronously(plugin, 100L, updateTicks);
-	}
-
 	
 	private void registerOpeners() {
 		//TODO register the rest of openers
