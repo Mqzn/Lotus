@@ -8,8 +8,6 @@ import io.github.mqzen.menus.misc.ViewData;
 import io.github.mqzen.menus.misc.button.Button;
 import io.github.mqzen.menus.misc.button.ButtonCondition;
 import io.github.mqzen.menus.misc.button.ButtonUpdater;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
