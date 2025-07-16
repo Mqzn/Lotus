@@ -12,6 +12,7 @@ import io.github.mqzen.menus.base.serialization.SerializedMenuIO;
 import io.github.mqzen.menus.base.serialization.impl.SerializedMenuYaml;
 import io.github.mqzen.menus.misc.DataRegistry;
 import io.github.mqzen.menus.openers.DefaultViewOpener;
+import io.github.mqzen.menus.util.InventoryUtil;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -22,7 +23,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.plugin.Plugin;
 import java.util.*;
 
@@ -275,14 +275,10 @@ public final class Lotus {
 
 		@EventHandler(priority = EventPriority.LOW)
 		public void onDrag(InventoryDragEvent e) {
-
-			InventoryView view = e.getView();
-			if(view == null) return;
-
 			Player clicker = (Player) e.getWhoClicked();
-			Inventory topInventory = view.getTopInventory();
 			Inventory clickedInventory = e.getInventory();
 
+			final Inventory topInventory = InventoryUtil.getTopInventory(e);
 			MenuView<?> menu = Lotus.this.getMenuView(clicker.getUniqueId()).orElseGet(() -> {
 				if (topInventory.getHolder() instanceof MenuView<?>) {
 					MenuView<?> playerMenu = (MenuView<?>)topInventory.getHolder();
@@ -292,7 +288,7 @@ public final class Lotus {
 				return null;
 			});
 
-			if(menu == null) {
+			if (menu == null) {
 				e.setCancelled(!Lotus.this.allowOutsideClick);
 				return;
 			}
@@ -305,7 +301,7 @@ public final class Lotus {
 			}
 			*/
 
-			if(clickedInventory != null && clickedInventory == topInventory) {
+			if (clickedInventory != null && clickedInventory == topInventory) {
 				Lotus.this.debug("Triggering InventoryDragEvent");
 				menu.onDrag(e);
 			}
@@ -315,8 +311,7 @@ public final class Lotus {
 		public void onClose(InventoryCloseEvent e) {
 			Player closer = (Player) e.getPlayer();
 			Lotus.this.debug("Triggering InventoryCloseEvent");
-			Lotus.this.getMenuView(closer.getUniqueId())
-				.ifPresent((menu) -> Lotus.this.closeView(menu, e));
+			Lotus.this.getMenuView(closer.getUniqueId()).ifPresent((menu) -> Lotus.this.closeView(menu, e));
 		}
 
 		@EventHandler(priority = EventPriority.LOW)
