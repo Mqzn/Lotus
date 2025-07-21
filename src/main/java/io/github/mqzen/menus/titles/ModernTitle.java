@@ -11,12 +11,6 @@ final class ModernTitle implements MenuTitle {
 		this.component = component;
 	}
 	
-	
-	@Override
-	public Component asComponent() {
-		return component;
-	}
-	
 	@Override
 	public String asString() {
 		return LegacyComponentSerializer.legacySection().serialize(component);
