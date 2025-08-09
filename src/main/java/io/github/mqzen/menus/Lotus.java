@@ -83,10 +83,6 @@ public final class Lotus {
 	private void registerOpeners() {
 		//TODO register the rest of openers
 	}
-
-	public void registerCustomOpener(InventoryType inventoryType, ViewOpener opener) {
-		openers.put(inventoryType, opener);
-	}
 	
 	public void enableDebugger() {
 		this.debugger = new LotusDebugger(plugin.getLogger());
