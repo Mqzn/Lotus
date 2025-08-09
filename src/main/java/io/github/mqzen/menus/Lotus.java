@@ -311,7 +311,15 @@ public final class Lotus {
 		public void onClose(InventoryCloseEvent e) {
 			Player closer = (Player) e.getPlayer();
 			Lotus.this.debug("Triggering InventoryCloseEvent");
-			Lotus.this.getMenuView(closer.getUniqueId()).ifPresent((menu) -> Lotus.this.closeView(menu, e));
+			Lotus.this.getMenuView(closer.getUniqueId()).ifPresent((menu) -> {
+				if (e.getInventory().getHolder() != menu) {
+					MenuView<?> previousMenuView = (MenuView<?>) e.getInventory().getHolder();
+					Lotus.this.closeView(previousMenuView, e);
+					return;
+				}
+
+				Lotus.this.closeView(menu, e);
+			});
 		}
 
 		@EventHandler(priority = EventPriority.LOW)
