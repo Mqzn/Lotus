@@ -83,6 +83,10 @@ public final class Lotus {
 	private void registerOpeners() {
 		//TODO register the rest of openers
 	}
+
+	public void registerCustomOpener(InventoryType inventoryType, ViewOpener opener) {
+		openers.put(inventoryType, opener);
+	}
 	
 	public void enableDebugger() {
 		this.debugger = new LotusDebugger(plugin.getLogger());
@@ -311,7 +315,11 @@ public final class Lotus {
 		public void onClose(InventoryCloseEvent e) {
 			Player closer = (Player) e.getPlayer();
 			Lotus.this.debug("Triggering InventoryCloseEvent");
-			Lotus.this.getMenuView(closer.getUniqueId()).ifPresent((menu) -> Lotus.this.closeView(menu, e));
+			Lotus.this.getMenuView(closer.getUniqueId()).ifPresent((menu) -> {
+				if (e.getInventory().getHolder() != menu) return;
+
+				Lotus.this.closeView(menu, e);
+			});
 		}
 
 		@EventHandler(priority = EventPriority.LOW)
