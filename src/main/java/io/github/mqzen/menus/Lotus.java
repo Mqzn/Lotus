@@ -22,6 +22,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import java.util.*;
@@ -172,8 +173,14 @@ public final class Lotus {
 	public void closeView(MenuView<?> view, InventoryCloseEvent event) {
 		Preconditions.checkNotNull(view);
 		Preconditions.checkNotNull(event);
-		view.onClose(event);
-		openMenus.remove(event.getPlayer().getUniqueId());
+		try {
+			view.onClose(event);
+		}catch(Exception e) {
+			Lotus.this.debugger.error("Error while closing menu for player '" + event.getPlayer().getName() + "' : ", e);
+		}
+		finally {
+			openMenus.remove(event.getPlayer().getUniqueId());
+		}
 	}
 	
 	/**
@@ -325,6 +332,11 @@ public final class Lotus {
 			menu.onOpen(e);
 		}
 
+		@EventHandler(priority = EventPriority.LOW)
+		public void onForceClosure(PlayerQuitEvent event) {
+			Player player = event.getPlayer();
+			Lotus.this.openMenus.remove(player.getUniqueId());
+		}
 	}
 
 }
