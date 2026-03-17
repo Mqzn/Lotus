@@ -17,7 +17,7 @@ import java.util.function.BiFunction;
  */
 @Getter
 public class Button {
-	
+
 	private @Nullable ItemStack item;
 	private @Nullable ButtonClickAction action = null;
 	
@@ -98,9 +98,8 @@ public class Button {
 	public boolean isClickable() {
 		return action != null;
 	}
-	
-	
-	/**
+
+    /**
 	 * Sets the action to be performed when the button is clicked.
 	 *
 	 * @param action the action to be performed on button click; can be {@code null} if no action is needed

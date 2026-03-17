@@ -1,6 +1,5 @@
 package io.github.mqzen.menus;
 
-
 import com.google.common.base.Preconditions;
 import io.github.mqzen.menus.base.BaseMenuView;
 import io.github.mqzen.menus.base.Menu;
