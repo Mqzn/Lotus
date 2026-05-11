@@ -1,4 +1,6 @@
 <p align="center"><img src="https://github.com/Mqzn/Lotus/blob/master/img.png" /></p><br>
+# MOVED TO 
+https://github.com/MeveraStudios/Lotus
 
 # Lotus [![](https://jitpack.io/v/Mqzn/Lotus.svg)](https://jitpack.io/#Mqzn/Lotus)   
 Simple but yet powerful spigot menus api created using OOP principles
